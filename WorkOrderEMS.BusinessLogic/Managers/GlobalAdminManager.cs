@@ -3969,7 +3969,7 @@ namespace WorkOrderEMS.BusinessLogic.Managers
                 var obj = ObjPerformanceRepository.GetMeetingDetail(Id, FinYear, FinQuarter);
                 if (obj != null)
                 {
-                    result = (DateTime.Now > obj.RMS_InterviewDateTime) ? "MEETINGCOMPLETED" : "MEETINGNOTCOMPLETED";
+                    result = (DateTime.UtcNow > obj.RMS_InterviewDateTime) ? "MEETINGCOMPLETED" : "MEETINGNOTCOMPLETED";
                 }
 
             }

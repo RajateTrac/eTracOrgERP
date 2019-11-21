@@ -21,9 +21,9 @@ namespace WorkOrderEMS.Data.DataRepository.NewAdminRepository
         {
             try
             {
-                DateTime dt = Convert.ToDateTime(objSetupMeeting.StartDate + " " + objSetupMeeting.StartTime);
-                //DateTime dt1 = DateTime.ParseExact(objSetupMeeting.StartDate + " " + objSetupMeeting.StartTime, "dd/MM/yy h:mm:ss tt", CultureInfo.InvariantCulture);
-                objworkorderEMSEntities.spSetReviewMeetingDateTime("I", null, null, objSetupMeeting.ReceipientEmailId, objSetupMeeting.FinYear, objSetupMeeting.FinQrtr, objSetupMeeting.StartDate + " " + objSetupMeeting.StartTime);
+                DateTime dt = DateTimeOffset.Parse(objSetupMeeting.StartDate + " " + objSetupMeeting.StartTime).UtcDateTime;
+                string _datetime = dt.ToString();
+                objworkorderEMSEntities.spSetReviewMeetingDateTime("I", null, null, objSetupMeeting.ReceipientEmailId, objSetupMeeting.FinYear, objSetupMeeting.FinQrtr, _datetime);
 
             }
             catch (Exception)
