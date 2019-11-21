@@ -707,7 +707,7 @@ namespace WorkOrderEMS.Data
                     EMP_DateOfJoining = t.EMP_DateOfJoining,
                     Assesment = t.Assesment,
                     Status = t.SAM_IsActive,
-             
+
 
 
 
@@ -739,7 +739,7 @@ namespace WorkOrderEMS.Data
                          SelfAssessmentId = t.SAM_Id ?? 0,
                          Answer = t.SAM_Answer,
                          SAM_IsActive = t.SAM_IsActive
-                         
+
 
                      }).ToList();
                 }
@@ -756,13 +756,13 @@ namespace WorkOrderEMS.Data
                          QuestionId = t.ASQ_Id,
                          Question = t.ASQ_Question,
                          Answer = t.EEL_AnswerSelf,
-                         EEL_AnswerManager=t.EEL_AnswerManager,
+                         EEL_AnswerManager = t.EEL_AnswerManager,
                          //SAR_AnswerManager = t.EEL_AnswerManager,
                          EEL_Comments = t.EEL_Comments,
                          SAM_IsActive = t.EEL_IsActive,
-                         EEL_FinencialYear=t.EEL_FinencialYear,
-                         EEL_FinQuarter=t.EEL_FinQuarter,
-                         EEL_ScoreSelf=t.EEL_ScoreSelf
+                         EEL_FinencialYear = t.EEL_FinencialYear,
+                         EEL_FinQuarter = t.EEL_FinQuarter,
+                         EEL_ScoreSelf = t.EEL_ScoreSelf
 
                      }).ToList();
                 }
@@ -773,16 +773,16 @@ namespace WorkOrderEMS.Data
 
         new GWCQUestionModel()
         {
-                 SAR_Id=t.SAR_Id,
-                SAR_EMP_EmployeeId=t.SAR_EMP_EmployeeId,
-                SAR_EMP_EmployeeIdManager=t.SAR_EMP_EmployeeIdManager,
-                  SAR_QuestionType=t.SAR_QuestionType,
-                  ASQ_Id=t.ASQ_Id,
-                  ASQ_Question=t.ASQ_Question,
-                  SAR_AnswerSelf=t.SAR_AnswerSelf,
-                  SAR_AnswerManager=t.SAR_AnswerManager,
-                  SAR_Comments=t.SAR_Comments,
-            SAR_IsActive=t.SAR_IsActive
+            SAR_Id = t.SAR_Id,
+            SAR_EMP_EmployeeId = t.SAR_EMP_EmployeeId,
+            SAR_EMP_EmployeeIdManager = t.SAR_EMP_EmployeeIdManager,
+            SAR_QuestionType = t.SAR_QuestionType,
+            ASQ_Id = t.ASQ_Id,
+            ASQ_Question = t.ASQ_Question,
+            SAR_AnswerSelf = t.SAR_AnswerSelf,
+            SAR_AnswerManager = t.SAR_AnswerManager,
+            SAR_Comments = t.SAR_Comments,
+            SAR_IsActive = t.SAR_IsActive
         }).ToList();
                 }
                 return QuestionList;
@@ -799,7 +799,7 @@ namespace WorkOrderEMS.Data
             {
                 string EmployeeId = string.Empty;
                 string AssessmentType = string.Empty;
-                
+
                 if (data.Count() > 0)
                 {
                     foreach (var i in data)
@@ -875,9 +875,9 @@ namespace WorkOrderEMS.Data
                     EMP_DateOfJoining = t.EMP_DateOfJoining,
                     Expectation = t.Expectation,
                     Status = t.EEL_IsActive,
-                    VST_Level=t.VST_Level,
-                    FinYear=t.FinYear.Value,
-                    AssessmentType=t.AssessmentType
+                    VST_Level = t.VST_Level,
+                    FinYear = t.FinYear.Value,
+                    AssessmentType = t.AssessmentType
 
 
 
@@ -892,12 +892,12 @@ namespace WorkOrderEMS.Data
         {
             try
             {
-               var list = data.GroupBy(x => x.ASQ_Id).Select(x => x.First());
+                var list = data.GroupBy(x => x.ASQ_Id).Select(x => x.First());
                 if (data.Count() > 0)
                 {
                     foreach (var i in list)
                     {
-                        _workorderEMSEntities.spSetSelfAssessmentQuarterly((i.EEL_IsActive == null || i.EEL_IsActive == "" || i.EEL_IsActive != "Y") ? "I" : "U", i.EEL_EMP_EmployeeId,i.EEL_EMP_EmployeeIdManager,i.QuestionType, i.ASQ_Id, i.EEL_Id,i.EEL_FinencialYear,i.EEL_FinQuarter, i.EEL_AnswerSelf, action == "S" ? "S" : "Y",i.EEL_Comments);
+                        _workorderEMSEntities.spSetSelfAssessmentQuarterly((i.EEL_IsActive == null || i.EEL_IsActive == "" || i.EEL_IsActive != "Y") ? "I" : "U", i.EEL_EMP_EmployeeId, i.EEL_EMP_EmployeeIdManager, i.QuestionType, i.ASQ_Id, i.EEL_Id, i.EEL_FinencialYear, i.EEL_FinQuarter, i.EEL_AnswerSelf, action == "S" ? "S" : "Y", i.EEL_Comments);
                     }
                 }
 
@@ -945,10 +945,11 @@ namespace WorkOrderEMS.Data
                     VST_Level = t.VST_Level,
                     FinYear = t.FinYear.Value,
                     AssessmentType = t.AssessmentType,
-                    PRMeetingStatus=t.PRMeetingStatus,
-                    PRMeetingDateTime=t.PRMeetingDateTime,
-                    MeetingDate=t.PRMeetingDateTime.HasValue?t.PRMeetingDateTime.Value.ToShortDateString():"",
-                    MeetingTime = t.PRMeetingDateTime.HasValue ? t.PRMeetingDateTime.Value.ToShortTimeString():""
+                    PRMeetingStatus = t.PRMeetingStatus,
+                    //PRMeetingDateTime=t.PRMeetingDateTime,
+                    PRMeetingDateTime = t.PRMeetingDateTime.HasValue ? new DateTimeOffset(t.PRMeetingDateTime.Value, TimeSpan.FromHours(0)).ToLocalTime().DateTime : (DateTime?)null,
+                    MeetingDate = t.PRMeetingDateTime.HasValue ? new DateTimeOffset(t.PRMeetingDateTime.Value, TimeSpan.FromHours(0)).ToLocalTime().DateTime.ToShortDateString() : "",
+                    MeetingTime = t.PRMeetingDateTime.HasValue ? new DateTimeOffset(t.PRMeetingDateTime.Value, TimeSpan.FromHours(0)).ToLocalTime().DateTime.ToShortTimeString() : ""
 
 
                 }).ToList();
@@ -972,11 +973,11 @@ namespace WorkOrderEMS.Data
                 {
                     foreach (var i in list)
                     {
-                        _workorderEMSEntities.spSetEvaluationQuarterly("U", i.EEL_EMP_EmployeeId, i.QuestionType, i.EEL_Id, i.EEL_FinencialYear, i.EEL_FinQuarter, i.EEL_AnswerSelf ,i.EEL_Comments, action == "C" ? "C" : "S");
+                        _workorderEMSEntities.spSetEvaluationQuarterly("U", i.EEL_EMP_EmployeeId, i.QuestionType, i.EEL_Id, i.EEL_FinencialYear, i.EEL_FinQuarter, i.EEL_AnswerSelf, i.EEL_Comments, action == "C" ? "C" : "S");
                         //_workorderEMSEntities.spSetSelfAssessmentQuarterly((i.EEL_IsActive == null || i.EEL_IsActive == "" || i.EEL_IsActive != "Y") ? "I" : "U", i.EEL_EMP_EmployeeId,i.EEL_EMP_EmployeeIdManager,i.QuestionType, i.ASQ_Id, i.EEL_Id,i.EEL_FinencialYear,i.EEL_FinQuarter, i.EEL_AnswerSelf == "Y" ? "Y" : i.EEL_AnswerSelf == "N" ? "N" : i.EEL_AnswerSelf == "S" ? "S" : null, action == "S" ? "S" : "Y");
                         EmployeeId = i.EEL_EMP_EmployeeId;
                     }
-                    result= _workorderEMSEntities.spGetIsTremination(EmployeeId, IsTermination)=='Y'?true:false;
+                    result = _workorderEMSEntities.spGetIsTremination(EmployeeId, IsTermination) == 'Y' ? true : false;
                 }
 
                 return result;
@@ -986,14 +987,15 @@ namespace WorkOrderEMS.Data
             { throw; }
         }
 
-        public string GetUserEmail(string userid) {
+        public string GetUserEmail(string userid)
+        {
             string UserEmail = string.Empty;
 
             try
             {
                 using (workorderEMSEntities objContext = new workorderEMSEntities())
                 {
-                    UserEmail= objContext.UserRegistrations.Where(x => x.EmployeeID == userid).First().UserEmail;
+                    UserEmail = objContext.UserRegistrations.Where(x => x.EmployeeID == userid).First().UserEmail;
                 }
             }
             catch (Exception)
