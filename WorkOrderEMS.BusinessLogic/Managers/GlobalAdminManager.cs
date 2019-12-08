@@ -3811,13 +3811,13 @@ namespace WorkOrderEMS.BusinessLogic.Managers
 
         }
         ///
-        public List<GWCQUestionModel> GetGWCQuestions(string Id, string AssessmetType)
+        public List<GWCQUestionModel> GetGWCQuestions(string Id, string AssessmetType, string type)
         {
             ObjUserRepository = new UserRepository();
             try
             {
 
-                return ObjUserRepository.GetGWCQuestions(Id, AssessmetType);
+                return ObjUserRepository.GetGWCQuestions(Id, AssessmetType, type);
             }
             catch (Exception)
             {
@@ -3996,7 +3996,53 @@ namespace WorkOrderEMS.BusinessLogic.Managers
             }
             return MeetingList;
         }
+        public PerformanceModel GetManagerAssessmentDetails(string userId)
+        {
+            ObjUserRepository = new UserRepository();
+            PerformanceModel model = new PerformanceModel();
+            try
+            {
+                model= ObjUserRepository.GetManagerAssessmentDetails(userId);
+                if (model != null)
+                {
+                    model.EMP_Photo = (model.EMP_Photo == null || model.EMP_Photo.Trim() == "") ? HostingPrefix + ConstantImagesForClient.Replace("~", "") : HostingPrefix + ProfileImagePath.Replace("~", "") + model.EMP_Photo;
 
+                    
+                }
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return model;
+        }
+        public bool saveChangedExpectations(List<GWCQUestionModel> data, string action,string Manager)
+        {
+
+            ObjUserRepository = new UserRepository();
+            try
+            {
+                return ObjUserRepository.saveChangedExpectations(data, action, Manager);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public List<GWCQUestionModel> GetSelfAssessmentView(string Id, string AssessmetType)
+        {
+            ObjUserRepository = new UserRepository();
+            try
+            {
+                return ObjUserRepository.GetSelfAssessmentView(Id, AssessmetType);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 
     public class loc

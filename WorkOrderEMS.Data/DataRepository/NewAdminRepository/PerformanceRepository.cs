@@ -23,7 +23,7 @@ namespace WorkOrderEMS.Data.DataRepository.NewAdminRepository
             {
                 DateTime dt = DateTimeOffset.Parse(objSetupMeeting.StartDate + " " + objSetupMeeting.StartTime).UtcDateTime;
                 string _datetime = dt.ToString();
-                objworkorderEMSEntities.spSetReviewMeetingDateTime("I", null, null, objSetupMeeting.ReceipientEmailId, objSetupMeeting.FinYear, objSetupMeeting.FinQrtr, _datetime);
+                //objworkorderEMSEntities.spSetReviewMeetingDateTime("I", null, null, objSetupMeeting.ReceipientEmailId, objSetupMeeting.FinYear, objSetupMeeting.FinQrtr, _datetime);
 
             }
             catch (Exception)

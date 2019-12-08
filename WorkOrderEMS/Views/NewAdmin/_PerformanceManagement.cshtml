@@ -19,6 +19,7 @@
         UserId = ObjLogin.UserId;
         CurrentUser = WorkOrderEMS.Helper.Cryptography.GetEncryptedData(ObjLogin.UserName, true);
     }
+
     <input type="hidden" value="@CurrentUser" id="LoggedInUser" />
 }
 @*@section scripts{

@@ -289,6 +289,7 @@
         <EntityTypeShape EntityType="workorderEMSModel.SelfAssessmentReview306090" Width="1.5" PointX="14.375" PointY="8.75" />
         <EntityTypeShape EntityType="workorderEMSModel.ExpectationEvaluation" Width="1.5" PointX="14.375" PointY="3.75" />
         <EntityTypeShape EntityType="workorderEMSModel.Review_MeetingSchedule" Width="1.5" PointX="14.375" PointY="13.75" />
+        <EntityTypeShape EntityType="workorderEMSModel.ChangeExpectation" Width="1.5" PointX="3.375" PointY="15.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

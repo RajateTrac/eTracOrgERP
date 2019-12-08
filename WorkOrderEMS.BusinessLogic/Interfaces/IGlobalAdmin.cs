@@ -266,7 +266,7 @@ namespace WorkOrderEMS.BusinessLogic
         List<listForEmployeeDevice> GetAllManagerList(long LocationId, long UserId);
         // BudgetDetails GetListBudgetDetails(long? LocationId, long? UserId, int? pageIndex, int? numberOfRows, string sortColumnName, string sortOrderBy, long? locationId, string textSearch, string statusType);
         List<PerformanceModel> GetListOf306090ForJSGrid(string userId, long locationId, int? pageIndex, int? numberOfRows, string sortColumnName, string sortOrderBy, string searchText, string myUserType, out long totalRecords);
-        List<GWCQUestionModel> GetGWCQuestions(string Id, string AssessmetType);
+        List<GWCQUestionModel> GetGWCQuestions(string Id, string AssessmetType,string type);
         bool saveSelfAssessment(List<GWCQUestionModel> data, string action);
         bool saveEvaluation(List<GWCQUestionModel> data, string action);
         List<PerformanceModel> GetListOfExpectationsForJSGrid(string userId, long locationId, int? pageIndex, int? numberOfRows, string sortColumnName, string sortOrderBy, string searchText, string myUserType, out long totalRecords);
@@ -277,6 +277,11 @@ namespace WorkOrderEMS.BusinessLogic
         bool SetupMeetingEmail(SetupMeeting objSetupMeeting);
         string GetMeetingDetail(string Id,string  FinYear, string FinQuarter);
         List<ReviewMeeting> GetMeetingList();
+        PerformanceModel GetManagerAssessmentDetails(string userId);
+
+        bool saveChangedExpectations(List<GWCQUestionModel> data, string action,string Manager);
+
+        List<GWCQUestionModel> GetSelfAssessmentView(string Id, string AssessmetType);
 
     }
 }
