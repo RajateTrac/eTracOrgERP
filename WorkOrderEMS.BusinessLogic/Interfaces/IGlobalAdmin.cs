@@ -5,6 +5,7 @@ using System.Web.Mvc;
 using WorkOrderEMS.Helper;
 using WorkOrderEMS.Models;
 using WorkOrderEMS.Models.CommonModels;
+using WorkOrderEMS.Models.NewAdminModel;
 using WorkOrderEMS.Models.SuperAdminModels;
 using WorkOrderEMS.Models.UserModels;
 
@@ -263,6 +264,27 @@ namespace WorkOrderEMS.BusinessLogic
         List<ContractDropdownDetailsModel> ListClientInvoicingTerm();
         List<listForEmployeeDevice> send30SecFRNotificaitonToAllManager(long LocationId, long UserId);
         List<listForEmployeeDevice> GetAllManagerList(long LocationId, long UserId);
-       // BudgetDetails GetListBudgetDetails(long? LocationId, long? UserId, int? pageIndex, int? numberOfRows, string sortColumnName, string sortOrderBy, long? locationId, string textSearch, string statusType);
+        // BudgetDetails GetListBudgetDetails(long? LocationId, long? UserId, int? pageIndex, int? numberOfRows, string sortColumnName, string sortOrderBy, long? locationId, string textSearch, string statusType);
+        List<PerformanceModel> GetListOf306090ForJSGrid(string userId, long locationId, int? pageIndex, int? numberOfRows, string sortColumnName, string sortOrderBy, string searchText, string myUserType, out long totalRecords);
+        List<GWCQUestionModel> GetGWCQuestions(string Id, string AssessmetType,string type);
+        bool saveSelfAssessment(List<GWCQUestionModel> data, string action);
+        bool saveEvaluation(List<GWCQUestionModel> data, string action);
+        List<PerformanceModel> GetListOfExpectationsForJSGrid(string userId, long locationId, int? pageIndex, int? numberOfRows, string sortColumnName, string sortOrderBy, string searchText, string myUserType, out long totalRecords);
+        bool saveExpectations(List<GWCQUestionModel> data, string action);
+        List<PerformanceModel> GetListOfQEvaluationsForJSGrid(string userId, long locationId, int? pageIndex, int? numberOfRows, string sortColumnName, string sortOrderBy, string searchText, string myUserType, out long totalRecords);
+
+        bool saveQEvaluations(List<GWCQUestionModel> data, string action);
+        bool SetupMeetingEmail(SetupMeeting objSetupMeeting);
+        string GetMeetingDetail(string Id,string  FinYear, string FinQuarter);
+        List<ReviewMeeting> GetMeetingList();
+        PerformanceModel GetManagerAssessmentDetails(string userId);
+
+        bool saveChangedExpectations(List<GWCQUestionModel> data, string action,string Manager);
+
+        List<GWCQUestionModel> GetSelfAssessmentView(string Id, string AssessmetType);
+
+        List<EventModel> GetMyEvents(string UserName,string start,string end);
+
+        bool CreateNewEvent(string Title, string NewEventDate, string NewEventTime, string NewEventDuration);
     }
 }

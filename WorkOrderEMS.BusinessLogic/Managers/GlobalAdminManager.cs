@@ -10,10 +10,12 @@ using System.Web.Mvc;
 using WorkOrderEMS.Data;
 using WorkOrderEMS.Data.DataRepository;
 using WorkOrderEMS.Data.DataRepository.AdminSection;
+using WorkOrderEMS.Data.DataRepository.NewAdminRepository;
 using WorkOrderEMS.Data.EntityModel;
 using WorkOrderEMS.Helper;
 using WorkOrderEMS.Models;
 using WorkOrderEMS.Models.CommonModels;
+using WorkOrderEMS.Models.NewAdminModel;
 using WorkOrderEMS.Models.SuperAdminModels;
 using WorkOrderEMS.Models.UserModels;
 
@@ -44,12 +46,14 @@ namespace WorkOrderEMS.BusinessLogic.Managers
         CommonMethodManager commonMethodManager;
         WorkRequestAssignmentRepository objWorkRequestAssignmentRepository;
         EmailLogRepository objEmailLogRepository = null;
+        PerformanceRepository ObjPerformanceRepository = null;
 
         private string ProfileImagePath = ConfigurationManager.AppSettings["ProfilePicPath"];
         private string HostingPrefix = Convert.ToString(System.Configuration.ConfigurationManager.AppSettings["hostingPrefix"], CultureInfo.InvariantCulture);
         private readonly string ConstantImages = ConfigurationManager.AppSettings["ConstantImages"] + "Images/constant/no-profile-pic.jpg";
         private readonly string ConstantImagesForClient = ConfigurationManager.AppSettings["ConstantImages"] + "no-profile-pic.jpg";
         private readonly string workorderimage = ConfigurationManager.AppSettings["WorkRequestImage"];
+
 
         //workorderEMSEntities _workorderEMSEntities = new workorderEMSEntities();
 
@@ -466,7 +470,7 @@ namespace WorkOrderEMS.BusinessLogic.Managers
 
                     // ObjLocationMasterModel.Services = services.toar
                 }
-                    if (ss.ManagerLocationMappings.FirstOrDefault() != null)
+                if (ss.ManagerLocationMappings.FirstOrDefault() != null)
                 {
                     ObjLocationMasterModel.ManagerModel.UserId = ss.ManagerLocationMappings.FirstOrDefault().UserRegistration.UserId;
                     ObjLocationMasterModel.ManagerModel.EmployeeID = ss.ManagerLocationMappings.FirstOrDefault().UserRegistration.EmployeeID;
@@ -1259,7 +1263,7 @@ namespace WorkOrderEMS.BusinessLogic.Managers
 
                             if (objLocation.ContractDetailsModel.OperatingHolder == null)
                             {
-                                ObjLocationMaster.OperatingCompany= objLocation.ContractDetailsModel.OperatingHolderSameId;
+                                ObjLocationMaster.OperatingCompany = objLocation.ContractDetailsModel.OperatingHolderSameId;
                             }
                             else
                             {
@@ -1276,8 +1280,8 @@ namespace WorkOrderEMS.BusinessLogic.Managers
 
                             //Added by Bhushan Dod on 11-August-2016 for objLocation.locationid null due to this not able to send email to client, manager.
                             objLocation.LocationId = ObjLocationMaster.LocationId;
-                           // objLocation.ManagerModel.Location = ObjLocationMaster.LocationId;
-                           // objLocation.ClientModel.Location = ObjLocationMaster.LocationId;
+                            // objLocation.ManagerModel.Location = ObjLocationMaster.LocationId;
+                            // objLocation.ClientModel.Location = ObjLocationMaster.LocationId;
 
                             if (ObjLocationMaster.LocationId > 0)
                             {
@@ -2355,14 +2359,14 @@ namespace WorkOrderEMS.BusinessLogic.Managers
                     {
                         objWorkRequestAssignmentModel.CustomerName = objWorkRequestAssignmentModel.CustomerName.ToTitleCase();
                     }
-                   
+
                     AutoMapper.Mapper.CreateMap<WorkRequestAssignmentModel, WorkRequestAssignment>();
                     objWorkRequestAssignment = AutoMapper.Mapper.Map(objWorkRequestAssignmentModel, objWorkRequestAssignment);
                     if (objWorkRequestAssignment.WorkRequestProjectType == 256) // May be wrong code.Comment by Bhu for while creating WO.
                     {
                         objWorkRequestAssignment.AssignByUserId = null;
                     }
-                    if(objWorkRequestAssignment.WorkRequestImage == "")
+                    if (objWorkRequestAssignment.WorkRequestImage == "")
                     {
                         objWorkRequestAssignment.WorkRequestImage = null;
                     }
@@ -2377,10 +2381,10 @@ namespace WorkOrderEMS.BusinessLogic.Managers
                     }
 
                     if (objWorkRequestAssignmentModel.CrStartTime != null)
-                    {                              
+                    {
                         objWorkRequestAssignment.ConStartTime = Convert.ToDateTime(objWorkRequestAssignmentModel.CrStartTime).ToUniversalTime();
                         //while converting time to universal time this code use because above ot getting correct Utc Time so minus some hour.
-                        
+
                         //DateTime ContTimeMinusTwoHour = objWorkRequestAssignment.ConStartTime.Value.AddHours(-2 );
                         //DateTime ContTimeMinusThirtyHour = ContTimeMinusTwoHour.AddMinutes(-30);
                         //objWorkRequestAssignment.ConStartTime = ContTimeMinusThirtyHour;
@@ -2566,7 +2570,7 @@ namespace WorkOrderEMS.BusinessLogic.Managers
             }
         }
         //Added by Ashwajit Bansod For only fetching list to display in web
-        public List<WorkRequestAssignmentModelList> GetAllWorkRequestAssignmentList(long? workRequestAssignmentId, long? requestedBy, string operationName, int? pageIndex, int? numberOfRows, string sortColumnName, string sortOrderBy, string textSearch, long LocationID, long UserID, DateTime StartDate, DateTime EndDate, string filter, string filterqrc,string filterwrtype, ObjectParameter totalRecords)
+        public List<WorkRequestAssignmentModelList> GetAllWorkRequestAssignmentList(long? workRequestAssignmentId, long? requestedBy, string operationName, int? pageIndex, int? numberOfRows, string sortColumnName, string sortOrderBy, string textSearch, long LocationID, long UserID, DateTime StartDate, DateTime EndDate, string filter, string filterqrc, string filterwrtype, ObjectParameter totalRecords)
         {
             WorkRequestAssignmentRepository _WorkRequestAssignmentRepository = new WorkRequestAssignmentRepository();
             try
@@ -3186,15 +3190,15 @@ namespace WorkOrderEMS.BusinessLogic.Managers
                         objEmailHelper.WeekDays = obj.WeekDayLst;
                         //objEmailHelper.StartTime = obj.StartTime.ToString("hh:mm tt");
                         if (obj.CrStartTime != null)
-                        //objEmailHelper.StartTime = obj.StartTime.Value.ToClientTimeZoneinDateTime().ToString("hh:mm tt");
-                        //objEmailHelper.StartTime = obj.CrStartTime.ToString("hh:mm tt"); Convert.ToDateTime(obj.CrStartTime)
-                        objEmailHelper.StartTime = Convert.ToDateTime(obj.CrStartTime).ToString("hh:mm tt");
+                            //objEmailHelper.StartTime = obj.StartTime.Value.ToClientTimeZoneinDateTime().ToString("hh:mm tt");
+                            //objEmailHelper.StartTime = obj.CrStartTime.ToString("hh:mm tt"); Convert.ToDateTime(obj.CrStartTime)
+                            objEmailHelper.StartTime = Convert.ToDateTime(obj.CrStartTime).ToString("hh:mm tt");
                         objEmailHelper.AssignedTime = obj.AssignedTime.ToString("HH:mm") + " (hh:mm)";
                         objEmailHelper.ProjectDesc = obj.ProjectDesc;
                         objEmailHelper.UserName = lst.UserName;
                         objEmailHelper.emailid = lst.UserEmail;
                         objEmailHelper.LocationName = lst.LocationName;
-                        objEmailHelper.WorkOrderImage = obj.WorkRequestImage == null ? HostingPrefix + workorderimage.Replace("~", "") + "no-asset-pic.png" : HostingPrefix + workorderimage.Replace("~", "") + obj.WorkRequestImage; 
+                        objEmailHelper.WorkOrderImage = obj.WorkRequestImage == null ? HostingPrefix + workorderimage.Replace("~", "") + "no-asset-pic.png" : HostingPrefix + workorderimage.Replace("~", "") + obj.WorkRequestImage;
                         bool IsSent = objEmailHelper.SendEmailWithTemplate();
                         if (lst.DeviceId != null)
                         {
@@ -3706,7 +3710,7 @@ namespace WorkOrderEMS.BusinessLogic.Managers
             if (status == false)
             {
                 //2 Operating , 3 Subsidery
-                 lstCompanyHolder = _workorderems.Companies.Where(x => x.CMP_COT_Id == 2 || x.CMP_COT_Id == 3 && x.CMP_IsActive == "Y").Select(x => new ContractDropdownDetailsModel()
+                lstCompanyHolder = _workorderems.Companies.Where(x => x.CMP_COT_Id == 2 || x.CMP_COT_Id == 3 && x.CMP_IsActive == "Y").Select(x => new ContractDropdownDetailsModel()
                 {
                     CompanyId = x.CMP_Id,
                     CompanyName = x.CMP_NameLegal,
@@ -3715,7 +3719,7 @@ namespace WorkOrderEMS.BusinessLogic.Managers
             }
             else
             {
-                 lstCompanyHolder = _workorderems.Companies.Where(x => x.CMP_COT_Id == 2 && x.CMP_IsActive == "Y").Select(x => new ContractDropdownDetailsModel()
+                lstCompanyHolder = _workorderems.Companies.Where(x => x.CMP_COT_Id == 2 && x.CMP_IsActive == "Y").Select(x => new ContractDropdownDetailsModel()
                 {
                     CompanyId = x.CMP_Id,
                     CompanyName = x.CMP_NameLegal,
@@ -3749,16 +3753,16 @@ namespace WorkOrderEMS.BusinessLogic.Managers
             {
                 try
                 {
-                   //var tt= Context.UserRegistrations.Join(Context.ManagerLocationMappings, q => q.UserId, u => u.ManagerUserId, (q, u) => new { q, u }).
-                   //                   Where(x => (x.u.IsDeleted == false)
-                   //                   && (x.u.LocationId == LocationId)).
-                   //                     Select(x =>  new listForEmployeeDevice
-                   //                     {
-                   //                         DeviceId = x.q.DeviceId,
-                   //                         UserId = x.q.UserId,
-                   //                         LocationName = x.u.LocationMaster.LocationName
-                   //                     }).Distinct().ToList();
-                    List<listForEmployeeDevice> a = (from ur in Context.UserRegistrations      
+                    //var tt= Context.UserRegistrations.Join(Context.ManagerLocationMappings, q => q.UserId, u => u.ManagerUserId, (q, u) => new { q, u }).
+                    //                   Where(x => (x.u.IsDeleted == false)
+                    //                   && (x.u.LocationId == LocationId)).
+                    //                     Select(x =>  new listForEmployeeDevice
+                    //                     {
+                    //                         DeviceId = x.q.DeviceId,
+                    //                         UserId = x.q.UserId,
+                    //                         LocationName = x.u.LocationMaster.LocationName
+                    //                     }).Distinct().ToList();
+                    List<listForEmployeeDevice> a = (from ur in Context.UserRegistrations
                                                      join elm in Context.ManagerLocationMappings
                                                             on ur.UserId equals elm.ManagerUserId
                                                      join lm in Context.LocationMasters
@@ -3780,11 +3784,299 @@ namespace WorkOrderEMS.BusinessLogic.Managers
                 }
             }
         }
+        /// <summary>GetListOf306090ForJSGrid
+        /// <Modified By>mayur sahu</Modified> 
+        /// <CreatedFor>To Get Performance 306090 list</CreatedFor>
+        /// <CreatedOn>13-Oct-2019</CreatedOn>
+        /// </summary>
+        /// <param name="UserId"></param>
+        /// <param name="PageIndex"></param>
+        /// <param name="NumberOfRows"></param>
+        /// <param name="SortColumnName"></param>
+        /// <param name="SortOrderBy"></param>
+        /// <param name="SearchText"></param>
+        /// <returns></returns>
+        public List<PerformanceModel> GetListOf306090ForJSGrid(string userId, long locationId, int? pageIndex, int? numberOfRows, string sortColumnName, string sortOrderBy, string searchText, string myUserType, out long totalRecords)
+        {
+            ObjUserRepository = new UserRepository();
+            try
+            {
+
+                return ObjUserRepository.GetListOf306090ForJSGrid(userId, locationId, myUserType, pageIndex, numberOfRows, sortColumnName, sortOrderBy, searchText, out totalRecords);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+        }
+        ///
+        public List<GWCQUestionModel> GetGWCQuestions(string Id, string AssessmetType, string type)
+        {
+            ObjUserRepository = new UserRepository();
+            try
+            {
+
+                return ObjUserRepository.GetGWCQuestions(Id, AssessmetType, type);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+        }
+        public bool saveSelfAssessment(List<GWCQUestionModel> data, string action)
+        {
+
+            ObjUserRepository = new UserRepository();
+            try
+            {
+
+                return ObjUserRepository.saveSelfAssessment(data, action);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        public bool saveEvaluation(List<GWCQUestionModel> data, string action)
+        {
+
+            ObjUserRepository = new UserRepository();
+            try
+            {
+
+                return ObjUserRepository.saveEvaluation(data, action);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>GetListOfExpectationsForJSGrid
+        /// <Modified By>mayur sahu</Modified> 
+        /// <CreatedFor>To Get Performance 306090 list</CreatedFor>
+        /// <CreatedOn>13-Oct-2019</CreatedOn>
+        /// </summary>
+        /// <param name="UserId"></param>
+        /// <param name="PageIndex"></param>
+        /// <param name="NumberOfRows"></param>
+        /// <param name="SortColumnName"></param>
+        /// <param name="SortOrderBy"></param>
+        /// <param name="SearchText"></param>
+        /// <returns></returns>
+        public List<PerformanceModel> GetListOfExpectationsForJSGrid(string userId, long locationId, int? pageIndex, int? numberOfRows, string sortColumnName, string sortOrderBy, string searchText, string myUserType, out long totalRecords)
+        {
+            ObjUserRepository = new UserRepository();
+            try
+            {
+
+                return ObjUserRepository.GetListOfExpectationsForJSGrid(userId, locationId, myUserType, pageIndex, numberOfRows, sortColumnName, sortOrderBy, searchText, out totalRecords);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+        }
+        public bool saveExpectations(List<GWCQUestionModel> data, string action)
+        {
+
+            ObjUserRepository = new UserRepository();
+            try
+            {
+
+                return ObjUserRepository.saveExpectations(data, action);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        /// <summary>GetListOfQEvaluationsForJSGrid
+        /// <Modified By>mayur sahu</Modified> 
+        /// <CreatedFor>To Get Performance 306090 list</CreatedFor>
+        /// <CreatedOn>13-Oct-2019</CreatedOn>
+        /// </summary>
+        /// <param name="UserId"></param>
+        /// <param name="PageIndex"></param>
+        /// <param name="NumberOfRows"></param>
+        /// <param name="SortColumnName"></param>
+        /// <param name="SortOrderBy"></param>
+        /// <param name="SearchText"></param>
+        /// <returns></returns>
+        public List<PerformanceModel> GetListOfQEvaluationsForJSGrid(string userId, long locationId, int? pageIndex, int? numberOfRows, string sortColumnName, string sortOrderBy, string searchText, string myUserType, out long totalRecords)
+        {
+            ObjUserRepository = new UserRepository();
+            try
+            {
+
+                return ObjUserRepository.GetListOfQEvaluationsForJSGrid(userId, locationId, myUserType, pageIndex, numberOfRows, sortColumnName, sortOrderBy, searchText, out totalRecords);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+        }
+
+        public bool saveQEvaluations(List<GWCQUestionModel> data, string action)
+        {
+            ObjUserRepository = new UserRepository();
+            try
+            {
+                return ObjUserRepository.saveQEvaluations(data, action);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        public bool SetupMeetingEmail(SetupMeeting objSetupMeeting)
+        {
+            EmailHelper objEmailHelper = new EmailHelper();
+            bool result = false;
+            ObjPerformanceRepository = new PerformanceRepository();
+            ObjUserRepository = new UserRepository();
+            try
+            {
+                objEmailHelper.Subject = objSetupMeeting.Subject;
+                objEmailHelper.EmailTo = objSetupMeeting.EmailTo;
+                objEmailHelper.emailid = ObjUserRepository.GetUserEmail(objSetupMeeting.ReceipientEmailId);
+                objEmailHelper.EmailFrom = objSetupMeeting.EmailFrom;
+                objEmailHelper.StartTime = objSetupMeeting.StartTime;
+                objEmailHelper.StartDate = objSetupMeeting.StartDate;
+                objEmailHelper.Body = objSetupMeeting.Body;
+                objEmailHelper.MailType = "SETUPEVALUATIONMEETING";
+                objEmailHelper.SendEmailWithTemplate();
+                ObjPerformanceRepository.SaveMeetingDetails(objSetupMeeting);
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return result;
+        }
+        public string GetMeetingDetail(string Id, string FinYear, string FinQuarter)
+        {
+            string result = "MEETINGNOTFOUND";
+            ObjPerformanceRepository = new PerformanceRepository();
+            try
+            {
+                var obj = ObjPerformanceRepository.GetMeetingDetail(Id, FinYear, FinQuarter);
+                if (obj != null)
+                {
+                    result = (DateTime.UtcNow > obj.RMS_InterviewDateTime) ? "MEETINGCOMPLETED" : "MEETINGNOTCOMPLETED";
+                }
+
+            }
+            catch (Exception)
+            {
+
+                result = "MEETINGNOTFOUND";
+            }
+            return result;
+        }
+        public List<ReviewMeeting> GetMeetingList()
+        {
+            ObjPerformanceRepository = new PerformanceRepository();
+            List<ReviewMeeting> MeetingList=new List<ReviewMeeting>();
+            try
+            {
+                MeetingList= ObjPerformanceRepository.GetMeetingList();
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return MeetingList;
+        }
+        public PerformanceModel GetManagerAssessmentDetails(string userId)
+        {
+            ObjUserRepository = new UserRepository();
+            PerformanceModel model = new PerformanceModel();
+            try
+            {
+                model= ObjUserRepository.GetManagerAssessmentDetails(userId);
+                if (model != null)
+                {
+                    model.EMP_Photo = (model.EMP_Photo == null || model.EMP_Photo.Trim() == "") ? HostingPrefix + ConstantImagesForClient.Replace("~", "") : HostingPrefix + ProfileImagePath.Replace("~", "") + model.EMP_Photo;
+
+                    
+                }
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return model;
+        }
+        public bool saveChangedExpectations(List<GWCQUestionModel> data, string action,string Manager)
+        {
+
+            ObjUserRepository = new UserRepository();
+            try
+            {
+                return ObjUserRepository.saveChangedExpectations(data, action, Manager);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public List<GWCQUestionModel> GetSelfAssessmentView(string Id, string AssessmetType)
+        {
+            ObjUserRepository = new UserRepository();
+            try
+            {
+                return ObjUserRepository.GetSelfAssessmentView(Id, AssessmetType);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public List<EventModel> GetMyEvents(string UserName,string start,string end) {
+
+            PerformanceRepository repo = new PerformanceRepository();
+            try
+            {
+                return repo.GetMyEvents(UserName,start,end);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+        }
+        public bool CreateNewEvent(string Title, string NewEventDate, string NewEventTime, string NewEventDuration) {
+            PerformanceRepository repo = new PerformanceRepository();
+            try
+            {
+                return repo.CreateNewEvent(Title, NewEventDate, NewEventTime, NewEventDuration);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        
+        }
 
     }
 
     public class loc
     {
         public string LocationId { get; set; }
-    }   
+    }
+
+
 }

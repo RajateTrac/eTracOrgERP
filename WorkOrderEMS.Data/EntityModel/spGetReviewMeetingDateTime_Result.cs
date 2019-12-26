@@ -11,9 +11,14 @@ namespace WorkOrderEMS.Data.EntityModel
 {
     using System;
     
-    public partial class sp_GetCompany_ContractDocument_Result
+    public partial class spGetReviewMeetingDateTime_Result
     {
-        public string CNT_ContractDocument { get; set; }
-        public string CMP_CompanyDocument { get; set; }
+        public long RMS_Id { get; set; }
+        public string RMS_EMP_EmployeeId { get; set; }
+        public string RMS_FinencialYear { get; set; }
+        public string RMS_FinQuarter { get; set; }
+        public Nullable<System.DateTime> RMS_InterviewDateTime { get; set; }
+        public Nullable<System.DateTime> RMS_Date { get; set; }
+        public string RMS_IsActive { get; set; }
     }
 }

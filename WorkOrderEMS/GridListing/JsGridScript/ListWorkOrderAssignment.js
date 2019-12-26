@@ -154,7 +154,18 @@ var $_OperationName = "", $_workRequestAssignmentId = 0, $_UserId = 0, $_Request
     //    }
     //})
     //basic jsgrid table
-
+    $.ajax({
+        type: "GET",
+        url: '../GlobalAdmin/GetUnseenNotifications',
+        datatype: 'json',
+        contentType: "application/json",
+        success: function (response) {
+            $("#UrgentWorkOrdersList").html(response);
+        },
+        error: function (data) {
+            debugger;
+        }
+    });
 
 })(jQuery);
 $(document).ready(function () {
