@@ -138,6 +138,8 @@ namespace WorkOrderEMS.Data.EntityModel
         public virtual DbSet<ExpectationEvaluation> ExpectationEvaluations { get; set; }
         public virtual DbSet<Review_MeetingSchedule> Review_MeetingSchedule { get; set; }
         public virtual DbSet<ChangeExpectation> ChangeExpectations { get; set; }
+        public virtual DbSet<TblCalendarEvent> TblCalendarEvents { get; set; }
+        public virtual DbSet<Appointment> Appointments { get; set; }
     
         public virtual ObjectResult<CommonQeriesByVijay_Result> CommonQeriesByVijay()
         {

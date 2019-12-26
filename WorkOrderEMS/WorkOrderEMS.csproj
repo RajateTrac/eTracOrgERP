@@ -1210,8 +1210,11 @@
     <Content Include="Content\Dashboard\plugins\flot\jquery.flot.time.min.js" />
     <Content Include="Content\Dashboard\plugins\fullcalendar\fullcalendar.css" />
     <Content Include="Content\Dashboard\plugins\fullcalendar\fullcalendar.js" />
-    <Content Include="Content\Dashboard\plugins\fullcalendar\fullcalendar.min.css" />
     <Content Include="Content\Dashboard\plugins\fullcalendar\fullcalendar.min.js" />
+    <Content Include="Content\Dashboard\plugins\fullcalendar\_fullcalendar.css" />
+    <Content Include="Content\Dashboard\plugins\fullcalendar\_fullcalendar.js" />
+    <Content Include="Content\Dashboard\plugins\fullcalendar\fullcalendar.min.css" />
+    <Content Include="Content\Dashboard\plugins\fullcalendar\_fullcalendar.min.js" />
     <Content Include="Content\Dashboard\plugins\fullcalendar\fullcalendar.print.css" />
     <Content Include="Content\Dashboard\plugins\iCheck\all.css" />
     <Content Include="Content\Dashboard\plugins\iCheck\flat\aero%402x.png" />
@@ -5893,6 +5896,11 @@
     <Content Include="ReportPDF\FullPageReport\eScanner\QRCScan20170628231937763.pdf" />
     <Content Include="Scripts\Calendar\bootstrap\package.json" />
     <Content Include="Scripts\Calendar\bootstrap\README.md" />
+    <Content Include="Scripts\listmain.js" />
+    <Content Include="Scripts\timegridmain.js" />
+    <Content Include="Scripts\daygridmain.js" />
+    <Content Include="Scripts\interactionmain.js" />
+    <Content Include="Scripts\coremain.js" />
     <Content Include="Scripts\Calendar\core\package.json" />
     <Content Include="Scripts\Calendar\core\README.md" />
     <Content Include="Scripts\Calendar\daygrid\package.json" />
@@ -6838,6 +6846,7 @@
     <Content Include="Views\Customer\Scripts\jquery-1.10.2.min.map" />
     <Content Include="Views\NewAdmin\MySchedules.cshtml" />
     <Content Include="Views\NewAdmin\SelfAssessmentView.cshtml" />
+    <Content Include="Views\NewAdmin\GetCalendarView.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -6924,19 +6933,6 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
-  </ItemGroup>
-  <ItemGroup>
-    <TypeScriptCompile Include="Scripts\Calendar\bootstrap\main.d.ts" />
-    <TypeScriptCompile Include="Scripts\Calendar\core\main.d.ts" />
-    <TypeScriptCompile Include="Scripts\Calendar\daygrid\main.d.ts" />
-    <TypeScriptCompile Include="Scripts\Calendar\google-calendar\main.d.ts" />
-    <TypeScriptCompile Include="Scripts\Calendar\interaction\main.d.ts" />
-    <TypeScriptCompile Include="Scripts\Calendar\list\main.d.ts" />
-    <TypeScriptCompile Include="Scripts\Calendar\luxon\main.d.ts" />
-    <TypeScriptCompile Include="Scripts\Calendar\moment-timezone\main.d.ts" />
-    <TypeScriptCompile Include="Scripts\Calendar\moment\main.d.ts" />
-    <TypeScriptCompile Include="Scripts\Calendar\rrule\main.d.ts" />
-    <TypeScriptCompile Include="Scripts\Calendar\timegrid\main.d.ts" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

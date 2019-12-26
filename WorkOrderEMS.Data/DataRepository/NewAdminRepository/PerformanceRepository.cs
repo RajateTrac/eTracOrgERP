@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using WorkOrderEMS.Data.EntityModel;
 using WorkOrderEMS.Models.NewAdminModel;
+using System.Web;
+using System.Data.Entity.Core.Objects;
 
 namespace WorkOrderEMS.Data.DataRepository.NewAdminRepository
 {
@@ -70,7 +70,7 @@ namespace WorkOrderEMS.Data.DataRepository.NewAdminRepository
                     ManagerPhoto = x.ManagerPhoto,
                     ManagerName = x.ManagerName,
                     EmployeePhoto = x.EmployeePhoto,
-                    PRMeetingDateTime = x.PRMeetingDateTime.HasValue?new DateTimeOffset(x.PRMeetingDateTime.Value, TimeSpan.FromHours(0)).ToLocalTime().DateTime: (DateTime?)null
+                    PRMeetingDateTime = x.PRMeetingDateTime.HasValue ? new DateTimeOffset(x.PRMeetingDateTime.Value, TimeSpan.FromHours(0)).ToLocalTime().DateTime : (DateTime?)null
                 }).ToList();
             }
             catch (Exception)
@@ -78,5 +78,68 @@ namespace WorkOrderEMS.Data.DataRepository.NewAdminRepository
                 throw;
             }
         }
+
+        public List<EventModel> GetMyEvents(string UserName,string start,string end)
+        {
+            List<EventModel> result = new List<EventModel>();
+            try
+            {
+                var fromDate = Convert.ToDateTime(start);
+                var toDate = Convert.ToDateTime(end);
+                using (objworkorderEMSEntities=new workorderEMSEntities())
+                {
+                    var rslt = objworkorderEMSEntities.Appointments.Where(s => s.DateTimeScheduled >= fromDate && EntityFunctions.AddMinutes(s.DateTimeScheduled, s.AppointmentLength) <= toDate);
+                    foreach (var item in rslt)
+                    {
+                        EventModel rec = new EventModel();
+                        rec.id = item.ID;
+                       // rec.SomeImportantKey = item.SomeImportantKey;
+                        rec.start = item.DateTimeScheduled.ToString("s"); // "s" is a preset format that outputs as: "2009-02-27T12:12:22"
+                        rec.end = item.DateTimeScheduled.AddMinutes(item.AppointmentLength).ToString("s"); // field AppointmentLength is in minutes
+                        rec.title = item.Title + " - " + item.AppointmentLength.ToString() + " mins";
+                        //rec.StatusString = Enums.GetName<AppointmentStatus>((AppointmentStatus)item.StatusENUM);
+                        //rec.StatusColor = Enums.GetEnumDescription<AppointmentStatus>(rec.StatusString);
+                        rec.StatusString = "#FF8000:BOOKED";
+                        rec.StatusColor = "#FF8000:BOOKED";
+                        string ColorCode = rec.StatusColor.Substring(0, rec.StatusColor.IndexOf(":"));
+                        rec.ClassName = rec.StatusColor.Substring(rec.StatusColor.IndexOf(":") + 1, rec.StatusColor.Length - ColorCode.Length - 1);
+                        rec.StatusColor = ColorCode;
+                        result.Add(rec);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return result;
+        }
+        private static DateTime ConvertFromUnixTimestamp(double timestamp)
+        {
+            var origin = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+            return origin.AddSeconds(timestamp);
+        }
+        public bool CreateNewEvent(string Title, string NewEventDate, string NewEventTime, string NewEventDuration)
+        {
+            bool result = false;
+            Appointment obj = new Appointment();
+            try
+            {
+                obj.Title = Title;
+                obj.DateTimeScheduled = DateTime.ParseExact(NewEventDate + " " + NewEventTime, "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
+                obj.AppointmentLength = Int32.Parse(NewEventDuration);
+                objworkorderEMSEntities.Appointments.Add(obj);
+                objworkorderEMSEntities.SaveChanges();
+                result = true;
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return result;
+        }
+
     }
 }

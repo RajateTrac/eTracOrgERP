@@ -277,10 +277,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WorkOrderEMS.Data\WorkOrderEMS.Data.csproj">
-      <Project>{ad61bc48-89fc-4811-99bf-c96fcafa5e1b}</Project>
-      <Name>WorkOrderEMS.Data</Name>
-    </ProjectReference>
     <ProjectReference Include="..\WorkOrderEMS.Helper\WorkOrderEMS.Helper.csproj">
       <Project>{e9e7b445-9a09-4309-96fd-28b0c46b59c0}</Project>
       <Name>WorkOrderEMS.Helper</Name>

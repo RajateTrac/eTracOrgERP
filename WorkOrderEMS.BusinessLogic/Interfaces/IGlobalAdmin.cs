@@ -283,5 +283,8 @@ namespace WorkOrderEMS.BusinessLogic
 
         List<GWCQUestionModel> GetSelfAssessmentView(string Id, string AssessmetType);
 
+        List<EventModel> GetMyEvents(string UserName,string start,string end);
+
+        bool CreateNewEvent(string Title, string NewEventDate, string NewEventTime, string NewEventDuration);
     }
 }

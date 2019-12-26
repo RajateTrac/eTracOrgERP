@@ -4043,6 +4043,34 @@ namespace WorkOrderEMS.BusinessLogic.Managers
                 throw;
             }
         }
+
+        public List<EventModel> GetMyEvents(string UserName,string start,string end) {
+
+            PerformanceRepository repo = new PerformanceRepository();
+            try
+            {
+                return repo.GetMyEvents(UserName,start,end);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+        }
+        public bool CreateNewEvent(string Title, string NewEventDate, string NewEventTime, string NewEventDuration) {
+            PerformanceRepository repo = new PerformanceRepository();
+            try
+            {
+                return repo.CreateNewEvent(Title, NewEventDate, NewEventTime, NewEventDuration);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        
+        }
+
     }
 
     public class loc
