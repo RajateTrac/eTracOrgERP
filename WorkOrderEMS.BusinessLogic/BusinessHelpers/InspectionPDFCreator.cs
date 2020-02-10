@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web;
 using WorkOrderEMS.BusinessLogic.Managers.eFleet;
 using WorkOrderEMS.Data.DataRepository;
@@ -10,7 +8,6 @@ using WorkOrderEMS.Data.EntityModel;
 using WorkOrderEMS.Helper;
 using WorkOrderEMS.Helper.SerializationHelper;
 using WorkOrderEMS.Models;
-using WorkOrderEMS.Models.ServiceModel;
 
 namespace WorkOrderEMS.BusinessLogic.BusinessHelpers
 {
