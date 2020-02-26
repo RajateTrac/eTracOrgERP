@@ -9,7 +9,8 @@ namespace WorkOrderEMS.Models.Employee
 {
 	public class W4FormModel
 	{
-		public long? W4FId { get; set; }
+        public long ApplicantId { get; set; }
+        public long? W4FId { get; set; }
 		[Required(ErrorMessage ="*")]
 		public string FirstName { get; set; }
 		public string MiddleName { get; set; }
@@ -40,6 +41,7 @@ namespace WorkOrderEMS.Models.Employee
         public Nullable<System.DateTime> w4F_9 { get; set; }
         public string w4F_10 { get; set; }
         public string EmployeeMaritalStatus { get; set; }
+        public bool IsSignature { get; set; }
     }
 	public class MeritalStatus
 	{

@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WorkOrderEMS.Models;
+using WorkOrderEMS.Models.Employee;
+using WorkOrderEMS.Models.NewAdminModel;
 
 namespace WorkOrderEMS.BusinessLogic.Interfaces
 {
@@ -18,5 +20,16 @@ namespace WorkOrderEMS.BusinessLogic.Interfaces
         bool SaveAssets(AssetsAllocationModel model);
         bool SendOffer(OfferModel model);
         bool SaveApplicantData(CommonApplicantModel Obj);
+        bool UpdateContactDetailsApplicant(ContactListModel model, List<ContactModel> lstModel);
+        ContactListModel GetContactListByApplicantId(long ApplicantId);
+        BackgroundCheckForm GetApplicantByApplicantId(long ApplicantId);
+        bool SendApplicantInfoForBackgrounddCheck(BackgroundCheckForm model);
+        I9FormModel GetI9FormData(long ApplicantId, long UserId);
+        bool SetI9Form(long UserId, long ApplicantId, I9FormModel model);
+        Desclaimer GetSignature(long ApplicantId);
+        bool SaveDesclaimerData(Desclaimer obj);
+        bool SaveSelfIdentification(SelfIdentificationModel obj);
+        SelfIdentificationModel GetSelfIdentification(string EmployeeId);
+        bool SaveApplicantFunFacts(ApplicantFunFactModel obj);
     }
 }

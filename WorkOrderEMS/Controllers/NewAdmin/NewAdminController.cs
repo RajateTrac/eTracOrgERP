@@ -38,6 +38,7 @@ namespace WorkOrderEMS.Controllers.NewAdmin
         private readonly IQRCSetup _IQRCSetup;
         private readonly IePeopleManager _IePeopleManager;
         private readonly IApplicantManager _IApplicantManager;
+        private readonly IGuestUser _IGuestUserRepository;
         private readonly string HostingPrefix = Convert.ToString(System.Configuration.ConfigurationManager.AppSettings["hostingPrefix"], CultureInfo.InvariantCulture);
         private readonly string WorkRequestImagepath = ConfigurationManager.AppSettings["WorkRequestImage"];
         private readonly string ProfilePicPath = ConfigurationManager.AppSettings["ProfilePicPath"];
@@ -46,7 +47,7 @@ namespace WorkOrderEMS.Controllers.NewAdmin
 
 
         DBUtilities DB = new DBUtilities();
-        public NewAdminController(IDepartment _IDepartment, IGlobalAdmin _GlobalAdminManager, ICommonMethod _ICommonMethod, IQRCSetup _IQRCSetup, IePeopleManager _IePeopleManager, IApplicantManager _IApplicantManager)
+        public NewAdminController(IDepartment _IDepartment, IGlobalAdmin _GlobalAdminManager, ICommonMethod _ICommonMethod, IQRCSetup _IQRCSetup, IePeopleManager _IePeopleManager, IApplicantManager _IApplicantManager, IGuestUser _IGuestUserRepository)
         {
             this._IDepartment = _IDepartment;
             this._GlobalAdminManager = _GlobalAdminManager;
@@ -54,6 +55,7 @@ namespace WorkOrderEMS.Controllers.NewAdmin
             this._IQRCSetup = _IQRCSetup;
             this._IePeopleManager = _IePeopleManager;
             this._IApplicantManager = _IApplicantManager;
+            this._IGuestUserRepository = _IGuestUserRepository;
         }
         public ActionResult Index()
         {
@@ -536,7 +538,6 @@ namespace WorkOrderEMS.Controllers.NewAdmin
         }
         [HttpPost]
         public ActionResult userAssessmentView(string Id, string Assesment, string Name, string Image, string JobTitle, string Department, string LocationName)
-
         {
             eTracLoginModel ObjLoginModel = null;
             string Employee_Id = string.Empty;
@@ -556,7 +557,7 @@ namespace WorkOrderEMS.Controllers.NewAdmin
                 Employee_Id = Id;
             }
 
-            ListQuestions = _GlobalAdminManager.GetGWCQuestions(Employee_Id, Assesment);
+            ListQuestions = _GlobalAdminManager.GetGWCQuestions(Employee_Id, Assesment,null);
             ViewData["employeeInfo"] = new GWCQUestionModel() { EmployeeName = Name, AssessmentType = Assesment, Image = Image, JobTitle = JobTitle, Department = Department, LocationName = LocationName };
             return PartialView("userAssessmentView", ListQuestions);
         }
@@ -685,8 +686,8 @@ namespace WorkOrderEMS.Controllers.NewAdmin
             {
                 Employee_Id = Id;
             }
-            ListQuestions = _GlobalAdminManager.GetGWCQuestions(Employee_Id, Assesment == "30" ? "31" : Assesment == "60" ? "61" : "91");
-            ViewData["employeeInfo"] = new GWCQUestionModel() { EmployeeName = Name, AssessmentType = Assesment, Image = Image, JobTitle = JobTitle, Department = Department, LocationName = LocationName };
+            ListQuestions = _GlobalAdminManager.GetGWCQuestions(Employee_Id, Assesment=="30"?"31":Assesment=="60"?"61":"91",null);
+            ViewData["employeeInfo"] = new GWCQUestionModel(){ EmployeeName=Name,AssessmentType=Assesment,Image=Image, JobTitle=JobTitle,Department=Department,LocationName=LocationName }; 
             return PartialView("userEvaluationView", ListQuestions);
         }
 
@@ -806,16 +807,17 @@ namespace WorkOrderEMS.Controllers.NewAdmin
                 Employee_Id = Id;
             }
 
-            ListQuestions = _GlobalAdminManager.GetGWCQuestions(Employee_Id, Assesment);
+            ListQuestions = _GlobalAdminManager.GetGWCQuestions(Employee_Id, Assesment,"Expectation");
             foreach (var item in ListQuestions)
             {
                 item.EEL_FinencialYear = FinYear;
                 item.EEL_FinQuarter = FinQuarter;
                 item.AssessmentType = Assesment;
+                item.EmployeeId = Employee_Id;
 
 
             }
-            ViewData["employeeInfo"] = new GWCQUestionModel() { EmployeeName = Name, AssessmentType = Assesment, Image = Image, JobTitle = JobTitle, Department = Department, LocationName = LocationName };
+            ViewData["employeeInfo"] = new GWCQUestionModel() { EmployeeId= Employee_Id, EmployeeName = Name, AssessmentType = Assesment, Image = Image, JobTitle = JobTitle, Department= Department, LocationName= LocationName };
             return PartialView("userExpectationsView", ListQuestions);
         }
 
@@ -1285,7 +1287,7 @@ namespace WorkOrderEMS.Controllers.NewAdmin
         }
 
         [HttpPost]
-        public ActionResult SaveApplicant(EmployeeVIewModel model)
+        public ActionResult SaveApplicant(CommonApplicantModel model)
         {
             eTracLoginModel ObjLoginModel = null;
             bool isSaved = false;
@@ -1298,16 +1300,18 @@ namespace WorkOrderEMS.Controllers.NewAdmin
             {
                 if (model != null)
                 {
-                    if (model.ApplicantId == 0)
-                    {
-                    //    model.Action = "I";
-                    //    isSaved = _IApplicantManager.SaveAssets(model);
+                    //if (model.ApplicantId == 0)
+                    //{
+                    ////    model.Action = "I";
+                    ////    isSaved = _IApplicantManager.SaveAssets(model);
                     //}
                     //else
                     //{
-                    //    model.Action = "U";
-                    //    isSaved = _IApplicantManager.SaveAssets(model);
-                    }
+                        returnModel = _IGuestUserRepository.GetW4Form(ObjLoginModel.UserId);
+                        //    model.Action = "U";
+                        //    isSaved = _IApplicantManager.SaveAssets(model);
+
+                    //}
                 }
             }
             catch (Exception ex)
@@ -1338,7 +1342,7 @@ namespace WorkOrderEMS.Controllers.NewAdmin
                 Employee_Id = Id;
             }
 
-            ListQuestions = _GlobalAdminManager.GetGWCQuestions(Employee_Id, Assesment);
+            ListQuestions = _GlobalAdminManager.GetGWCQuestions(Employee_Id, Assesment,"Evaluation");
             foreach (var item in ListQuestions)
             {
                 item.EEL_FinencialYear = FinYear;
@@ -1639,12 +1643,11 @@ namespace WorkOrderEMS.Controllers.NewAdmin
         ///17/11/2019
         public JsonResult GetMeetingList()
         {
-            var MeetingList = new List<ReviewMeeting>();
-
+            List<ReviewMeeting> MeetingList;
             try
             {
-                var lst = _GlobalAdminManager.GetMeetingList();
-                foreach (var ITAdmin in lst)
+                MeetingList = _GlobalAdminManager.GetMeetingList();
+                foreach (var ITAdmin in MeetingList)
                 {
                     ITAdmin.ManagerPhoto = (ITAdmin.ManagerPhoto == "" || ITAdmin.ManagerPhoto == "null") ? HostingPrefix + ConstantImages.Replace("~", "") + "no-profile-pic.jpg" : HostingPrefix + ProfilePicPath.Replace("~/", "") + ITAdmin.ManagerPhoto;
                     ITAdmin.EmployeePhoto = (ITAdmin.EmployeePhoto == "" || ITAdmin.EmployeePhoto == "null") ? HostingPrefix + ConstantImages.Replace("~", "") + "no-profile-pic.jpg" : HostingPrefix + ProfilePicPath.Replace("~/", "") + ITAdmin.EmployeePhoto;
@@ -1802,5 +1805,110 @@ namespace WorkOrderEMS.Controllers.NewAdmin
 
 
         #endregion
+		public ActionResult MySchedules() {
+            try
+            {
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return View();
+        
+        }
+        [HttpGet]
+        public ActionResult GetManagerAssessmentDetails()
+        {
+            eTracLoginModel ObjLoginModel = null;
+            PerformanceModel model = new PerformanceModel();
+            if (Session["eTrac"] != null)
+            {
+                ObjLoginModel = (eTracLoginModel)(Session["eTrac"]);
+            }
+            try
+            {
+                model = _GlobalAdminManager.GetManagerAssessmentDetails(ObjLoginModel.UserName);
+            }
+            catch (Exception ex)
+            {
+            }
+            return Json(model, JsonRequestBehavior.AllowGet);
+
+        }
+
+        [HttpPost]
+        public JsonResult insertChangedExpectations(List<GWCQUestionModel> data)
+        {
+            eTracLoginModel ObjLoginModel = null;
+            bool result = false;
+            if (Session["eTrac"] != null)
+            {
+                ObjLoginModel = (eTracLoginModel)(Session["eTrac"]);
+            }
+            try
+            {
+                result = _GlobalAdminManager.saveChangedExpectations(data, null, ObjLoginModel.UserName);
+            }
+            catch (Exception ex)
+            { return Json(ex.Message, JsonRequestBehavior.AllowGet); }
+            return Json(result, JsonRequestBehavior.AllowGet);
+
+        }
+
+
+        [HttpPost]
+        public JsonResult updateChangedExpectations(List<GWCQUestionModel> data)
+        {
+            eTracLoginModel ObjLoginModel = null;
+            bool result = false;
+            if (Session["eTrac"] != null)
+            {
+                ObjLoginModel = (eTracLoginModel)(Session["eTrac"]);
+            }
+            try
+            {
+                result = _GlobalAdminManager.saveChangedExpectations(data, "S", ObjLoginModel.UserName);
+            }
+            catch (Exception ex)
+            { return Json(ex.Message, JsonRequestBehavior.AllowGet); }
+            return Json(result, JsonRequestBehavior.AllowGet);
+
+        }
+        [HttpPost]
+        public ActionResult SelfAssessmentView(string Id, string Assesment, string Name, string Image, string JobTitle, string FinYear, string FinQuarter, string Department, string LocationName)
+        {
+            eTracLoginModel ObjLoginModel = null;
+            string Employee_Id = string.Empty;
+            GlobalAdminManager _GlobalAdminManager = new GlobalAdminManager();
+            var details = new LocationDetailsModel();
+            if (Session["eTrac"] != null)
+            {
+                ObjLoginModel = (eTracLoginModel)(Session["eTrac"]);
+            }
+            List<GWCQUestionModel> ListQuestions = new List<GWCQUestionModel>();
+            try
+            {
+                Employee_Id = Cryptography.GetDecryptedData(Id, true);
+            }
+            catch (Exception e)
+            {
+                Employee_Id = Id;
+            }
+
+            ListQuestions = _GlobalAdminManager.GetSelfAssessmentView(Employee_Id, Assesment);
+            foreach (var item in ListQuestions)
+            {
+                item.EEL_FinencialYear = FinYear;
+                item.EEL_FinQuarter = FinQuarter;
+                item.AssessmentType = Assesment;
+                item.EmployeeId = Employee_Id;
+
+
+            }
+            ViewData["employeeInfo"] = new GWCQUestionModel() { EmployeeName = Name, AssessmentType = Assesment, Image = Image, JobTitle = JobTitle, Department = Department, LocationName = LocationName };
+            return PartialView("SelfAssessmentView", ListQuestions);
+        }
     }
 }

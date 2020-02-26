@@ -268,7 +268,7 @@ namespace WorkOrderEMS.BusinessLogic
         List<listForEmployeeDevice> GetAllManagerList(long LocationId, long UserId);
 
         List<MyOpeningModel> GetMyOpenings(long PostingId);
-        List<JobPosting> GetJobPostong(long userId);
+        List<WorkOrderEMS.Models.NewAdminModel.JobPosting> GetJobPostong(long userId);
         List<spGetApplicantInfo_Result2> GetApplicantInfo(long userId);
         bool SaveApplicantInfo(OnboardingDetailRequestModel onboardingDetailRequestModel);
         bool SaveGuestEmployeeBasicInfo(GuestEmployeeBasicInfoRequestModel guestEmployeeBasicInfoRequestModel);
@@ -282,7 +282,6 @@ namespace WorkOrderEMS.BusinessLogic
         int GetScore(long ApplicantId);
         bool CheckIfAllRespondedForQuestion(long ApplicantId, long QusId);
         List<PerformanceModel> GetListOf306090ForJSGrid(string userId, long locationId, int? pageIndex, int? numberOfRows, string sortColumnName, string sortOrderBy, string searchText, string myUserType, out long totalRecords);
-        List<GWCQUestionModel> GetGWCQuestions(string Id, string AssessmetType);
         bool saveSelfAssessment(List<GWCQUestionModel> data, string action);
         bool saveEvaluation(List<GWCQUestionModel> data, string action);
         List<PerformanceModel> GetListOfExpectationsForJSGrid(string userId, long locationId, int? pageIndex, int? numberOfRows, string sortColumnName, string sortOrderBy, string searchText, string myUserType, out long totalRecords);
@@ -305,5 +304,11 @@ namespace WorkOrderEMS.BusinessLogic
         List<EventModel> GetOutlookMeetingDetails(string start, string end);
         List<ChildrenQuestionModel> GetInterviewChildQuestions(int num);
         AnswerModel GetInterviewAnswerByApplicantId(int Applicant);
+		        PerformanceModel GetManagerAssessmentDetails(string userId);
+
+        bool saveChangedExpectations(List<GWCQUestionModel> data, string action,string Manager);
+
+        List<GWCQUestionModel> GetSelfAssessmentView(string Id, string AssessmetType);
+        List<GWCQUestionModel> GetGWCQuestions(string Id, string AssessmetType, string type);
     }
 }
