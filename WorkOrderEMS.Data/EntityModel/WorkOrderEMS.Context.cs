@@ -152,7 +152,6 @@ namespace WorkOrderEMS.Data.EntityModel
         public virtual DbSet<EmergencyContactForm> EmergencyContactForms { get; set; }
         public virtual DbSet<Applicant> Applicants { get; set; }
         public virtual DbSet<ApplicantLoginAccess> ApplicantLoginAccesses { get; set; }
-        public virtual DbSet<ApplicantPersonalInfo> ApplicantPersonalInfoes { get; set; }
         public virtual DbSet<InterviewQuestionChild> InterviewQuestionChilds { get; set; }
         public virtual DbSet<InterviewQuestionMaster> InterviewQuestionMasters { get; set; }
         public virtual DbSet<InterviewAnswer> InterviewAnswers { get; set; }
@@ -160,6 +159,7 @@ namespace WorkOrderEMS.Data.EntityModel
         public virtual DbSet<SlotTime> SlotTimes { get; set; }
         public virtual DbSet<BookSlotTime> BookSlotTimes { get; set; }
         public virtual DbSet<ApplicantContactInfo> ApplicantContactInfoes { get; set; }
+        public virtual DbSet<ApplicantPersonalInfo> ApplicantPersonalInfoes { get; set; }
         public virtual DbSet<JobPosting> JobPostings { get; set; }
     
         [DbFunction("workorderEMSEntities", "fn_Split")]
@@ -6469,17 +6469,17 @@ namespace WorkOrderEMS.Data.EntityModel
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("spSetAssetAllocation", actionParameter, aTA_IdParameter, aTA_EMP_EmployeeIdParameter, aTA_TypeParameter, aTA_AssetNameParameter, aTA_AssetDescriptionParameter, aTA_MakeParameter, aTA_ModelParameter, aTA_SerialNumberParameter, aTA_LoginParameter, aTA_PasswordParameter, aTA_AssignDateParameter, aTA_ReturnAcceptByParameter, aTA_ReturnDateParameter, aTA_ReturnStatusParameter, aTA_IsActiveParameter);
         }
     
-        public virtual ObjectResult<Nullable<long>> spGetApplicantLogin(string aLA_LiginId, string aLA_Password, ObjectParameter aLA_UserId)
+        public virtual ObjectResult<Nullable<long>> spGetApplicantLogin(string aLA_LoginId, string aLA_Password, ObjectParameter aLA_UserId)
         {
-            var aLA_LiginIdParameter = aLA_LiginId != null ?
-                new ObjectParameter("ALA_LiginId", aLA_LiginId) :
-                new ObjectParameter("ALA_LiginId", typeof(string));
+            var aLA_LoginIdParameter = aLA_LoginId != null ?
+                new ObjectParameter("ALA_LoginId", aLA_LoginId) :
+                new ObjectParameter("ALA_LoginId", typeof(string));
     
             var aLA_PasswordParameter = aLA_Password != null ?
                 new ObjectParameter("ALA_Password", aLA_Password) :
                 new ObjectParameter("ALA_Password", typeof(string));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<long>>("spGetApplicantLogin", aLA_LiginIdParameter, aLA_PasswordParameter, aLA_UserId);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<long>>("spGetApplicantLogin", aLA_LoginIdParameter, aLA_PasswordParameter, aLA_UserId);
         }
     
         public virtual int spGetApplicantNewLoginCheckAvailability(string aLA_LiginId, ObjectParameter availability)
@@ -6827,7 +6827,7 @@ namespace WorkOrderEMS.Data.EntityModel
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetJobPosting_Result5>("spGetJobPosting", jPS_HiringManagerIDParameter);
         }
     
-        public virtual int spSetJobPosting(string action, Nullable<long> jPS_JobPostingIdRecruitee, Nullable<long> jPS_JobTitleID, string jPS_HiringManagerID, Nullable<long> jPS_LocationId, Nullable<int> jPS_NumberOfPost, string jPS_IsActive)
+        public virtual int spSetJobPosting(string action, Nullable<long> jPS_JobPostingIdRecruitee, Nullable<long> jPS_JobTitleID, string jPS_HiringManagerID, Nullable<int> jPS_NumberOfPost, string jPS_IsActive)
         {
             var actionParameter = action != null ?
                 new ObjectParameter("Action", action) :
@@ -6845,10 +6845,6 @@ namespace WorkOrderEMS.Data.EntityModel
                 new ObjectParameter("JPS_HiringManagerID", jPS_HiringManagerID) :
                 new ObjectParameter("JPS_HiringManagerID", typeof(string));
     
-            var jPS_LocationIdParameter = jPS_LocationId.HasValue ?
-                new ObjectParameter("JPS_LocationId", jPS_LocationId) :
-                new ObjectParameter("JPS_LocationId", typeof(long));
-    
             var jPS_NumberOfPostParameter = jPS_NumberOfPost.HasValue ?
                 new ObjectParameter("JPS_NumberOfPost", jPS_NumberOfPost) :
                 new ObjectParameter("JPS_NumberOfPost", typeof(int));
@@ -6857,7 +6853,7 @@ namespace WorkOrderEMS.Data.EntityModel
                 new ObjectParameter("JPS_IsActive", jPS_IsActive) :
                 new ObjectParameter("JPS_IsActive", typeof(string));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("spSetJobPosting", actionParameter, jPS_JobPostingIdRecruiteeParameter, jPS_JobTitleIDParameter, jPS_HiringManagerIDParameter, jPS_LocationIdParameter, jPS_NumberOfPostParameter, jPS_IsActiveParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("spSetJobPosting", actionParameter, jPS_JobPostingIdRecruiteeParameter, jPS_JobTitleIDParameter, jPS_HiringManagerIDParameter, jPS_NumberOfPostParameter, jPS_IsActiveParameter);
         }
     
         public virtual ObjectResult<spGetI9Form_Result1> spGetI9Form(string employeeId)
@@ -7434,6 +7430,28 @@ namespace WorkOrderEMS.Data.EntityModel
                 new ObjectParameter("EEO_DisabilityDiscloseDiscription", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("spSetEEO", actionParameter, eEO_IdParameter, eEO_EMP_EmployeeIDParameter, eEO_GenderParameter, eEO_RaceParameter, eEO_VeteranStatusParameter, eEO_VeteranDateOfDischargeParameter, eEO_DisabilityDiscloseParameter, eEO_IsActiveParameter, eEO_DisabilityDiscloseDiscriptionParameter);
+        }
+    
+        public virtual ObjectResult<spGetUserAssessmentInfo_Result> spGetUserAssessmentInfo(string employeeId)
+        {
+            var employeeIdParameter = employeeId != null ?
+                new ObjectParameter("EmployeeId", employeeId) :
+                new ObjectParameter("EmployeeId", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetUserAssessmentInfo_Result>("spGetUserAssessmentInfo", employeeIdParameter);
+        }
+    
+        public virtual ObjectResult<spGetChangeExpectationQuestionQCQM_Result> spGetChangeExpectationQuestionQCQM(string employeeID, string cHE_QuestionType)
+        {
+            var employeeIDParameter = employeeID != null ?
+                new ObjectParameter("EmployeeID", employeeID) :
+                new ObjectParameter("EmployeeID", typeof(string));
+    
+            var cHE_QuestionTypeParameter = cHE_QuestionType != null ?
+                new ObjectParameter("CHE_QuestionType", cHE_QuestionType) :
+                new ObjectParameter("CHE_QuestionType", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetChangeExpectationQuestionQCQM_Result>("spGetChangeExpectationQuestionQCQM", employeeIDParameter, cHE_QuestionTypeParameter);
         }
     }
 }
