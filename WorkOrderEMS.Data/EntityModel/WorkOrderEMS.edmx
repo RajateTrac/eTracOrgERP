@@ -1772,6 +1772,25 @@ warning 6002: The table/view 'workorderemslive.dbo.IdleEmployee' does not have a
           <Property Name="MDL_Date" Type="datetime" />
           <Property Name="MDL_IsActive" Type="char" MaxLength="1" />
         </EntityType>
+        <EntityType Name="Notification">
+          <Key>
+            <PropertyRef Name="NTF_Id" />
+          </Key>
+          <Property Name="NTF_Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NTF_Details" Type="varchar(max)" Nullable="false" />
+          <Property Name="NTF_Module" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="NTF_Submodule" Type="varchar" MaxLength="20" />
+          <Property Name="NTF_SubmoduleId" Type="bigint" />
+          <Property Name="NTF_AssignTo" Type="varchar" MaxLength="20" />
+          <Property Name="NTF_AssignToIsWorkable" Type="bit" />
+          <Property Name="NTF_IsRead" Type="bit" />
+          <Property Name="NTF_DeletedDate" Type="date" />
+          <Property Name="NTF_CreatedBy" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="NTF_CreatedByIsWorkable" Type="bit" />
+          <Property Name="NFT_Severity" Type="char" MaxLength="1" />
+          <Property Name="NTF_CreatedDate" Type="datetime" />
+          <Property Name="NTF_IsActive" Type="char" MaxLength="1" />
+        </EntityType>
         <EntityType Name="NotificationDetails">
           <Key>
             <PropertyRef Name="NID" />
@@ -6642,6 +6661,7 @@ warning 6002: The table/view 'workorderemslive.dbo.QRCMaster1' does not have a p
           <EntitySet Name="Miscellaneous" EntityType="Self.Miscellaneous" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MisNumber" EntityType="Self.MisNumber" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Module" EntityType="Self.Module" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Notification" EntityType="Self.Notification" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="NotificationDetails" EntityType="Self.NotificationDetails" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PaymentMode" EntityType="Self.PaymentMode" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PaymentTerm" EntityType="Self.PaymentTerm" Schema="dbo" store:Type="Tables" />
@@ -14776,6 +14796,7 @@ warning 6002: The table/view 'workorderemslive.dbo.QRCMaster1' does not have a p
             <Parameter Name="EmployeeID" Mode="In" Type="String" />
             <Parameter Name="CHE_QuestionType" Mode="In" Type="String" />
           </FunctionImport>
+          <EntitySet Name="Notifications" EntityType="WorkOrderEMS.Data.EntityModel.Notification" />
         </EntityContainer>
         <ComplexType Name="Proc_GetAllWorkAssignedToEmployee_Result">
           <Property Type="Int64" Name="RN" Nullable="true" />
@@ -19241,6 +19262,25 @@ warning 6002: The table/view 'workorderemslive.dbo.QRCMaster1' does not have a p
           <Property Type="String" Name="ASQ_Question" Nullable="true" />
           <Property Type="String" Name="ASQ_IsActive" Nullable="true" MaxLength="1" />
         </ComplexType>
+        <EntityType Name="Notification">
+          <Key>
+            <PropertyRef Name="NTF_Id" />
+          </Key>
+          <Property Name="NTF_Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NTF_Details" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="NTF_Module" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="NTF_Submodule" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="NTF_SubmoduleId" Type="Int64" />
+          <Property Name="NTF_AssignTo" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="NTF_AssignToIsWorkable" Type="Boolean" />
+          <Property Name="NTF_IsRead" Type="Boolean" />
+          <Property Name="NTF_DeletedDate" Type="DateTime" Precision="0" />
+          <Property Name="NTF_CreatedBy" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="NTF_CreatedByIsWorkable" Type="Boolean" />
+          <Property Name="NFT_Severity" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="NTF_CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="NTF_IsActive" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -25335,6 +25375,26 @@ warning 6002: The table/view 'workorderemslive.dbo.QRCMaster1' does not have a p
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="Notifications">
+            <EntityTypeMapping TypeName="WorkOrderEMS.Data.EntityModel.Notification">
+              <MappingFragment StoreEntitySet="Notification">
+                <ScalarProperty Name="NTF_IsActive" ColumnName="NTF_IsActive" />
+                <ScalarProperty Name="NTF_CreatedDate" ColumnName="NTF_CreatedDate" />
+                <ScalarProperty Name="NFT_Severity" ColumnName="NFT_Severity" />
+                <ScalarProperty Name="NTF_CreatedByIsWorkable" ColumnName="NTF_CreatedByIsWorkable" />
+                <ScalarProperty Name="NTF_CreatedBy" ColumnName="NTF_CreatedBy" />
+                <ScalarProperty Name="NTF_DeletedDate" ColumnName="NTF_DeletedDate" />
+                <ScalarProperty Name="NTF_IsRead" ColumnName="NTF_IsRead" />
+                <ScalarProperty Name="NTF_AssignToIsWorkable" ColumnName="NTF_AssignToIsWorkable" />
+                <ScalarProperty Name="NTF_AssignTo" ColumnName="NTF_AssignTo" />
+                <ScalarProperty Name="NTF_SubmoduleId" ColumnName="NTF_SubmoduleId" />
+                <ScalarProperty Name="NTF_Submodule" ColumnName="NTF_Submodule" />
+                <ScalarProperty Name="NTF_Module" ColumnName="NTF_Module" />
+                <ScalarProperty Name="NTF_Details" ColumnName="NTF_Details" />
+                <ScalarProperty Name="NTF_Id" ColumnName="NTF_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

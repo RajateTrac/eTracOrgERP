@@ -2779,5 +2779,23 @@ namespace WorkOrderEMS.BusinessLogic.Managers
             }
             return ListSlotTime;
         }
+        public List<Notification> GetNotifications(string UserId)
+        {
+            var _db = new workorderEMSEntities();
+            var listTask = new List<EmailHelper>();
+            var objEmailHelper = new EmailHelper();
+            var notification = new List<Notification>();
+            var obj = new EmailHelper();
+            try
+            {
+                var notifications= _db.Notifications.Where(x => x.NTF_AssignTo==UserId && x.NTF_IsActive=="Y").ToList();
+                return notifications;
+            }
+            catch (Exception ex)
+            {
+                Exception_B.Exception_B.exceptionHandel_Runtime(ex, "public List<EmailHelper> GetUnseenNotifications(NotificationDetailModel objDetails)", "Exception while getting the list for notification details", obj);
+                throw;
+            }
+        }
     }
 }

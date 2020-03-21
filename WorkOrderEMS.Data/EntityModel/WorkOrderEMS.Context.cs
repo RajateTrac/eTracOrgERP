@@ -161,6 +161,7 @@ namespace WorkOrderEMS.Data.EntityModel
         public virtual DbSet<ApplicantContactInfo> ApplicantContactInfoes { get; set; }
         public virtual DbSet<ApplicantPersonalInfo> ApplicantPersonalInfoes { get; set; }
         public virtual DbSet<JobPosting> JobPostings { get; set; }
+        public virtual DbSet<Notification> Notifications { get; set; }
     
         [DbFunction("workorderEMSEntities", "fn_Split")]
         public virtual IQueryable<fn_Split_Result> fn_Split(string sText, string sDelim)

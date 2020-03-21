@@ -202,5 +202,7 @@ namespace WorkOrderEMS.BusinessLogic
         bool CheckEmployeeIdExist(string employeeId);
         List<CustomSlotTime> GetSlotTimings(long userid,string date);
 
+        List<Notification> GetNotifications(string UserId);
+
     }
 }
