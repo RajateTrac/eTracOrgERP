@@ -418,11 +418,11 @@
                             </li>
                         </ul>*@
                                                     <hr />
-                                                    <label>Select additional interviewers</label>
+                                                    @*<label>Select additional interviewers</label>
                                                     <div id="inpManageName">
                                                         <span class="autocomplete-select"></span>
                                                     </div>
-                                                    <hr />
+                                                    <hr />*@
                                                     <h2>Booked Slots</h2>
                                                     <div id="BookedSlots">
                                                     </div>
@@ -453,11 +453,11 @@
                             </li>
                         </ul>*@
                                                     <hr />
-                                                    <label>Select additional interviewers</label>
+                                                    @*<label>Select additional interviewers</label>
                                                     <div id="inpManageName">
                                                         <span class="autocomplete-select"></span>
                                                     </div>
-                                                    <hr />
+                                                    <hr />*@
                                                     <h2>Booked Slots</h2>
                                                     <div id="BookedSlots">
                                                     </div>
@@ -600,6 +600,33 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary bluebutton text-right" style="border-radius:25px;width:90px;" onclick="return AppproveRejectApplicant(true);" id="btnApproveData">Approve</button>
                 <button class="btn btn-danger" onclick="return AppproveRejectApplicant(false);" style="border-radius:25px;width:90px;" id="btnRejectPO">Reject</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal bs-example-modal-lg fade preview" id="myModalUpdatePanel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg ">
+        <div class="modal-content" style="width: 120%;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel">Update Interview Panel</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <hr />
+                <label>Select additional interviewers</label>
+                <div id="inpManageName">
+                    <span class="autocomplete-select"></span>
+                </div>
+                <hr />
+                <span id="DisplayMessage" style="color:red; display:none" >Interview panel has been saved successfully </span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary bluebutton text-right" style="border-radius:25px;width:90px;" onclick="return UpdateInterviewPanel();" id="btnApproveData">Update</button>
+                <button class="btn btn-danger" onclick="" style="border-radius:25px;width:90px;" id="btnRejectPO">Cancel</button>
             </div>
 
         </div>

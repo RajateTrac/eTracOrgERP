@@ -4662,6 +4662,18 @@ namespace WorkOrderEMS.BusinessLogic.Managers
             }
             return message;
         }
+        public bool UpdateInterviewPanel(string selectedManagers,string Manager,string JobId) {
+            PerformanceRepository repo = new PerformanceRepository();
+            try
+            {
+                return repo.UpdateInterviewPanel(selectedManagers,Manager, JobId);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public bool UpdateEvent(int id, string NewEventStart, string NewEventEnd)
         {
             PerformanceRepository repo = new PerformanceRepository();

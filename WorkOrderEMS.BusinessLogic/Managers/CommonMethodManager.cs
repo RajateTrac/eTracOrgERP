@@ -1779,7 +1779,8 @@ namespace WorkOrderEMS.BusinessLogic.Managers
                 lstManagerList = _workorderems.UserRegistrations.Where(x => x.IsDeleted == false && x.IsEmailVerify == true).Select(a => new ManagerModel()
                 {
                     UserName = a.FirstName + " " + a.LastName,
-                    UserID = a.UserId
+                    UserID = a.UserId,
+                     UserEmail=a.UserEmail
                 }).ToList();
             }
             catch (Exception ex)

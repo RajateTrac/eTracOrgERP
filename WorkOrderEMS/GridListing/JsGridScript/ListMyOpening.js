@@ -349,10 +349,22 @@ function MyOpeningSummery() {
                             loadCalendar(item.Employee);
                         }).append($iconOpenCalendar);
 
+                    var $iconUpdatePanel = $("<i>").attr({ class: "fa fa-users fa-2x whiteS" }).attr({ style: "color:red;font-size:22px;margin-left:8px;" });
+                    var $customUpdatePanelButton = $("<span>")
+                        .attr({ title: jsGrid.fields.control.prototype.UpdatePanel })
+                        .attr({ id: "btn-Recruitee-" + item.Employee }).click(function (e) {
+                            e.stopPropagation();
+                            $("#JobId").val(item.JobPostingId);
+                            $("#myModalUpdatePanel").modal('show');
+                            loadInterviewPanel();
+                        }).append($iconUpdatePanel);
+
 			        return $("<div>").append($("<div id='detailDiv'>").addClass('text').text("asdadfaf")).append($("<div>").addClass("inlineDivdonut").append("<img src='Images/donut.png' class='donutC' onmouseover='GetSummeryDetail(this);' onmouseout='HideDetail(this)'>"))
 						.append($("<div>").append("<i>").addClass("fa fa-envelope-o fa-lg actionBtn"))
                         .append($("<div>").append("<i>").addClass("fa fa-trash fa-lg actionBtn"))
-                        .append($customOpenCalendarButton);
+                        .append($customOpenCalendarButton)
+                        .append($customUpdatePanelButton);
+
 			    }
 			}
         ],

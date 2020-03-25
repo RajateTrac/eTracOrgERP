@@ -1769,14 +1769,32 @@ namespace WorkOrderEMS.Controllers.NewAdmin
                                 select new
                                 {
                                     label=e.UserName,
-                                    value=e.UserID.ToString()
+                                    value=e.UserEmail.Split('@')[0]
                                 };
-                var rows = eventList.ToArray();
+                var rows = eventList.Where(x=>x.value.ToLower() != ObjLoginModel.UserName.ToLower()).ToArray();
                 return Json(rows, JsonRequestBehavior.AllowGet);
             }
             catch (Exception)
             {
                 return Json(null, JsonRequestBehavior.AllowGet);
+            }
+        }
+        public ActionResult UpdateInterviewPanel(string selectedManagers,string JobId)
+        {
+            eTracLoginModel ObjLoginModel = null;
+            bool result =false;
+            if (Session["eTrac"] != null)
+            {
+                ObjLoginModel = (eTracLoginModel)(Session["eTrac"]);
+            }
+            try
+            {
+                result = _GlobalAdminManager.UpdateInterviewPanel(selectedManagers, ObjLoginModel.UserName, JobId);
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception)
+            {
+                return Json(result, JsonRequestBehavior.AllowGet);
             }
         }
 

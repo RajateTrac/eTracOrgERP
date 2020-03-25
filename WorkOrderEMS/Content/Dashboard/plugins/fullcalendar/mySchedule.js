@@ -51,7 +51,7 @@ function loadCalendar(ApplicantId) {
 
 
         dayClick: function (date, allDay, jsEvent, view) {
-            debugger;
+           
             getslots(date.format("DD-MMM-YYYY"));
             $('#eventTitle').val("");
             //$('#eventDate').val($.fullCalendar.formatDate(date, 'dd/MM/yyyy'));
@@ -104,6 +104,31 @@ function loadCalendar(ApplicantId) {
 
             }
 
+        }
+    });
+
+}
+function loadInterviewPanel() {
+    selectedManagers = "";
+    $("#inpManageName").html('');
+    $("#inpManageName").html('<span class="autocomplete-select"></span>');
+    $.ajax({
+        type: 'GET',
+        url: '/NewAdmin/GetManagerList/',
+        success: function (response) {
+            if (response.length > 0) {
+                ManagerList = response;
+                autocomplete = new SelectPure(".autocomplete-select", {
+                    options: ManagerList,
+                    multiple: true,
+                    autocomplete: true,
+                    icon: "fa fa-times",
+                    max: 3,
+                    onChange: value => {
+                        selectedManagers = autocomplete.value().toString();
+                    },
+                });
+            }
         }
     });
 
@@ -216,10 +241,31 @@ function ShowMyOpeningGrid() {
     //$("#JobPostBackBtn").show();
     $("#Scheduler").css('display', 'none');
     $("#MyOpeningSummery").show();
-    $("#inpManageName").html('');
-    $("#inpManageName").html('<span class="autocomplete-select"></span>');
+    //$("#inpManageName").html('');
+    //$("#inpManageName").html('<span class="autocomplete-select"></span>');
     $("#lblApplicantId").text('');
     $("#lblApplicantName").text('');
     $("#lblApplicantEmail").text('');
 }
+function UpdateInterviewPanel() {
 
+    $.ajax({
+        type: 'POST',
+        url: "/NewAdmin/UpdateInterviewPanel",
+        data: { "selectedManagers": selectedManagers, "JobId": $("#JobId").val()   },
+        success: function (response) {
+            if (response == true) {
+                $("#DisplayMessage").show();
+            }
+            else {
+                $("#DisplayMessage").hide();
+            }
+            setTimeout(function () {
+                $("#DisplayMessage").hide();
+                $("#myModalUpdatePanel").modal('hide');
+
+            }, 2000);
+
+        }
+    });
+}

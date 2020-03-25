@@ -133,48 +133,47 @@ namespace WorkOrderEMS.Data.DataRepository.NewAdminRepository
         {
             bool result = false;
             // Appointment obj = new Appointment();
-
             try
             {
                 using (objworkorderEMSEntities = new workorderEMSEntities())
                 {
                     objworkorderEMSEntities.spSetBookSlotTime("I", null, Title, ManagerId, Convert.ToDateTime(NewEventDate), Convert.ToInt32(NewEventTime), 1, "Y");
-                    if (selectedManagers != "")
-                    {
-                        var mgrlist = selectedManagers.Split(',').Distinct().ToList();
-                        long? mgr1, mgr2, mgr3;
-                        try
-                        {
-                            mgr1 = ManagerId;
-                        }
-                        catch (Exception e)
-                        {
-                            mgr1 = null;
-                        }
-                        try
-                        {
-                            mgr2 = Convert.ToInt64(mgrlist[0]);
-                        }
-                        catch (Exception e)
-                        {
-                            mgr2 = null;
-                        }
-                        try
-                        {
-                            mgr3 = Convert.ToInt64(mgrlist[1]);
-                        }
-                        catch (Exception e)
-                        {
-                            mgr3 = null;
-                        }
+                    //if (selectedManagers != "")
+                    //{
+                    //    var mgrlist = selectedManagers.Split(',').Distinct().ToList();
+                    //    long? mgr1, mgr2, mgr3;
+                    //    try
+                    //    {
+                    //        mgr1 = ManagerId;
+                    //    }
+                    //    catch (Exception e)
+                    //    {
+                    //        mgr1 = null;
+                    //    }
+                    //    try
+                    //    {
+                    //        mgr2 = Convert.ToInt64(mgrlist[0]);
+                    //    }
+                    //    catch (Exception e)
+                    //    {
+                    //        mgr2 = null;
+                    //    }
+                    //    try
+                    //    {
+                    //        mgr3 = Convert.ToInt64(mgrlist[1]);
+                    //    }
+                    //    catch (Exception e)
+                    //    {
+                    //        mgr3 = null;
+                    //    }
 
-                        objworkorderEMSEntities.spSetInterviewPanel("I", null, Convert.ToInt64(JobId), mgr1, mgr2, mgr3, 1, "Y");
-                        result = true;
-                    }
-                    else
-                    {
-                        objworkorderEMSEntities.spSetInterviewPanel("I", null, Convert.ToInt64(JobId), ManagerId, null, null, 1, "Y");
-                    }
+                    //    objworkorderEMSEntities.spSetInterviewPanel("I", null, Convert.ToInt64(JobId), mgr1, mgr2, mgr3, 1, "Y");
+                    //    result = true;
+                    //}
+                    //else
+                    //{
+                    //    objworkorderEMSEntities.spSetInterviewPanel("I", null, Convert.ToInt64(JobId), ManagerId, null, null, 1, "Y");
+                    //}
                 }
             }
             catch (Exception e)
@@ -183,7 +182,42 @@ namespace WorkOrderEMS.Data.DataRepository.NewAdminRepository
             }
             return result;
         }
+        public bool UpdateInterviewPanel(string selectedManagers,string ManagerId,string JobId) {
+            bool result =false;
+            var IsExist=false;
+            var _JobId = Convert.ToInt64(JobId);
+            long IPT_Id=0;
+            try
+            {
+                if (selectedManagers != "")
+                {
+                    var mgrlist = selectedManagers.Split(',').Distinct().ToList();
+                    string  mgr1, mgr2, mgr3;
+                        mgr1 = ManagerId??string.Empty;
+                        mgr2 = (mgrlist[0])??string.Empty;
+                        mgr3 = (mgrlist[1])??string.Empty;
 
+                    using (workorderEMSEntities db = new workorderEMSEntities())
+                    {
+                        var obj = db.InterviewProposalTimes.Where(x => x.IPT_JPS_JobPostingId == _JobId && x.IPT_Status == "Y").ToList();
+                        IPT_Id=obj.FirstOrDefault().IPT_Id;
+                        IsExist = obj.Count()>0?true:false;
+                    }
+                        //objworkorderEMSEntities.spSetInterviewPanel("I", null, Convert.ToInt64(JobId), mgr1, mgr2,mgr3, 1, "Y");
+                        objworkorderEMSEntities.spSetInterviewPanel(IsExist?"U":"I", IPT_Id, _JobId, 1, 2, 3, 1, "Y");
+                    result = true;
+                }
+                else
+                {
+                    objworkorderEMSEntities.spSetInterviewPanel(IsExist ? "U" : "I", IPT_Id, _JobId, 1, null, null, 1, "Y");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
         public bool UpdateEvent(int id, string NewEventStart, string NewEventEnd)
         {
             bool result = false;

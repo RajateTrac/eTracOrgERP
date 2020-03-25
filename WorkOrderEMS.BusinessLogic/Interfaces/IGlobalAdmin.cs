@@ -299,6 +299,7 @@ namespace WorkOrderEMS.BusinessLogic
         spGetHiringGraph_Result HiringGraphCount(long PostingId);
         List<EventModel> GetMyEvents(long UserName, string start, string end);
         string CreateNewEvent(string Title, string NewEventDate, string NewEventTime, string NewEventDuration, string JobId, string ApplicantName, string ApplicantEmail,long ManagerId,string selectedManagers);
+        bool UpdateInterviewPanel(string selectedManagers,string Manager,string JobId);
         bool UpdateEvent(int id, string NewEventStart, string NewEventEnd);
         List<EventModel> GetBookedSlots(long userid);
         List<EventModel> GetOutlookMeetingDetails(string start, string end);
