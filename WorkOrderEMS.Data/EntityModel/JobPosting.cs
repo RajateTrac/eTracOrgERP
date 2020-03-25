@@ -24,6 +24,6 @@ namespace WorkOrderEMS.Data.EntityModel
         public Nullable<System.DateTime> JPS_DateClose { get; set; }
         public Nullable<System.DateTime> JPS_Date { get; set; }
         public string JPS_IsActive { get; set; }
-        public Nullable<long> JPS_LocationId { get; set; }
+        public Nullable<int> JPS_LocationId { get; set; }
     }
 }

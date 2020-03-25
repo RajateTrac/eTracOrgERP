@@ -6899,6 +6899,7 @@
     <Content Include="Views\Guest\PartialView\_SelfIdentificationForm.cshtml" />
     <Content Include="Views\Guest\PartialView\_DesclaimerEEO.cshtml" />
     <Content Include="Views\Guest\PartialView\_ApplicantFunFact.cshtml" />
+    <Content Include="Views\NewAdmin\ePeople\_HiringOnBoardingDashboardNew.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
