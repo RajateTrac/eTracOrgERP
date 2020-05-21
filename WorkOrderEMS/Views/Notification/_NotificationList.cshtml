@@ -46,7 +46,7 @@
                 {
                     <td><button class="btn btn-success" modulename="@WorkOrderEMS.Helper.ModuleSubModule.OnBoarding" notificationId="@item.NotificationId" submoduleId="@item.SubModuleId1" status="@item.OfferAcceptRejectCounterStatus" style="font-size: 12px;padding: 4px;width: 91px;border-radius: 20px;" onclick="OpenCommonView(this,'View')">View</button></td>
                 }
-                else if (item.SubModule == WorkOrderEMS.Helper.ModuleSubModule.OnBoarding && item.OfferAcceptRejectCounterStatus == WorkOrderEMS.Helper.ApplicantIsActiveStatus.OfferCounter)
+                @*else if (item.SubModule == WorkOrderEMS.Helper.ModuleSubModule.OnBoarding && item.OfferAcceptRejectCounterStatus == WorkOrderEMS.Helper.ApplicantIsActiveStatus.OfferCounter)
                 {
                     <td><button class="btn btn-success" modulename="@WorkOrderEMS.Helper.ModuleSubModule.OnBoarding" notificationId="@item.NotificationId" submoduleId="@item.SubModuleId1" style="font-size: 12px;padding: 4px;border-radius: 20px;width: 91px;" status="@item.OfferAcceptRejectCounterStatus" onclick="OpenCommonView(this,'View')">View</button></td>
                 }
@@ -57,7 +57,7 @@
                 else if (item.SubModule == WorkOrderEMS.Helper.ModuleSubModule.Interviewer)
                 {
                     <td><button class="btn btn-success" modulename="@WorkOrderEMS.Helper.ModuleSubModule.Interviewer" notificationId="@item.NotificationId" submoduleId="@item.SubModuleId1" style="font-size: 12px;padding: 4px;border-radius: 20px;" status="@item.OfferAcceptRejectCounterStatus" onclick="OpenCommonView(this, 'Acknowledge')">Acknowledge</button></td>
-                }
+                }*@
                 else if (item.SubModule == WorkOrderEMS.Helper.ModuleSubModule.InterviewerAcceptDeny)
                 {
                     <td><button class="btn btn-success" modulename="@WorkOrderEMS.Helper.ModuleSubModule.InterviewerAcceptDeny" notificationId="@item.NotificationId" submoduleId="@item.SubModuleId1" style="font-size: 12px;padding: 4px;border-radius: 20px;" status="@item.OfferAcceptRejectCounterStatus" onclick="OpenCommonView(this, 'Acknowledge')">Acknowledge</button></td>
