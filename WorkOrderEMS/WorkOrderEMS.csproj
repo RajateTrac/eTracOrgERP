@@ -450,6 +450,8 @@
     <Compile Include="Controllers\Services\ServiceApiController.cs" />
     <Compile Include="Controllers\Services\WebAPIDocController.cs" />
     <Compile Include="Controllers\Staff\EmployeeController.cs" />
+    <Compile Include="Controllers\TCAPIP\CorrectiveController.cs" />
+    <Compile Include="Controllers\TCAPIP\TerminationDetailController.cs" />
     <Compile Include="Controllers\WorkOrderAssignment\WorkOrderController.cs" />
     <Compile Include="DependencyResolution\DefaultRegistry.cs" />
     <Compile Include="DependencyResolution\IoC.cs" />
@@ -5219,6 +5221,7 @@
     <Content Include="GridListing\JsGridScript\ListOnBoarding.js" />
     <Content Include="GridListing\JsGridScript\ListQRCList.js" />
     <Content Include="GridListing\JsGridScript\ListRequisitionData.js" />
+    <Content Include="GridListing\JsGridScript\ListTerminationDetails.js" />
     <Content Include="GridListing\JsGridScript\ListWorkOrderAssignment.js" />
     <Content Include="Images\back2.jpg" />
     <Content Include="Images\back4.jpg" />
@@ -5310,6 +5313,9 @@
     <Content Include="MailTemplate\ShuttlePartDamageTemplate.html" />
     <Content Include="MailTemplate\ShuttleTirePartDamageTemplate.html" />
     <Content Include="MailTemplate\SurveryFeedback.html" />
+    <Content Include="MailTemplate\Termination\AssetListTemplate.html" />
+    <Content Include="MailTemplate\Termination\ServeranceAgreementTemplate.html" />
+    <Content Include="MailTemplate\Termination\TerminationFormTemplate.html" />
     <Content Include="MailTemplate\UrgentWorkOrderRequestTemplate.html" />
     <Content Include="MailTemplate\UserAddedToLocation.html" />
     <Content Include="MailTemplate\VehicleDamage.html" />
@@ -6364,6 +6370,9 @@
     <Content Include="Views\Customer\Scripts\JqGrid\i18n\grid.locale-en.js" />
     <Content Include="Views\Customer\Scripts\JqGrid\jquery.jqGrid.min.js" />
     <Content Include="Views\Customer\Scripts\JqGrid\jquery.js" />
+    <Content Include="Views\CorrectiveAction\CorrectiveActionAcknowledgement.cshtml" />
+    <Content Include="Views\CorrectiveAction\CorrectiveActionForm.cshtml" />
+    <Content Include="Views\CorrectiveAction\MeetingScheduler.cshtml" />
     <None Include="Views\Customer\Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Views\Customer\Scripts\jquery-1.10.2.js" />
     <Content Include="Views\Customer\Scripts\jquery-1.10.2.min.js" />
@@ -6975,6 +6984,13 @@
     <Content Include="Views\Notification\_NotificationList.cshtml" />
     <Content Include="Views\Notification\_ApplicantDetails.cshtml" />
     <Content Include="Views\InvoiceManagement\CreditInvoicePDF.cshtml" />
+    <Content Include="Views\TerminationDetail\Serverance.cshtml" />
+    <Content Include="Views\TerminationDetail\TerminationForm.cshtml" />
+    <Content Include="Views\TerminationDetaills\AssetList.cshtml" />
+    <Content Include="Views\TerminationDetaills\AssetstatusList.cshtml" />
+    <Content Include="Views\TerminationDetaills\SeveranceAgreement.cshtml" />
+    <Content Include="Views\TerminationDetaills\TerminationAcknowledge.cshtml" />
+    <Content Include="Views\TerminationDetaills\TerminationList.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

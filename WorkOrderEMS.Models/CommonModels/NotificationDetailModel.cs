@@ -46,5 +46,8 @@ namespace WorkOrderEMS.Models
         public long ApplicantId { get; set; }
         public string Module { get; set; }
         public string EmployeeStatus { get; set; }
+        public Nullable<DateTime> MeetingDateTime { get; set; } //Added by Rajat Toppo
+        public string IsExempt { get; set; } // Added by Rajat Toppo
+        public string emp_id { get; set; }
     }
 }

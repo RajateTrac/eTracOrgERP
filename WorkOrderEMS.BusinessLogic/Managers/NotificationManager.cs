@@ -637,6 +637,36 @@ namespace WorkOrderEMS.BusinessLogic
             }
             return isSaved;
         }
+        /// <summary>
+        /// Get meeting date and time from notifications table
+        /// Created by: Rajat Toppo
+        /// Date: 15-05-2020
+        /// </summary>
+        /// <param name="EmpId"></param>
+        /// <returns></returns>
+        public NotificationDetailModel NotificationDetailsforMeetingDateTime(NotificationDetailModel obj)
+        {
+            try
+            {
+
+                var NotificationTable = Context.Notifications.Where(x => x.NTF_Id == obj.NotificationId).FirstOrDefault();
+                var ApplicantIsExempt = Context.Employees.Where(c => c.EMP_EmployeeID == obj.emp_id).FirstOrDefault();
+
+                return (new NotificationDetailModel()
+                {
+                    Details = NotificationTable.NTF_Details,
+                    IsExempt = ApplicantIsExempt.EMP_IsExempt,
+                    emp_id = ApplicantIsExempt.EMP_EmployeeID
+
+                });
+            }
+            catch (Exception ex)
+            {
+                Exception_B.Exception_B.exceptionHandel_Runtime(ex, "NotificationDetailModel NotificationDetailsforMeetingDateTime(string EmpId)", "Exception while getting the details of applicant", obj.NotificationId);
+                throw;
+            }
+
+        }
         #endregion New Notification
     }
 }

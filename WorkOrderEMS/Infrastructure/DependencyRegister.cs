@@ -105,6 +105,8 @@ namespace WorkOrderEMS.Infrastructure
                 For<IDebitMemo>().Use<DebitMemoManager>();
                 For<IApplicantManager>().Use<ApplicantManager>();
                 For<INotification>().Use<NotificationManager>();
+                For<ITerminationManager>().Use<TerminationManager>();
+                For<ICorrectiveManager>().Use<CorrectiveManager>();
             }
         }
     }

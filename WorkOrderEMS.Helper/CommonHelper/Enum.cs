@@ -754,7 +754,8 @@ namespace WorkOrderEMS.Helper
     public enum FileTypeId
     {
         I9 = 17,
-        W4 = 19
+        W4 = 19,
+       ComplaintFile = 22
     }
     public static class ActiveStatus
     {
@@ -769,14 +770,22 @@ namespace WorkOrderEMS.Helper
         public const string OnBoarding = "OnBoarding";
         public const string Interviewer = "Interviewer";
         public const string InterviewerAcceptDeny = "InterviewAcceptDeny";
-        public const string AssessmentStatus = "AssessmentStatus";
+       
         public const string OnBoardingComplete = "OnBoardingComplete";
-        public const string AssessmentStart = "AssessmentStart";
+         
 
         //Performance
         public const string Performance = "Performance";
         public const string EvaluationStart = "EvaluationStart";
         public const string EvaluationComplete = "EvaluationComplete";
+        public const string AssessmentStart = "AssessmentStart";
+        public const string AssessmentStatus = "AssessmentStatus";
+
+        //Termination
+        public const string TerminateEmployee = "EmployeeAsset";
+        public const string TerminateApproveDeny = "EmployeeTermination";
+        public const string CorrectiveAction = "CorrectiveAction";
+        public const string ScheduleMeeting = "ScheduleMeeting";
     }
     public static class Priority
     {

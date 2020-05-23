@@ -381,7 +381,7 @@ namespace WorkOrderEMS.BusinessLogic.Managers
         public eTracLoginModel AuthenticateUser(eTracLoginModel loginViewModel)
         {
             //var clientUrl = new ApplicantAPI();
-            
+            workorderEMSEntities _db = new workorderEMSEntities();
             //var data = clientUrl.Configuration("https://api.availity.com/availity/v1/configurations");
             ObjUserRepository = new UserRepository();
             //objLocationServicesRepository = new LocationServicesRepository();
@@ -403,6 +403,16 @@ namespace WorkOrderEMS.BusinessLogic.Managers
 
                 if (authuser != null && authuser.UserId > 0)
                 {
+                    var getEmpDetails = _db.spGetEmployeeLogin(loginViewModel.UserName, mypassword).FirstOrDefault();
+                    if(getEmpDetails != null)
+                    {
+                        loginViewModel.JobTitleId = getEmpDetails.JBT_Id;
+                        loginViewModel.JobTitleName = getEmpDetails.JBT_JobTitle;
+                        loginViewModel.DepartmentID = getEmpDetails.DPT_Id;
+                        loginViewModel.DepartmentName = getEmpDetails.DPT_Name;
+                        loginViewModel.VSCId = getEmpDetails.VST_Id;
+                        loginViewModel.VSCName = getEmpDetails.VST_Title;
+                    }
                     //Added by Bhushan  on Jan-12-2015 for Validate Login through Serivce call
                     #region Validate Login through Serivce call
                     if ((loginViewModel.DeviceType > 0) || !string.IsNullOrEmpty(loginViewModel.DeviceId))

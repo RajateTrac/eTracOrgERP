@@ -5,7 +5,7 @@
 
     string hostingPrefix = System.Configuration.ConfigurationManager.AppSettings["hostingPrefix"];
     WorkOrderEMS.Models.eTracLoginModel ObjLogin = (WorkOrderEMS.Models.eTracLoginModel)Session["eTrac"];
-    string loginUserName = "", loginUserEmail = "", loginUserContactNo = "", loginUserProfile = "", CurrentUser = "";
+    string loginUserName = "", loginUserEmail = "", loginUserContactNo = "", loginUserProfile = "", CurrentUser = "", JobTitle ="";
     bool isScheduled = Convert.ToBoolean(Session["IsInterviewDone"]);
     long loginUserType = 0;
     long locationId = 0;
@@ -20,6 +20,7 @@
         locationId = ObjLogin.LocationID;
         UserId = ObjLogin.UserId;
         CurrentUser = WorkOrderEMS.Helper.Cryptography.GetEncryptedData(ObjLogin.UserName, true);
+        JobTitle = ObjLogin.JobTitleName;
     }
 }
 <style>
@@ -366,19 +367,31 @@ background-color:cadetblue;
                     <div class="card" data-aos="fade-up">
                         <div class="card-header" style="height: 45px;">
                             <h4 class="card-title addWhite"><b>Hiring & On-Boarding</b></h4>
-                        </div>
-                        <span>
-                            <i class="fa fa-refresh fa-2x" aria-hidden="true" onclick="RefreshGrid();" title="Refresh"></i>                          
-                        </span>
+                            <span>
+                                <i class="fa fa-refresh fa-2x" style="cursor:pointer;" aria-hidden="true" id="RefreshGrid" title="Refresh"></i>
+                            </span>
+                            @*<button id="CancelGridList">
+                                <i class="fa fa-ban fa-2x" style="cursor:pointer;" aria-hidden="true" id="getCancelData" onclick="getCancelData()" title="CancelData"></i>
+                            Cancel List</button>*@
+                        </div>                        
                         <div class="card-body">
                             <div class="custom-tab-1">
                                 <ul class="nav nav-tabs">
+                                    @if (JobTitle != "" && JobTitle != null && JobTitle == "HR")
+                                    {
                                     <li class="nav-item WidthForTab">
                                         <a class="nav-link active CenterText" data-toggle="tab" href="#home1">On-Boarding</a>
                                     </li>
                                     <li class="nav-item WidthForTab">
                                         <a class="nav-link CenterText" data-toggle="tab" onclick="MyOpeningSummery();" href="#profile1">My Opening</a>
                                     </li>
+                                    }
+                                    else
+                                    {
+                                    <li class="nav-item WidthForTab">
+                                        <a class="nav-link active CenterText" data-toggle="tab" onclick="MyOpeningSummery();" href="#profile1">My Opening</a>
+                                    </li>
+                                    }
                                     <li class="nav-item WidthForTab">
                                         <a class="nav-link CenterText" data-toggle="tab" href="#contact1" onclick="GetCompanyOpening()">Company Opening</a>
                                     </li>
@@ -393,6 +406,8 @@ background-color:cadetblue;
                                     </a>
                                 </div>
                                 <div class="tab-content">
+                                    @if (JobTitle != "" && JobTitle != null && JobTitle == "HR")
+                                    {
                                     <div class="tab-pane fade show active" id="home1" role="tabpanel">
                                         <div class="pt-4">
 
@@ -489,6 +504,99 @@ background-color:cadetblue;
                                             <div id="myinterviews"></div>
                                         </div>
                                     </div>
+                                    }
+                                    else
+                                    {
+                                    <div class="tab-pane fade show active" id="profile1">
+                                        <div class="pt-4">
+                                            <div id="ListMyOpening"></div>
+                                            <div id="MyOpeningSummery"></div>
+                                            <div class="row mx-md-n5">
+                                            </div>
+                                            <div id="Scheduler" style="display:none" class="row">
+                                                <div class="nav-item" style="float:right;display:inline-block;position: absolute;right: 0;top: 5%;">
+                                                    <a onclick="ShowMyOpeningGrid();">
+                                                        <i class="fa fa-chevron-circle-left" aria-hidden="true" style="font-size: 32px;color: black;padding: 11px 5px 6px 5px;"></i>
+                                                    </a>
+                                                </div>
+                                                <div class="col-sm-8 col-lg-8">
+                                                    <div id="calendar"></div>
+                                                </div>
+                                                <div id="SchedulerList" class="col-sm-4 col-lg-4">
+                                                    @*<ul class="list-group">
+                                        <li class="list-group-item list-group-item-success">
+                                            <label>Applicant Id:</label>
+                                            <label id="lblApplicantId"></label>
+                                        </li>
+                                        <li class="list-group-item list-group-item-info">
+                                            <label>Applicant Name:</label>
+                                            <label id="lblApplicantName"></label>
+                                        </li>
+                                        <li class="list-group-item list-group-item-warning">
+                                            <label>Applicant Email:</label>
+                                            <label id="lblApplicantEmail"></label>
+                                        </li>
+                                    </ul>*@
+                                                    <hr />
+                                                    @*<label>Select additional interviewers</label>
+                                    <div id="inpManageName">
+                                        <span class="autocomplete-select"></span>
+                                    </div>
+                                    <hr />*@
+                                                    <h2>Booked Slots</h2>
+                                                    <div id="BookedSlots">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div id="Scheduler" style="display:none" class="row">
+                                                <div class="nav-item" style="float:right;display:inline-block;position: absolute;right: 0;top: 1%;">
+                                                    <a onclick="ShowMyOpeningGrid();">
+                                                        <i class="fa fa-chevron-circle-left" aria-hidden="true" style="font-size: 32px;color: black;padding: 11px 5px 6px 5px;"></i>
+                                                    </a>
+                                                </div>
+                                                <div class="col-sm-8 col-lg-8">
+                                                    <div id="calendar"></div>
+                                                </div>
+                                                <div id="SchedulerList" class="col-sm-4 col-lg-4">
+                                                    @*<ul class="list-group">
+                                        <li class="list-group-item list-group-item-success">
+                                            <label>Applicant Id:</label>
+                                            <label id="lblApplicantId"></label>
+                                        </li>
+                                        <li class="list-group-item list-group-item-info">
+                                            <label>Applicant Name:</label>
+                                            <label id="lblApplicantName"></label>
+                                        </li>
+                                        <li class="list-group-item list-group-item-warning">
+                                            <label>Applicant Email:</label>
+                                            <label id="lblApplicantEmail"></label>
+                                        </li>
+                                    </ul>*@
+                                                    <hr />
+                                                    @*<label>Select additional interviewers</label>
+                                    <div id="inpManageName">
+                                        <span class="autocomplete-select"></span>
+                                    </div>
+                                    <hr />*@
+                                                    <h2>Booked Slots</h2>
+                                                    <div id="BookedSlots">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="contact1">
+                                            <div class="pt-4">
+                                                <div id="companyOpening"></div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="tab-pane fade" id="myinterview">
+                                        <div class="pt-4">
+                                            <div id="myinterviews"></div>
+                                        </div>
+                                    </div>
+                                    }
                                 </div>
 
                             </div>
@@ -678,7 +786,11 @@ background-color:cadetblue;
 <script src="~/Content/NewAdminContent/JQUERY/clockPicker.js"></script>
 <script src="~/Scripts/BootStrap-Multiselect/JS/bootbox.js"></script>
 <script>
-
+    MyOpeningSummery();
+    $("#RefreshGrid").click(function () {
+        debugger
+        $("#" + refreshGridId).jsGrid("loadData");
+    });
     $("#HiringOnBoard").click(function () {
         $("#hiringOnBordingDiv").show();
         $("#EmployeeManagementDiv").hide();

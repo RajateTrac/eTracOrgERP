@@ -7,12 +7,21 @@ var JobStatus;
 var isInterviewDone = false;
 let ManagerList;
 var JobTitle;
+refreshGridId = "ListMyOpening";
 var $_LocationId = $("#drp_MasterLocation1 option:selected").val();
 var $_OperationName = "", $_workRequestAssignmentId = 0, $_UserId = 0, $_RequestedBy = 0;//= $("#drp_MasterLocation option:selected").val();
 
 function myOpenings(PostingId) {
     refreshGridId = "ListMyOpening";
+    $("#CancelGridList").hide();
+    //$("#ListMyOpening").show();
+
+    
     $("#ListMyOpening").show();
+    $("#companyOpening").hide();
+    $("#myinterview").hide();
+    $("#MyOpeningSummery").hide();
+
     $("#ListMyOpening").jsGrid({
         width: "100%",
         height: "430px",
@@ -35,11 +44,13 @@ function myOpenings(PostingId) {
                 return deferred.promise();
             }
         },
-        onRefreshed: function (args) {
+        onRefreshing: function (args) {
+            debugger
             $(".jsgrid-insert-row").hide();
             $(".jsgrid-filter-row").hide()
             $(".jsgrid-grid-header").removeClass("jsgrid-header-scrollbar");
         },
+        
         fields: [
 			{
 			    title: "Applicant Image", name: "Image", width: 30,
@@ -245,7 +256,14 @@ function myOpenings(PostingId) {
 }
 function MyInterviews() {
     refreshGridId = "myinterviews";
+    $("#CancelGridList").hide();
+    //$("#myinterview").show();
+
+    $("#ListMyOpening").hide();
+    $("#companyOpening").hide();
     $("#myinterview").show();
+    $("#MyOpeningSummery").hide();
+
     $("#myinterviews").jsGrid({
         width: "100%",
         height: "300px",
@@ -312,9 +330,16 @@ function MyInterviews() {
 }
 function MyOpeningSummery() {
     refreshGridId = "MyOpeningSummery";
+    $("#CancelGridList").show();
     $("#btnBack").hide();
+    //$("#ListMyOpening").hide();
+    //$("#MyOpeningSummery").show();
+
     $("#ListMyOpening").hide();
+    $("#companyOpening").hide();
+    $("#myinterview").hide();
     $("#MyOpeningSummery").show();
+
     $("#MyOpeningSummery").jsGrid({
         width: "100%",
         height: "300px",
@@ -337,21 +362,20 @@ function MyOpeningSummery() {
                 return d.promise();
             }
         },
-        //onRefreshed: function (args) {
-        //    debugger
-        //    $(".jsgrid-insert-row").hide();
-        //    $(".jsgrid-filter-row").hide()
-        //    $(".jsgrid-grid-header").removeClass("jsgrid-header-scrollbar");
-        //    $(".HoldJob").attr({ style: "color:blue;"});
+        onRefreshed: function (args) {
+            debugger
+            $(".jsgrid-insert-row").hide();
+            $(".jsgrid-filter-row").hide()
+            $(".jsgrid-grid-header").removeClass("jsgrid-header-scrollbar");
+            $(".HoldJob").attr({ style: "color:red;"});
 
-        //},
-        //rowClass: function (item, itemIndex) //item is the data in a row, index is the row number.
-        //{
-            
-        //    if (item.Status == "Hold") {
-        //        return "HoldJob";
-        //    }
-        //},
+        },
+        rowClass: function (item, itemIndex) //item is the data in a row, index is the row number.
+        {
+            if (item.Status == "Hold") {
+                return "HoldJob";
+            }
+        },
         fields: [
 			{ name: "JobTitle", type: "text", width: 300 },
 			{ name: "Employee", type: "text", width: 70 },
@@ -1185,7 +1209,12 @@ function MarkAbsent() {
 
 
 function GetCompanyOpening() {
+    debugger
     refreshGridId = "companyOpening";
+    $("#ListMyOpening").hide();
+    $("#companyOpening").show();
+    $("#myinterview").hide();
+    $("#MyOpeningSummery").hide();
     var records = [
         { "JobTitle": "Otto Clay", "PositionCount": 1, "ApplicantCount": 1, "JobPostingDate": "28/12/2019", "Duration": "30", "Status": true}
     ];
@@ -1751,7 +1780,9 @@ function CloseHoldJob() {
         }
     });
 }
-function RefreshGrid() {
+//function RefreshGrid() {
+$("#RefreshGrid").click(function () {
+    debugger
     $("#" + refreshGridId).jsGrid("loadData");
-}
+});
 

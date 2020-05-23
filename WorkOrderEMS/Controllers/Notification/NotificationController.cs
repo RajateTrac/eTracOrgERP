@@ -69,31 +69,48 @@ namespace WorkOrderEMS.Controllers
         /// </summary>
         /// <param name="ApplicantId"></param>
         /// <returns></returns>
-        //[HttpPost]
-        //public ActionResult GetViewForApplicantDetails(long ApplicantId,string ApplicantStatus)
-        //{
-        //    var getData = new ApplicantDetails();
-        //    try
-        //    {
-        //        if(ApplicantId > 0 && ApplicantStatus != null)
-        //        {
-        //             getData = _INotification.GetApplicantDetails(ApplicantId);
-        //        }
-        //        else
-        //        {
-        //            return View("_ApplicantDetailsWhenAcceptRejectCounterOffer", getData);
-        //        }
-        //    }
-        //    catch(Exception ex)
-        //    {
-
-        //    }
-        //    return View("_ApplicantDetailsWhenAcceptRejectCounterOffer", getData);
-        //}
         [HttpPost]
         public ActionResult GetViewForApplicantDetails(long ApplicantId, string ApplicantStatus)
         {
-            return null;
+            var getData = new ApplicantDetails();
+            try
+            {
+                if (ApplicantId > 0 && ApplicantStatus != null)
+                {
+                    getData = _INotification.GetApplicantDetails(ApplicantId);
+                }
+                else
+                {
+                    return View("_ApplicantDetailsWhenAcceptRejectCounterOffer", getData);
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return View("_ApplicantDetailsWhenAcceptRejectCounterOffer", getData);
+        }
+        [HttpPost]
+        public ActionResult ViewForMeeting(NotificationDetailModel obj)
+        {
+            try
+            {
+                if (obj != null)
+                {
+                    var getnotificationdetails = _INotification.NotificationDetailsforMeetingDateTime(obj);
+
+                    return View("~/Views/CorrectiveAction/MeetingScheduler.cshtml", getnotificationdetails);
+                }
+                else
+                {
+                    return View("~/Views/CorrectiveAction/MeetingScheduler.cshtml");
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return View("~/Views/CorrectiveAction/MeetingScheduler.cshtml");
         }
     }
 }

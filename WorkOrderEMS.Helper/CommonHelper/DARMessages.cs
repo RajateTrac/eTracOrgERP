@@ -377,5 +377,48 @@ namespace WorkOrderEMS.Helper
         {
             return string.Format(CultureInfo.InvariantCulture, " The Manager {0} has been completed the evaluation {1} for employee {2}.", EmployeeName, Assessment, ManagerName);
         }
+        public static string AssetLost(string EmployeeName)
+        {
+            return string.Format(CultureInfo.InvariantCulture, "Asset lost by {0}", EmployeeName);
+        }
+        public static string TerminationDeny(string EmployeeName)
+        {
+            return string.Format(CultureInfo.InvariantCulture, "Termination denied for {0}", EmployeeName);
+        }
+        public static string TerminationApprove(string EmployeeName)
+        {
+            return string.Format(CultureInfo.InvariantCulture, "Termination Approved for {0}", EmployeeName);
+        }
+        public static string CorrectiveActionRequest(string EmployeeName)
+        {
+            return string.Format(CultureInfo.InvariantCulture, "Corrective Action for {0}", EmployeeName);
+        }
+        public static string CorrectiveActionApprove(string EmployeeName)
+        {
+            return string.Format(CultureInfo.InvariantCulture, "Corrective Action Approve for {0}", EmployeeName);
+        }
+        public static string CorrectiveActionDeny(string EmployeeName)
+        {
+            return string.Format(CultureInfo.InvariantCulture, "Corrective Action Denied for {0}", EmployeeName);
+        }
+
+        public static string CorrectiveActionMeeting(string EmployeeName)
+        {
+            return string.Format(CultureInfo.InvariantCulture, "Meeting for Corrective Action with {0}", EmployeeName);
+        }
+
+        public static string EmployeeCorrectiveActionDispute(string EmployeeName)
+        {
+            return string.Format(CultureInfo.InvariantCulture, "Corrective Action Dispute by {0}", EmployeeName);
+        }
+
+        public static string CorrectiveActionMeetingDateTime(string ManagerName, string DTone, string DTtwo, string DTthree)
+        {
+            return string.Format(CultureInfo.InvariantCulture, "Corrective Action Meeting Date&Time with {0}, {1}+ {2}+ {3}", ManagerName, DTone, DTtwo, DTthree);
+        }
+        public static string CorrectiveActionMeetingDateTime(string ManagerName, string DTone)
+        {
+            return string.Format(CultureInfo.InvariantCulture, "Corrective Action Meeting Date&Time with {0}, {1}", ManagerName, DTone);
+        }
     }
 }

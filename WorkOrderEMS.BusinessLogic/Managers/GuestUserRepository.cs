@@ -104,12 +104,12 @@ namespace WorkOrderEMS.BusinessLogic
         public CommonApplicantModel GetApplicantAllDetailsToView(long Applicant)
         {
             CommonApplicantModel commonModel = new CommonApplicantModel();
+            var getStateList = objworkorderEMSEntities.MasterStates.ToList();
             commonModel.ApplicantAddress = objworkorderEMSEntities.spGetApplicantAddress(Applicant).Select
                 (x => new WorkOrderEMS.Models.ApplicantAddress() {
                     APA_Apartment = x.APA_Apartment,
                     APA_City  =x.APA_City,
-                    APA_State = objworkorderEMSEntities.MasterStates.Where(ms => ms.StateCode == x.APA_State).FirstOrDefault().StateName
-                    ,
+                    APA_State = x.APA_State,//getStateList.Where(ms => ms.StateCode == x.APA_State).FirstOrDefault().StateName,
                     APA_StreetAddress = x.APA_StreetAddress,
                     APA_YearsAddressFrom = x.APA_YearsAddressFrom,
                     APA_YearsAddressTo = x.APA_YearsAddressTo,
@@ -132,7 +132,7 @@ namespace WorkOrderEMS.BusinessLogic
                       AAD_City = x.AAD_City,
                       AAD_EducationType = x.AAD_EducationType,
                       AAD_InstituteName = x.AAD_InstituteName,
-                      AAD_State = objworkorderEMSEntities.MasterStates.Where(ms => ms.StateCode == x.AAD_State).FirstOrDefault().StateName,
+                      AAD_State = x.AAD_State,//getStateList.Where(ms => ms.StateCode == x.AAD_State).FirstOrDefault().StateName,
                       AAD_Zip = Convert.ToInt32(x.AAD_Zip),                     
                   }).ToList();
             commonModel.ApplicantAccidentRecord = objworkorderEMSEntities.spGetApplicantAccidentRecord(Applicant).Select
@@ -166,7 +166,7 @@ namespace WorkOrderEMS.BusinessLogic
                       ABH_ReasonForGAP = x.ABH_ReasonForGAP,
                       ABH_ReasonforLeaving = x.ABH_ReasonforLeaving,
                       ABH_SafetySensitiveFunction =Convert.ToChar(x.ABH_SafetySensitiveFunction),
-                      ABH_State = objworkorderEMSEntities.MasterStates.Where(ms => ms.StateCode == x.ABH_State).FirstOrDefault().StateName,
+                      ABH_State = x.ABH_State,//getStateList.Where(ms => ms.StateCode == x.ABH_State).FirstOrDefault().StateName,
                       
                       ABH_StillEmployed = Convert.ToChar(x.ABH_StillEmployed),
                       ABH_SubToFedralMotor = Convert.ToChar(x.ABH_SubToFedralMotor),
@@ -186,7 +186,7 @@ namespace WorkOrderEMS.BusinessLogic
                      ALH_IssueDate = x.ALH_IssueDate,
                      ALH_LicenceNumber = x.ALH_LicenceNumber,
                      ALH_LicenseType = x.ALH_LicenseType,
-                     ALH_State = objworkorderEMSEntities.MasterStates.Where(ms => ms.StateCode == x.ALH_State).FirstOrDefault().StateName,
+                     ALH_State = x.ALH_State//getStateList.Where(ms => ms.StateCode == x.ALH_State).FirstOrDefault().StateName,
                       
                   }).ToList();
             commonModel.ApplicantPositionTitle = objworkorderEMSEntities.spGetApplicantPositionTitle(Applicant).Select

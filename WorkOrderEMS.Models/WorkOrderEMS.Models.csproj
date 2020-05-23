@@ -314,6 +314,11 @@
     <Compile Include="NewAdminModel\RecruiteeModels\RecruiteeOfferAddModel.cs" />
     <Compile Include="NewAdminModel\RecruiteeOfferModel.cs" />
     <Compile Include="NewAdminModel\Scheduler.cs" />
+    <Compile Include="NewAdminModel\TCAPIP\AssetModel.cs" />
+    <Compile Include="NewAdminModel\TCAPIP\CorrectiveActionModel.cs" />
+    <Compile Include="NewAdminModel\TCAPIP\TerminationListModel.cs" />
+    <Compile Include="NewAdminModel\TCAPIP\TerminationModel.cs" />
+    <Compile Include="NewAdminModel\TCAPIP\WitnessModel.cs" />
     <Compile Include="PDF\CharitableContributionForm.cs" />
     <Compile Include="PDF\PDFSaveModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

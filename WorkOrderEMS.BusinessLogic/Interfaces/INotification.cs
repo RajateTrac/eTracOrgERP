@@ -15,5 +15,6 @@ namespace WorkOrderEMS.BusinessLogic
         bool ReadNotificationById(long NotificationId);
         ApplicantDetails GetApplicantDetails(long ApplicantId);
         bool SaveNotification(NotificationDetailModel obj);
+        NotificationDetailModel NotificationDetailsforMeetingDateTime(NotificationDetailModel obj);
     }
 }

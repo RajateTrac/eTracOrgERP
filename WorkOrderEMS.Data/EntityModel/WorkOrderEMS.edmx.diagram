@@ -405,6 +405,8 @@
         <AssociationConnector Association="workorderEMSModel.FK_UserVehicleSeatingMap_UserRegistrations" ManuallyRouted="false" />
         <AssociationConnector Association="workorderEMSModel.FK_UserVehicleSeatingMap_Module" ManuallyRouted="false" />
         <AssociationConnector Association="workorderEMSModel.FK_VehicleSeatingSubModuleMapping_Module" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="workorderEMSModel.CorrectiveActionForm" Width="1.5" PointX="5.375" PointY="32.75" />
+        <EntityTypeShape EntityType="workorderEMSModel.TerminationForm" Width="1.5" PointX="11.375" PointY="32.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

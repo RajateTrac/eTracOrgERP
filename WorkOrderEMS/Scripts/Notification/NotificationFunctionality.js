@@ -1,4 +1,4 @@
-﻿var url, data;
+﻿var url, data, FormId;
 var base_url = window.location.origin;
 
 function OpenCommonView(result, action) {
@@ -9,16 +9,21 @@ function OpenCommonView(result, action) {
     var getNotificationId = $(result).attr("notificationId");
     switch (getSubModuleName + action) {
         case 'OnBoardingView':
-            url = base_url+'/Notification/GetViewForApplicantDetails';
+            url = base_url + '/Notification/GetViewForApplicantDetails';
             data = { "ApplicantId": getSubModuleId, "ApplicantStatus": getStatus };
             break;
         case 'EvaluationComplete':
             url = base_url + '/Notification/GetViewForApplicantDetails';
             data = { "ApplicantId": getSubModuleId, "ApplicantStatus": getStatus };
             break;
+        case 'ScheduleMeetingView':
+            url = base_url + '/Notification/ViewForMeeting';
+            data = { "emp_id": getSubModuleId, "NotificationId": Number(getNotificationId) };
+            FormId = "ScheduleMeetingForm";
+            break;
     }
 
-    DoFunctionality(url, data, getSubModuleName, getStatus, getSubModuleId, action, getNotificationId);   
+    DoFunctionality(url, data, getSubModuleName, getStatus, getSubModuleId, action, getNotificationId);
 }
 
 function DoFunctionality(url, data, getSubModuleName, getStatus, getSubModuleId, action, getNotificationId) {
@@ -31,7 +36,7 @@ function DoFunctionality(url, data, getSubModuleName, getStatus, getSubModuleId,
             beforeSend: function () {
                 new fn_showMaskloader('Please wait...');
             },
-            success: function (getData) {                
+            success: function (getData) {
                 ResultView(getData, action)
             },
             error: function (err) { },
@@ -54,8 +59,8 @@ function DoFunctionality(url, data, getSubModuleName, getStatus, getSubModuleId,
                     label: 'Complete Now',
                     className: 'btn-success',
                     callback: function () {
-                        
-                        $('#RenderPageId').load(base_url+"/NewAdmin/PerformanceManagement");
+
+                        $('#RenderPageId').load(base_url + "/NewAdmin/PerformanceManagement");
                     }
                 },
                 cancel: {
@@ -121,3 +126,24 @@ function NotificationRead(NotificationId) {
         }
     });
 }
+$("#SaveNotificationAction").click(function () {
+    debugger
+    var FormData = $("#ScheduleMeetingForm").serialize();
+    $.ajax({
+        type: "POST",
+        data: FormData,
+        url: base_url + '/Corrective/SaveMeetingDateTime',
+        beforeSend: function () {
+            new fn_showMaskloader('Please wait...');
+        },
+        success: function (Data) {
+
+        },
+        error: function (err) {
+
+        },
+        complete: function () {
+            fn_hideMaskloader();
+        }
+    });
+});

@@ -276,6 +276,9 @@
     <Compile Include="EntityModel\ContractType.cs">
       <DependentUpon>WorkOrderEMS.tt</DependentUpon>
     </Compile>
+    <Compile Include="EntityModel\CorrectiveActionForm.cs">
+      <DependentUpon>WorkOrderEMS.tt</DependentUpon>
+    </Compile>
     <Compile Include="EntityModel\CostCode.cs">
       <DependentUpon>WorkOrderEMS.tt</DependentUpon>
     </Compile>
@@ -732,6 +735,9 @@
     <Compile Include="EntityModel\spGetAssessmentQuestion_Result.cs">
       <DependentUpon>WorkOrderEMS.tt</DependentUpon>
     </Compile>
+    <Compile Include="EntityModel\spGetAssetAllocation_Result.cs">
+      <DependentUpon>WorkOrderEMS.tt</DependentUpon>
+    </Compile>
     <Compile Include="EntityModel\spGetBillFacilityItemForApproval_Result.cs">
       <DependentUpon>WorkOrderEMS.tt</DependentUpon>
     </Compile>
@@ -813,6 +819,9 @@
     <Compile Include="EntityModel\spGetContract_Result.cs">
       <DependentUpon>WorkOrderEMS.tt</DependentUpon>
     </Compile>
+    <Compile Include="EntityModel\spGetCorrectiveActionForm_Result.cs">
+      <DependentUpon>WorkOrderEMS.tt</DependentUpon>
+    </Compile>
     <Compile Include="EntityModel\spGetCostCodeLocationMapping_Result.cs">
       <DependentUpon>WorkOrderEMS.tt</DependentUpon>
     </Compile>
@@ -820,6 +829,9 @@
       <DependentUpon>WorkOrderEMS.tt</DependentUpon>
     </Compile>
     <Compile Include="EntityModel\spGetDebitMemoList_Result.cs">
+      <DependentUpon>WorkOrderEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntityModel\spGetDepartmentEmail_Result.cs">
       <DependentUpon>WorkOrderEMS.tt</DependentUpon>
     </Compile>
     <Compile Include="EntityModel\spGetDepartment_Result.cs">
@@ -841,6 +853,15 @@
       <DependentUpon>WorkOrderEMS.tt</DependentUpon>
     </Compile>
     <Compile Include="EntityModel\spGetEmergencyContactForm_Result.cs">
+      <DependentUpon>WorkOrderEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntityModel\spGetEmployeeLogin_Result.cs">
+      <DependentUpon>WorkOrderEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntityModel\spGetEmployeeLogin_Result1.cs">
+      <DependentUpon>WorkOrderEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntityModel\spGetEmployeeLogin_Result2.cs">
       <DependentUpon>WorkOrderEMS.tt</DependentUpon>
     </Compile>
     <Compile Include="EntityModel\spGetEmployeeManagementList_Result.cs">
@@ -942,6 +963,9 @@
     <Compile Include="EntityModel\spGetOrgnizationCommonview_Result.cs">
       <DependentUpon>WorkOrderEMS.tt</DependentUpon>
     </Compile>
+    <Compile Include="EntityModel\spGetOrgnizationCommonview_Result1.cs">
+      <DependentUpon>WorkOrderEMS.tt</DependentUpon>
+    </Compile>
     <Compile Include="EntityModel\spGetOrgnizationListview_Result.cs">
       <DependentUpon>WorkOrderEMS.tt</DependentUpon>
     </Compile>
@@ -970,6 +994,9 @@
       <DependentUpon>WorkOrderEMS.tt</DependentUpon>
     </Compile>
     <Compile Include="EntityModel\spGetPendingPOList_Result.cs">
+      <DependentUpon>WorkOrderEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntityModel\spGetPIP_Termination_CorrectiveAction_Result.cs">
       <DependentUpon>WorkOrderEMS.tt</DependentUpon>
     </Compile>
     <Compile Include="EntityModel\spGetPODetail_Result.cs">
@@ -1315,6 +1342,9 @@
       <DependentUpon>WorkOrderEMS.tt</DependentUpon>
     </Compile>
     <Compile Include="EntityModel\tbl_Staffing_Addition_Details.cs">
+      <DependentUpon>WorkOrderEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntityModel\TerminationForm.cs">
       <DependentUpon>WorkOrderEMS.tt</DependentUpon>
     </Compile>
     <Compile Include="EntityModel\TimeZone.cs">

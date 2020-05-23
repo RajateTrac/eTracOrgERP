@@ -4,7 +4,7 @@ var QEvaluationsUrl = '../NewAdmin/GetListOfQEvaluationsForJSGrid';
 var MeetingUrl = '../NewAdmin/GetMeetingList';
 var base_Url = window.location.origin;
 
-var clients;
+var clients, RefreshAllGrid;
 var $_LocationId = $("#drp_MasterLocation1 option:selected").val();
 var $_OperationName = "", $_workRequestAssignmentId = 0, $_UserId = 0, $_RequestedBy = 0;//= $("#drp_MasterLocation option:selected").val();
 (function ($) {
@@ -36,7 +36,7 @@ var $_OperationName = "", $_workRequestAssignmentId = 0, $_UserId = 0, $_Request
             $(".jsgrid-insert-row").hide();
             $(".jsgrid-filter-row").hide()
             $(".jsgrid-grid-header").removeClass("jsgrid-header-scrollbar");
-
+            RefreshAllGrid = 
         },
         //      rowRenderer: function (item) {
         //         var user = item;
@@ -760,4 +760,13 @@ function SelfAssessment() {
             });
         }
     });
+}
+
+function RefreshPerformanceGrid() {
+    debugger
+    $("#" + RefreshAllGrid).jsGrid('loadData');
+}
+function getTabIdEvent($_this) {
+    debugger
+    RefreshAllGrid = $($_this).attr("id");
 }
