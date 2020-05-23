@@ -14,7 +14,7 @@ namespace WorkOrderEMS.Controllers
         private readonly INotification _INotification;
         public NotificationController(INotification _INotification)
         {
-            this._INotification = _INotification;            
+            this._INotification = _INotification;
         }
         public ActionResult Index()
         {
@@ -57,7 +57,7 @@ namespace WorkOrderEMS.Controllers
                 else
                     return RedirectToAction("GetUnseenList");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return RedirectToAction("GetUnseenList");
             }
@@ -69,26 +69,31 @@ namespace WorkOrderEMS.Controllers
         /// </summary>
         /// <param name="ApplicantId"></param>
         /// <returns></returns>
-        [HttpPost]
-        public ActionResult GetViewForApplicantDetails(long ApplicantId,string ApplicantStatus)
-        {
-            var getData = new ApplicantDetails();
-            try
-            {
-                if(ApplicantId > 0 && ApplicantStatus != null)
-                {
-                     getData = _INotification.GetApplicantDetails(ApplicantId);
-                }
-                else
-                {
-                    return View("_ApplicantDetailsWhenAcceptRejectCounterOffer", getData);
-                }
-            }
-            catch(Exception ex)
-            {
+        //[HttpPost]
+        //public ActionResult GetViewForApplicantDetails(long ApplicantId,string ApplicantStatus)
+        //{
+        //    var getData = new ApplicantDetails();
+        //    try
+        //    {
+        //        if(ApplicantId > 0 && ApplicantStatus != null)
+        //        {
+        //             getData = _INotification.GetApplicantDetails(ApplicantId);
+        //        }
+        //        else
+        //        {
+        //            return View("_ApplicantDetailsWhenAcceptRejectCounterOffer", getData);
+        //        }
+        //    }
+        //    catch(Exception ex)
+        //    {
 
-            }
-            return View("_ApplicantDetailsWhenAcceptRejectCounterOffer", getData);
+        //    }
+        //    return View("_ApplicantDetailsWhenAcceptRejectCounterOffer", getData);
+        //}
+        [HttpPost]
+        public ActionResult GetViewForApplicantDetails(long ApplicantId, string ApplicantStatus)
+        {
+            return null;
         }
     }
 }
