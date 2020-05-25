@@ -184,11 +184,6 @@
     }
 </style>
 <br />
-@*<div class="content-body">
-    <div class="container-fluid">*@
-@*row*@
-@*<div class="row">
-    <div class="col-xl-12 col-xxl-12">*@
 <div class="card aos-init aos-animate" data-aos="fade-up">
     <div class="card-header headerSize">
         <h4 class="card-title" style="color:white;"><strong>SetUp Customer</strong></h4>
@@ -344,7 +339,7 @@
                         <div class="form-group row">
                             <label class="col-sm-2 col-form-label" for="DLNo">Last 4 digit of DL#<span class="req">*</span></label>
                             <div class="col-sm-4">
-                                @Html.TextBoxFor(model => model.DLNo, new { @maxLength = "4", @class = "form-control input-rounded required", @placeholder = "DL#"})
+                                @Html.TextBoxFor(model => model.DLNo, new { @maxLength = "4", @class = "form-control input-rounded required", @placeholder = "DL#" })
                                 <div class="errorspace">
                                     @Html.ValidationMessageFor(model => model.DLNo)
                                 </div>
@@ -728,30 +723,35 @@
                 <div class="clearfix"></div>
                 @*<a href="javascript:void(0)" class="previous fa fa-long-arrow-left pull-left" style="font-size: 33px;color:#0aa0cd; cursor: pointer;"></a>*@
                 <button type="button" class="btn btn-success pull-left previous"><i class="fa fa-arrow-left"></i>&nbsp;Previous</button>
-                <button type="submit" id="Savebtndata" class="btn btn-success pull-right">Accept the Information </button>
+                <button type="button" id="Savebtndata" class="btn btn-success pull-right">Accept the Information </button>
                 <span class="pull-right next">&nbsp;&nbsp;</span>
                 <input type="button" onclick="callCancel();" class="btn btn-danger pull-right" formnovalidate="formnovalidate" value="Deny" />
             </fieldset>
         }
     </div>
 </div>
-@*</div>
-            </div>
-        </div>
-    </div>*@
-<script src="~/Scripts/eCounting/CustomerMultiStepWizard.js"></script>
+
+@*<script src="~/Scripts/eCounting/CustomerMultiStepWizard.js"></script>
 <script src="~/Content/NewAdminContent/VENDOR/jquery-steps/build/jquery.steps.min.js"></script>
-<script src="~/Scripts/NewAdminJS/plugins-init/jquery-steps-init.js"></script>
+<script src="~/Scripts/NewAdminJS/plugins-init/jquery-steps-init.js"></script>*@
+
+<script type="text/javascript" src="@Url.Content("~/Scripts/eCounting/CustomerMultiStepWizard.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Content/NewAdminContent/VENDOR/jquery-steps/build/jquery.steps.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/NewAdminJS/plugins-init/jquery-steps-init.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/bootstrap-datepicker.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.js")"></script>
 
 <script>
     $(function () {
 
-        $("#Savebtndata").on("click", function (event) {
-            if ($("#msform").valid()) {
-                return false;
-            }
-            fn_showMaskloader('Please wait...Loading');
-        });
+        //$("#Savebtndata").on("click", function (event) {
+        //    if ($("#msform").valid()) {
+        //        return false;
+        //    }
+        //    //fn_showMaskloader('Please wait...Loading');
+        //    //fn_hideMaskloader();
+        //});
 
         $("#ParkingFacilityLocation").change(function () {
             $.ajax({
@@ -905,7 +905,7 @@
                 var Loc = decodeURIComponent(vars.loc);
                 if (Loc == undefined || Loc == null || Loc == "undefined") {
                     $('#RenderPageId').load(addNewUrl123);
-                     $("#myModalForRequisitionAction").modal("hide");
+                    $("#myModalForRequisitionAction").modal("hide");
                 }
                 else {
                     $('#RenderPageId').load(addNewUrl123);
@@ -932,6 +932,7 @@
                     cache: false,
                     timeout: 600000,
                     success: function (data) {
+                        $('.modal-backdrop').hide();
                         $("#myModalForRequisitionAction").modal("hide");
                         var addNewUrl;
                         if ('@ViewBag.UpdateMode' == 'True') {
@@ -947,6 +948,7 @@
 
                     }
                 });
+                fn_hideMaskloader();
             }
         });
 </script>

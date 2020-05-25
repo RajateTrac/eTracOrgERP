@@ -63,6 +63,8 @@
 
     </script>
 }
+<link rel="stylesheet" href="@Url.Content("~/Content/NewAdminContent/CSS/clockPicker.css")" />
+<link rel="stylesheet" href="@Url.Content("~/Content/Dashboard/plugins/daterangepicker/daterangepicker-bs3.css")" />
 
 <style>
 
@@ -186,6 +188,7 @@
         font-weight: bold;
         border-color: red !important;
     }
+
     .form-control-sm1 {
         height: calc(1.5em + 0.5rem + 2px);
         padding: 0.25rem 0.5rem;
@@ -224,8 +227,8 @@
             <div class="col-xl-12 col-xxl-12">
                 <div class="card aos-init aos-animate" data-aos="fade-up">
                     @*<div class="card-header headerSize">
-                        <h4 class="card-title" style="color:white;"><strong>Create Manual Client Invoice</strong></h4>
-                    </div>*@
+                            <h4 class="card-title" style="color:white;"><strong>Create Manual Client Invoice</strong></h4>
+                        </div>*@
                     <div class="card-body">
 
                         <br />
@@ -405,7 +408,7 @@
                                 <div class="form-group row">
                                     <label class="col-sm-2 col-form-label" for="PaymentAmount"> Payment Amount<span class="req">*</span></label>
                                     <div class="col-sm-2">
-                                        @Html.TextBoxFor(model => model.PaymentAmount, new { @class = "form-control input-rounded required", @Value = Model.PendingAmount, @placeholder = "Payment Amount", @min = 1,@max = Model.PendingAmount, @onkeypress = "javascript:return validFloat(event,this.id);" })
+                                        @Html.TextBoxFor(model => model.PaymentAmount, new { @class = "form-control input-rounded required", @Value = Model.PendingAmount, @placeholder = "Payment Amount", @min = 1, @max = Model.PendingAmount, @onkeypress = "javascript:return validFloat(event,this.id);" })
                                         <div class="errorspace">
                                             @Html.ValidationMessageFor(model => model.PaymentAmount)
                                         </div>
@@ -495,8 +498,16 @@
     </div>
     @*</div>*@
 }
-<script src="~/Content/NewAdminContent/VENDOR/jquery-steps/build/jquery.steps.min.js"></script>
-<script src="~/Scripts/NewAdminJS/plugins-init/jquery-steps-init.js"></script>
+@*<script src="~/Content/NewAdminContent/VENDOR/jquery-steps/build/jquery.steps.min.js"></script>
+    <script src="~/Scripts/NewAdminJS/plugins-init/jquery-steps-init.js"></script>*@
+
+<script type="text/javascript" src="@Url.Content("~/Content/NewAdminContent/VENDOR/jquery-steps/build/jquery.steps.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/NewAdminJS/plugins-init/jquery-steps-init.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/NewAdminJS/plugins-init/bs-daterange-picker-init.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Content/Dashboard/plugins/daterangepicker/daterangepicker.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.js")"></script>
+
 <script type="text/javascript">
 
     function validInt(event) {

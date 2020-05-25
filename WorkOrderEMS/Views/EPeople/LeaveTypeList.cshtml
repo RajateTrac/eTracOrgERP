@@ -47,7 +47,7 @@
     }
 </style>
 <br />
-<div class="content-body" style="min-height: 920px;">
+<div style="margin-top:80px">
     <!-- row -->
     <div class="container-fluid">
         <div class="row">
@@ -58,10 +58,13 @@
                             <div class="basic-form">
                                 <div class="form-group mb-0">
                                     <div class="row">
+                                        <div class="col-md-1" style="padding-top: 6px;">
+                                            <a id="BackToAdmin" title="Back to Admin Dahsboard" style="cursor:pointer;"><i style="vertical-align:bottom;color:white;font-size:25px;" class="fa fa-long-arrow-left fa-2x"></i></a>
+                                        </div>&nbsp;&nbsp;
                                         <div class="col-md-1">
                                             <a href="javascript:void(0)"><span><i id="AddItem" class="mdi mdi-plus" style="vertical-align:bottom;color:white;font-size:25px;"></i></span></a>
                                         </div>&nbsp;&nbsp;
-                                        <div class="col-md-6" style="padding:5px">
+                                        <div class="col-md-9" style="padding:5px">
                                             <input id="SearchText" class="inputSearch form-control input-rounded" placeholder="Search by Leave Type Description/Id" style="width:350px;height: 25px;padding: 10px;" onkeyup="doSearch()" type="text">
                                         </div>
                                     </div>
@@ -241,6 +244,10 @@
             var addNewUrl = "/EPeople/LeaveType?TypeId=0";
             $('#RenderPageId').load(addNewUrl);
         });
+        $("#BackToAdmin").click(function () {
+        var url = "@Url.Action("Index", "AdminDashboard", new { area = "AdminSection" })";
+        window.location.href = url;
+    });
     });
     GridLoad();
     function doSearch(ev) {

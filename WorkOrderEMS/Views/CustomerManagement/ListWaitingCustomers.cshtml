@@ -70,8 +70,6 @@
     .headerSize {
         height: 36px;
     }
-    
-    
 </style>
 <br />
 <div class="content-body" style="min-height: 920px;">
@@ -92,10 +90,10 @@
             </div>
             <div class="col-lg-6">
                 @*<a href="@Url.Action("ListCustomers", "CustomerManagement")" data-oldDash="Yes">*@
-                    <div class="pricing_table_content mt-5" id="lstCust" style="background-color: #3F8ADA;color:white;cursor: pointer;">
-                        <p style="margin-top:-20px;font-size:20px;"><b> </b></p>
-                        <div class="package" style="margin-top:-30px;"><i class="mdi mdi-account-check" style="color:white;font-size:30px;"></i>&nbsp;&nbsp;&nbsp;<b>Customer List</b></div>
-                    </div>
+                <div class="pricing_table_content mt-5" id="lstCust" style="background-color: #3F8ADA;color:white;cursor: pointer;">
+                    <p style="margin-top:-20px;font-size:20px;"><b> </b></p>
+                    <div class="package" style="margin-top:-30px;"><i class="mdi mdi-account-check" style="color:white;font-size:30px;"></i>&nbsp;&nbsp;&nbsp;<b>Customer List</b></div>
+                </div>
                 @*</a>*@
             </div>
         </div>
@@ -426,118 +424,34 @@
     </div>
 </div>
 
+<div class="modal fade bd-example-modal-lg ActionRequisition" tabindex="-1" role="dialog" aria-hidden="true" id="myModalForRequisitionAction" style="overflow:scroll;">
+    <div class="modal-dialog modal-lg" style="max-width: 1021px;">
+        <div class="modal-content" style="width:1000px">
+            <div class="modal-header" style="display: inherit;">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body-popup">
+                <div id="divOpenRquisitionForm" class="">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-<script src="~/GridListing/JqGridScript/CustomersWaitingList.js"></script>
+@*<script src="~/GridListing/JqGridScript/CustomersWaitingList.js"></script>*@
+<script type="text/javascript" src="@Url.Content("~/GridListing/JqGridScript/CustomersWaitingList.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/bootstrap-datepicker.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.js")"></script>
 <script>
     $(document).ready(function () {
 
-    $.ajax({
-        type: "GET",
-        url: "@Url.Action("GetDashboardForVendorCount", "VendorManagement")",
-        data: {},
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        success: function (dataJSON) {
-
-            am4core.ready(function () {
-
-                // Themes begin
-                am4core.useTheme(am4themes_animated);
-                // Themes end
-
-                // Create chart instance
-                var chart = am4core.create("EmployeeCount1", am4charts.PieChart);
-
-                // Add data
-                chart.data = [{
-                    "User": "Approved",
-                    "Count": dataJSON.model.ApprovedVendorCount,
-                }, {
-                    "User": "Waiting",
-                    "Count":dataJSON.model.WaitingVendorCount,
-                }, {
-                    "User": "Rejected",
-                    "Count": dataJSON.model.RejectedVendorCount,
-                }];
-
-                // Add and configure Series
-                var pieSeries = chart.series.push(new am4charts.PieSeries());
-                pieSeries.dataFields.value = "Count";
-                pieSeries.dataFields.category = "User";
-                pieSeries.innerRadius = am4core.percent(50);
-                pieSeries.ticks.template.disabled = true;
-                pieSeries.labels.template.disabled = true;
-
-                var rgm = new am4core.RadialGradientModifier();
-                rgm.brightnesses.push(-0.8, -0.8, -0.5, 0, -0.5);
-                pieSeries.slices.template.fillModifier = rgm;
-                pieSeries.slices.template.strokeModifier = rgm;
-                pieSeries.slices.template.strokeOpacity = 0.4;
-                pieSeries.slices.template.strokeWidth = 0;
-
-                chart.legend = new am4charts.Legend();
-                chart.legend.position = "right";
-
-            }); // end am4core.ready()
-        }
-    });
-
-        var chartData = [];
-        $.ajax({
-            type: "GET",
-            url: "@Url.Action("GetDashboardForLocationAllocaionVendorCount", "VendorManagement")",
-            data: {},
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function (_result) {
-                $.each(_result.data, function (index, value)
-                {
-                    chartData.push(value);
-                });
-                AmCharts.makeChart("chartdiv", {
-                    "theme": "none",
-                    "type": "serial",
-                    "startDuration": 7,
-                    "dataProvider": chartData,
-                    "valueAxes": [{
-                        "position": "left",
-                        "axisAlpha": 0,
-                        "gridAlpha": 0
-                    }],
-                    "graphs": [{
-                        "balloonText": "[[category]]: <b>[[value]]</b>",
-                        "colorField": "colour",
-                        "fillAlphas": 0.85,
-                        "lineAlpha": 0.1,
-                        "type": "column",
-                        "topRadius": 1,
-                        "valueField": "VendorCount"
-                    }],
-                    "depth3D": 40,
-                    "angle": 30,
-                    "chartCursor": {
-                        "categoryBalloonEnabled": false,
-                        "cursorAlpha": 0,
-                        "zoomable": false
-                    },
-                    "categoryField": "LocationName",
-                    "categoryAxis": {
-                        "gridPosition": "start",
-                        "axisAlpha": 1,
-                        "gridAlpha": 0,
-                        "labelRotation": 20,
-                    },
-                    "export": {
-                        "enabled": true
-                    }
-                }, 0);
-            }
+        $("#BackToAdmin").click(function () {
+            var url = "@Url.Action("Index", "AdminDashboard", new { area = "AdminSection" })";
+            window.location.href = url;
         });
-    });
 
-    $("#BackToAdmin").click(function () {
-        var url = "@Url.Action("Index", "AdminDashboard", new { area = "AdminSection" })";
-        window.location.href = url;
     });
-
 </script>

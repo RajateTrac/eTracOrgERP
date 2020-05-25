@@ -12,11 +12,7 @@
         Layout = null;
     }
 }
-<script src="https://www.amcharts.com/lib/4/core.js"></script>
-<script src="https://www.amcharts.com/lib/4/charts.js"></script>
-<script src="https://www.amcharts.com/lib/4/themes/animated.js"></script>
-<script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
-<script src="https://www.amcharts.com/lib/3/serial.js"></script>
+
 <link href="~/Content/NewAdminContent/VENDOR/jsgrid/css/jsgrid.min.css" rel="stylesheet" />
 <link href="~/Content/NewAdminContent/VENDOR/jsgrid/css/jsgrid-theme.min.css" rel="stylesheet" />
 <link href="~/Content/NewAdminContent/VENDOR/c3/css/c3.min.css" rel="stylesheet" />
@@ -166,110 +162,10 @@
     </div>
 </div>
 <script src="~/GridListing/JqGridScript/ListItem.js"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.js")"></script>
 <script>
     $(document).ready(function () {
 
-    $.ajax({
-        type: "GET",
-        url: "@Url.Action("GetDashboardForVendorCount", "VendorManagement")",
-        data: {},
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        success: function (dataJSON) {
-
-            am4core.ready(function () {
-
-                // Themes begin
-                am4core.useTheme(am4themes_animated);
-                // Themes end
-
-                // Create chart instance
-                var chart = am4core.create("EmployeeCount1", am4charts.PieChart);
-
-                // Add data
-                chart.data = [{
-                    "User": "Approved",
-                    "Count": dataJSON.model.ApprovedVendorCount,
-                }, {
-                    "User": "Waiting",
-                    "Count":dataJSON.model.WaitingVendorCount,
-                }, {
-                    "User": "Rejected",
-                    "Count": dataJSON.model.RejectedVendorCount,
-                }];
-
-                // Add and configure Series
-                var pieSeries = chart.series.push(new am4charts.PieSeries());
-                pieSeries.dataFields.value = "Count";
-                pieSeries.dataFields.category = "User";
-                pieSeries.innerRadius = am4core.percent(50);
-                pieSeries.ticks.template.disabled = true;
-                pieSeries.labels.template.disabled = true;
-
-                var rgm = new am4core.RadialGradientModifier();
-                rgm.brightnesses.push(-0.8, -0.8, -0.5, 0, -0.5);
-                pieSeries.slices.template.fillModifier = rgm;
-                pieSeries.slices.template.strokeModifier = rgm;
-                pieSeries.slices.template.strokeOpacity = 0.4;
-                pieSeries.slices.template.strokeWidth = 0;
-
-                chart.legend = new am4charts.Legend();
-                chart.legend.position = "right";
-
-            }); // end am4core.ready()
-        }
-    });
-
-        var chartData = [];
-        $.ajax({
-            type: "GET",
-            url: "@Url.Action("GetDashboardForLocationAllocaionVendorCount", "VendorManagement")",
-            data: {},
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function (_result) {
-                $.each(_result.data, function (index, value)
-                {
-                    chartData.push(value);
-                });
-                AmCharts.makeChart("chartdiv", {
-                    "theme": "none",
-                    "type": "serial",
-                    "startDuration": 7,
-                    "dataProvider": chartData,
-                    "valueAxes": [{
-                        "position": "left",
-                        "axisAlpha": 0,
-                        "gridAlpha": 0
-                    }],
-                    "graphs": [{
-                        "balloonText": "[[category]]: <b>[[value]]</b>",
-                        "colorField": "colour",
-                        "fillAlphas": 0.85,
-                        "lineAlpha": 0.1,
-                        "type": "column",
-                        "topRadius": 1,
-                        "valueField": "VendorCount"
-                    }],
-                    "depth3D": 40,
-                    "angle": 30,
-                    "chartCursor": {
-                        "categoryBalloonEnabled": false,
-                        "cursorAlpha": 0,
-                        "zoomable": false
-                    },
-                    "categoryField": "LocationName",
-                    "categoryAxis": {
-                        "gridPosition": "start",
-                        "axisAlpha": 1,
-                        "gridAlpha": 0,
-                        "labelRotation": 20,
-                    },
-                    "export": {
-                        "enabled": true
-                    }
-                }, 0);
-            }
-        });
     });
 </script>

@@ -144,7 +144,7 @@
 @Html.ValidationSummary(true)
 @Html.AntiForgeryToken()
 
-<script src="@Url.Content("~/Scripts/bootstrap-datepicker.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/bootstrap-datepicker.js")"></script>
 <input type="hidden" value='@hiddnUserType' name='@UserTypeControlName'>
 @*<input type="hidden" name="UserModel.EmployeeCategory" id="UserCategory" value='@Controller' />*@
 @Html.Hidden("StateList", null, new { id = myModelprefix + "StateList", Value = ViewBag.StateList })

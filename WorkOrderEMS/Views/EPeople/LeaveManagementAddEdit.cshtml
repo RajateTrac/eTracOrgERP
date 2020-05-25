@@ -173,7 +173,7 @@
         </div>
     </div>
 </div>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
 <script type="text/javascript" src="@Url.Content("~/Content/Dashboard/plugins/timepicker/bootstrap-timepicker.min.js")"></script>
 <script type="text/javascript" src="@Url.Content("~/Scripts/bootstrap-datepicker.js")"></script>
 <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
@@ -185,19 +185,21 @@
         });
         $('#FromDate').datepicker({
             format: "mm/dd/yyyy",
-            startDate: new Date()
+            startDate: new Date($('#FromDate').val())
         });
         var now = new Date();
         var date = ((now.getMonth() + 1) + '/' + (now.getDate()) + '/' + now.getFullYear());
-        $('#FromDate').val(date);
 
         $('#ToDate').datepicker({
             format: "mm/dd/yyyy",
-            startDate: new Date()
+            startDate: new Date($('#ToDate').val())
         });
         var now = new Date();
         var date = ((now.getMonth() + 1) + '/' + (now.getDate()) + '/' + now.getFullYear());
-        $('#ToDate').val(date);
+        if (@Model.Id==0) {
+            $('#FromDate').val(date);
+            $('#ToDate').val(date);
+        }
         $("#ToDate").change(function () {
             var startDate = new Date($('#FromDate').val());
             var endDate = new Date($('#ToDate').val());

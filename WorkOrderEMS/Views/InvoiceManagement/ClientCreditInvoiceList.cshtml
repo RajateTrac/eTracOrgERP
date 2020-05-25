@@ -45,6 +45,9 @@
 <link href="~/Content/NewAdminContent/VENDOR/jsgrid/css/jsgrid-theme.min.css" rel="stylesheet" />
 <link href="~/Content/NewAdminContent/VENDOR/c3/css/c3.min.css" rel="stylesheet" />
 
+<link rel="stylesheet" href="@Url.Content("~/Content/NewAdminContent/CSS/clockPicker.css")" />
+<link rel="stylesheet" href="@Url.Content("~/Content/Dashboard/plugins/daterangepicker/daterangepicker-bs3.css")" />
+
 <style>
     #chartdiv, #EmployeeCount1 {
         width: 100%;
@@ -106,7 +109,7 @@
                                             <canvas id="CreditInvoiceStatuses"></canvas>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="form-group row col-md-6">
                                         <label class="col-sm-3 col-form-label">Type</label>
                                         <div class="col-sm-9">
@@ -123,18 +126,18 @@
                                             @Html.Hidden("InvoiceTypeRadioValue")
                                         </div>
                                         @*<label class="col-sm-3 col-form-label" for="FirstName">Location</label>
-                                        <div class="col-sm-9">
-                                            @if (Session != null)
-                                            {
-                                                if (Session["eTrac_UserLocations"] != null)
+                                            <div class="col-sm-9">
+                                                @if (Session != null)
                                                 {
-                                                    @Html.DropDownList("ClientLocationCodeSearchParams", new SelectList((List<WorkOrderEMS.Models.UserLocations>)Session["eTrac_UserLocations"], "LocationId", "LocationName"), "--Select Location--", new { @class = "form-control input-rounded required required2", @onchange = "doSearch()" })
+                                                    if (Session["eTrac_UserLocations"] != null)
+                                                    {
+                                                        @Html.DropDownList("ClientLocationCodeSearchParams", new SelectList((List<WorkOrderEMS.Models.UserLocations>)Session["eTrac_UserLocations"], "LocationId", "LocationName"), "--Select Location--", new { @class = "form-control input-rounded required required2", @onchange = "doSearch()" })
+                                                    }
                                                 }
-                                            }
-                                            <div class="errorspace">
-                                                @Html.ValidationMessage("ClientLocationCode1")
-                                            </div>
-                                        </div>*@
+                                                <div class="errorspace">
+                                                    @Html.ValidationMessage("ClientLocationCode1")
+                                                </div>
+                                            </div>*@
                                         <label class="col-sm-3 col-form-label">Search</label>
                                         <div class="col-sm-9">
                                             @Html.TextBox("SearchText", "", new { @class = "form-control input-rounded", @placeholder = "Search", onkeyup = "doSearch()" })
@@ -269,7 +272,7 @@
                     <label class="col-sm-2 col-form-label">Comment<span class="req">*</span></label>
                     <div class="col-sm-10">
 
-                        @Html.TextBoxFor(model => model.Comment, new { @class = "form-control", @id ="CommentCustomer", @placeholder = "Comment", @style = "border-radios:0px;" })
+                        @Html.TextBoxFor(model => model.Comment, new { @class = "form-control", @id = "CommentCustomer", @placeholder = "Comment", @style = "border-radios:0px;" })
                         <span id="spn_valcomment" style="color:red"></span>
                         @Html.ValidationMessageFor(model => model.Comment, "", new { @class = "text-danger" })
                     </div>
@@ -358,7 +361,7 @@
                                 <div id="lblDraftCreditMemoNumber" class="form-control-static"></div>
                             </div>
                         </div>
-                        
+
 
                     </div>
                     <div class="row">
@@ -380,7 +383,7 @@
                                 <div id="lblPositionTitle" class="form-control-static"></div>
                             </div>
                         </div>
-                        
+
                     </div>
                     <div class="row">
                         <div class="col-lg-3">
@@ -401,7 +404,7 @@
                                 <div id="lblCreditIssuedDate" class="form-control-static"></div>
                             </div>
                         </div>
-                        
+
                     </div>
                     <div class="row">
                         <div class="col-lg-3">
@@ -576,9 +579,25 @@
     </div>
 </div>
 
-<script src="~/Scripts/NewAdminJS/plugins-init/bs-daterange-picker-init.js"></script>
-<script src="~/GridListing/JqGridScript/ListCreditInvoice.js"></script>
+@*<script src="~/Scripts/NewAdminJS/plugins-init/bs-daterange-picker-init.js"></script>
+    <script src="~/GridListing/JqGridScript/ListCreditInvoice.js"></script>*@
+
+<script type="text/javascript" src="@Url.Content("~/Scripts/NewAdminJS/plugins-init/bs-daterange-picker-init.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Content/Dashboard/plugins/daterangepicker/daterangepicker.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/GridListing/JqGridScript/ListCreditInvoice.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.js")"></script>
+
+
 <script>
+
+    $('.input-daterange-datepicker-new').daterangepicker({
+        buttonClasses: ['btn', 'btn-sm'],
+        applyClass: 'btn-danger',
+        cancelClass: 'btn-inverse',
+        format: "MM/DD/YYYY"
+    });
+
     $("input[name='TypeFilter'").change(function () {
         if ($(this).data('title') == "Invoice") {
             PageRedirect("ClientInvoiceList", "InvoiceManagement");
@@ -616,7 +635,7 @@
                                 'rgba(128,128,0)',
                                 'rgba(102,205,170)',
                                 'rgba(186,85,211)',
-                                
+
                             ],
                             hoverBackgroundColor: [
                                 'rgba(128,0,0)',
@@ -658,7 +677,7 @@
     });
     $(document).ready(function () {
         GetCreditInvoiceChartData();
-        
+
         @*$.ajax({
             type: "GET",
             url: "@Url.Action("GetDashboardForCreditInvoiceStatusCount", "InvoiceManagement")",

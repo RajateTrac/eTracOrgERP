@@ -44,6 +44,8 @@
 <link href="~/Content/NewAdminContent/VENDOR/jsgrid/css/jsgrid.min.css" rel="stylesheet" />
 <link href="~/Content/NewAdminContent/VENDOR/jsgrid/css/jsgrid-theme.min.css" rel="stylesheet" />
 <link href="~/Content/NewAdminContent/VENDOR/c3/css/c3.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="@Url.Content("~/Content/NewAdminContent/CSS/clockPicker.css")" />
+<link rel="stylesheet" href="@Url.Content("~/Content/Dashboard/plugins/daterangepicker/daterangepicker-bs3.css")" />
 
 <style>
     #chartdiv, #EmployeeCount1 {
@@ -644,9 +646,24 @@
     </div>
 </div>
 
-<script src="~/Scripts/NewAdminJS/plugins-init/bs-daterange-picker-init.js"></script>
-<script src="~/GridListing/JqGridScript/ListInvoice.js"></script>
+@*<script src="~/Scripts/NewAdminJS/plugins-init/bs-daterange-picker-init.js"></script>
+    <script src="~/GridListing/JqGridScript/ListInvoice.js"></script>*@
+<script type="text/javascript" src="@Url.Content("~/Scripts/NewAdminJS/plugins-init/bs-daterange-picker-init.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Content/Dashboard/plugins/daterangepicker/daterangepicker.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/GridListing/JqGridScript/ListInvoice.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.js")"></script>
+
+
 <script type="text/javascript">
+
+    $('.input-daterange-datepicker-new').daterangepicker({
+        buttonClasses: ['btn', 'btn-sm'],
+        applyClass: 'btn-danger',
+        cancelClass: 'btn-inverse',
+        format: "MM/DD/YYYY"
+    });
+
     $("input[name='TypeFilter'").change(function () {
         if ($(this).data('title') == "Invoice") {
             var a = '/InvoiceManagement/ClientInvoiceList/';

@@ -66,7 +66,8 @@
 
     </script>
 }
-
+<link rel="stylesheet" href="@Url.Content("~/Content/NewAdminContent/CSS/clockPicker.css")" />
+<link rel="stylesheet" href="@Url.Content("~/Content/Dashboard/plugins/daterangepicker/daterangepicker-bs3.css")" />
 <style>
 
     .form-control {
@@ -179,7 +180,6 @@
     input[type="checkbox"]:after {
         background: #0aa0cd;
     }
-
 </style>
 
 <script type="text/javascript" src="~/Scripts/common/Common.js"></script>
@@ -329,11 +329,11 @@
                                 </div>
                             </div>
                             @*<div id="divNext">
-            <span class="w-100 text-right float-left">
-                <button type="button" class="btn btn-default bluebutton" onclick="return callCancel();" style="background-color:red;border-radius:18px;margin-left: 20px;width:160px;color:white;" value="Cancel" id="btnCancel">Cancel</button>
-                <button type="button" class="btn btn-default bluebutton nxt-btn" value="Next" id="btnNext" style="background-color:forestgreen;border-radius:18px;width:120px;color:white;">Next</button>
-            </span>
-        </div>*@
+                                    <span class="w-100 text-right float-left">
+                                        <button type="button" class="btn btn-default bluebutton" onclick="return callCancel();" style="background-color:red;border-radius:18px;margin-left: 20px;width:160px;color:white;" value="Cancel" id="btnCancel">Cancel</button>
+                                        <button type="button" class="btn btn-default bluebutton nxt-btn" value="Next" id="btnNext" style="background-color:forestgreen;border-radius:18px;width:120px;color:white;">Next</button>
+                                    </span>
+                                </div>*@
                         </div>
                         <div class="marbottom"></div>
                         <div class="clearfix"></div>
@@ -377,11 +377,11 @@
                             <div class="form-group row ">
                                 @*<label class="col-sm-2 col-form-label" for="SubTotal">Subtotal</label>*@
                                 @*<div class="col-sm-2">
-                                        @Html.TextBoxFor(model => model.SubTotal, new { @class = "form-control input-rounded", @placeholder = "SubTotal" })
-                                        <div class="errorspace">
-                                            @Html.ValidationMessageFor(model => model.SubTotal)
-                                        </div>
-                                </div>*@
+                                            @Html.TextBoxFor(model => model.SubTotal, new { @class = "form-control input-rounded", @placeholder = "SubTotal" })
+                                            <div class="errorspace">
+                                                @Html.ValidationMessageFor(model => model.SubTotal)
+                                            </div>
+                                    </div>*@
                                 <label class="col-sm-2 col-form-label" for="InvoiceSubTotal">Invoice Sub Total</label>
                                 <div class="col-sm-2">
                                     @Html.TextBoxFor(model => model.InvoiceSubTotal, new { @class = "form-control input-rounded", @placeholder = "Invoice SubTotal", @readonly = true })
@@ -398,7 +398,7 @@
                                     </div>*@
                                 <label class="col-sm-2 col-form-label" for="TotalCreditAmount">Credit Sub Total</label>
                                 <div class="col-sm-2">
-                                    @Html.TextBoxFor(model => model.TotalCreditAmount, new { @class = "form-control input-rounded", @placeholder = "Credit SubTotal" , @readonly = true})
+                                    @Html.TextBoxFor(model => model.TotalCreditAmount, new { @class = "form-control input-rounded", @placeholder = "Credit SubTotal", @readonly = true })
                                     <div class="errorspace">
                                         @Html.ValidationMessageFor(model => model.TotalCreditAmount)
                                     </div>
@@ -519,8 +519,16 @@
     @*</div>
         </div>*@
 }
-<script src="~/Content/NewAdminContent/VENDOR/jquery-steps/build/jquery.steps.min.js"></script>
-<script src="~/Scripts/NewAdminJS/plugins-init/jquery-steps-init.js"></script>
+@*<script src="~/Content/NewAdminContent/VENDOR/jquery-steps/build/jquery.steps.min.js"></script>
+    <script src="~/Scripts/NewAdminJS/plugins-init/jquery-steps-init.js"></script>*@
+<script type="text/javascript" src="@Url.Content("~/Content/NewAdminContent/VENDOR/jquery-steps/build/jquery.steps.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/NewAdminJS/plugins-init/jquery-steps-init.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/NewAdminJS/plugins-init/bs-daterange-picker-init.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Content/Dashboard/plugins/daterangepicker/daterangepicker.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.js")"></script>
+
+
 <script type="text/javascript">
 
     function validInt(event) {

@@ -62,6 +62,8 @@
 
     </script>
 }
+<link rel="stylesheet" href="@Url.Content("~/Content/NewAdminContent/CSS/clockPicker.css")" />
+<link rel="stylesheet" href="@Url.Content("~/Content/Dashboard/plugins/daterangepicker/daterangepicker-bs3.css")" />
 
 <style>
 
@@ -215,20 +217,20 @@
                             <div class="form-group row">
                                 <label class="col-sm-2 col-form-label" for="Location">Client Location<span class="req">*</span></label>
                                 @*<div class="col-sm-4">
-                                    @Html.HiddenFor(model => model.ClientLocationCode, new { @id = "ClientLocationCode", @class = "form-control input-rounded", @readonly = true })
-                                </div>*@
+                                        @Html.HiddenFor(model => model.ClientLocationCode, new { @id = "ClientLocationCode", @class = "form-control input-rounded", @readonly = true })
+                                    </div>*@
                                 <div class="col-sm-4">
-                                        @if (Session != null)
+                                    @if (Session != null)
+                                    {
+                                        if (Session["eTrac_UserLocations"] != null)
                                         {
-                                            if (Session["eTrac_UserLocations"] != null)
-                                            {
-                                                @Html.DropDownList("ClientLocationCode", new SelectList((List<WorkOrderEMS.Models.UserLocations>)Session["eTrac_UserLocations"], "LocationId", "LocationName"), "--Select Location--", new { @id = "ClientLocationCode", @class = "form-control input-rounded required required2", @disabled = true })
-                                            }
+                                            @Html.DropDownList("ClientLocationCode", new SelectList((List<WorkOrderEMS.Models.UserLocations>)Session["eTrac_UserLocations"], "LocationId", "LocationName"), "--Select Location--", new { @id = "ClientLocationCode", @class = "form-control input-rounded required required2", @disabled = true })
                                         }
-                                        <div class="errorspace">
-                                            @Html.ValidationMessageFor(model => model.ClientLocationCode)
-                                        </div>
+                                    }
+                                    <div class="errorspace">
+                                        @Html.ValidationMessageFor(model => model.ClientLocationCode)
                                     </div>
+                                </div>
                             </div>
                             <div class="form-group row">
                                 <label class="col-sm-2 col-form-label" for="FirstName">Client Company Name<span class="req">*</span></label>
@@ -453,8 +455,15 @@
     @*</div>
         </div>*@
 }
-<script src="~/Content/NewAdminContent/VENDOR/jquery-steps/build/jquery.steps.min.js"></script>
-<script src="~/Scripts/NewAdminJS/plugins-init/jquery-steps-init.js"></script>
+@*<script src="~/Content/NewAdminContent/VENDOR/jquery-steps/build/jquery.steps.min.js"></script>
+    <script src="~/Scripts/NewAdminJS/plugins-init/jquery-steps-init.js"></script>*@
+<script type="text/javascript" src="@Url.Content("~/Content/NewAdminContent/VENDOR/jquery-steps/build/jquery.steps.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/NewAdminJS/plugins-init/jquery-steps-init.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/NewAdminJS/plugins-init/bs-daterange-picker-init.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Content/Dashboard/plugins/daterangepicker/daterangepicker.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.js")"></script>
+
 <script type="text/javascript">
 
     function validInt(event) {
@@ -620,7 +629,6 @@
                 datatype: 'json',
                 success: function (result) {
                     $("#ClientLocationCode").val(result.LocationId);
-                    debugger
                     $("#LocationAddress").val(result.LocationAddress);
                     $("#LocationCode").val(result.LocationCode);
                     $("#ContractType").val(result.ContractType);

@@ -108,13 +108,24 @@
 </div>
 
 @*<script src="~/Content/NewAdminContent/JQUERY/clockPicker.js"></script>
-<script src="~/Scripts/NewAdminJS/plugins-init/bs-daterange-picker-init.js"></script>*@
+    <script src="~/Scripts/NewAdminJS/plugins-init/bs-daterange-picker-init.js"></script>*@
 <script type="text/javascript" src="@Url.Content("~/Content/Dashboard/plugins/daterangepicker/daterangepicker.js")"></script>
 <script type="text/javascript" src="@Url.Content("~/Content/NewAdminContent/JQUERY/clockPicker.js")"></script>
-<script type="text/javascript" src="@Url.Content("~/Scripts/NewAdminJS/plugins-init/bs-daterange-picker-init.js")"></script>
+@*<script type="text/javascript" src="@Url.Content("~/Scripts/NewAdminJS/plugins-init/bs-daterange-picker-init.js")"></script>*@
 
 <script>
     $(document).ready(function () {
+        $('.input-daterange-datepicker-new').daterangepicker({
+            startDate: moment().subtract('days', 7),
+            endDate: moment(),
+            buttonClasses: ['btn', 'btn-sm'],
+            applyClass: 'btn-danger',
+            cancelClass: 'btn-inverse',
+            format: "MM/DD/YYYY",
+        });
+        $("#DateRangeFilter").val("@ViewBag.FromDate-@ViewBag.ToDate");
+        $("#FromDate").val("@ViewBag.FromDate");
+        $("#ToDate").val("@ViewBag.ToDate");
         $('#DOT_form').on("click", ":submit", function () {
         });
         $("#DateRangeFilter").on("change", function () {
@@ -165,10 +176,10 @@
             var result = "";
             var strUrl = "@Url.Action("GetData", "GlobalSettings")";
                 var parameters = {};
-                parameters['FromDate'] = $("#FromDate").val(),
-                parameters['ToDate'] = $("#ToDate").val()
-            parameters['SeatLocationType'] = $("#SeatLocationType").val()
-            parameters['Search'] = $("#SearchText").val()
+            parameters['FromDate'] = ($("#FromDate").val() == "1/1/0001 12:00:00 AM") ? new date() - 7 : $("#FromDate").val()
+                parameters['ToDate'] = ($("#ToDate").val() == "1/1/0001 12:00:00 AM") ? new date() : $("#ToDate").val()
+                parameters['SeatLocationType'] = $("#SeatLocationType").val()
+                parameters['Search'] = $("#SearchText").val()
                 result = $.ajax({
 
                 async: false,
@@ -240,10 +251,10 @@
             var result = "";
             var strUrl = "@Url.Action("GetData", "GlobalSettings")";
                 var parameters = {};
-                parameters['FromDate'] = $("#FromDate").val(),
-                parameters['ToDate'] = $("#ToDate").val()
+                parameters['FromDate'] = ($("#FromDate").val() == "1/1/0001 12:00:00 AM") ? new date()-7 : $("#FromDate").val(),
+                parameters['ToDate'] = ($("#ToDate").val() == "1/1/0001 12:00:00 AM") ? new date(): $("#ToDate").val(),
                 parameters['SeatLocationType'] = $("#SeatLocationType").val()
-            parameters['Search'] = $("#SearchText").val()
+                parameters['Search'] = $("#SearchText").val()
                 result = $.ajax({
 
                 async: false,

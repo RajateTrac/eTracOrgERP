@@ -1643,7 +1643,8 @@ namespace WorkOrderEMS.Controllers.NewAdmin
                 string SQRY1 = "SELECT LeaveDesc,TypeId FROM Tbl_LeaveType_Setup where IsActive=1 ";
                 dt1 = DBUtilities.GetDTResponse(SQRY1);
                 Leave.ListLTSM = DataRowToObject.CreateListFromTable<LeaveManagementchartData>(dt1);
-
+                Leave.FromDate = System.DateTime.Now;
+                Leave.ToDate = System.DateTime.Now;
                 if (Id > 0)
                 {
                     DataTable dt = new DataTable();
@@ -2447,6 +2448,8 @@ namespace WorkOrderEMS.Controllers.NewAdmin
                 throw;
             }
             ViewBag.IsPageRefresh = false;
+            ViewBag.FromDate = System.DateTime.Now.AddDays(-7).ToString("MM/dd/yyyy");
+            ViewBag.ToDate = System.DateTime.Now.ToString("MM/dd/yyyy");
             return View(VMSA);
         }
         [HttpGet]
