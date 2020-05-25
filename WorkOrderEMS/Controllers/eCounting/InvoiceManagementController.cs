@@ -536,8 +536,8 @@ namespace WorkOrderEMS.Controllers
                                 bool IsSent = false;
                                 var objEmailHelper = new EmailHelper();
                                 objEmailHelper.DtInvoiceDetails = DtDetails;
-                                objEmailHelper.ClientName = "Jitesh Italiya";//ClientName.CMP_NameDBA;
-                                objEmailHelper.emailid = "jiteshitaliya@gmail.com";//userEmail.COD_Email; //vendorDetail.COD_Email;
+                                objEmailHelper.ClientName = ClientName.CMP_NameDBA;
+                                objEmailHelper.emailid = userEmail.COD_Email; //vendorDetail.COD_Email;
                                 objEmailHelper.UserName = userData.FirstName + ' ' + userData.FirstName; //vendorDetail.CMP_NameLegal;
                                 objEmailHelper.LocationName = locationDetails.LocationName;
                                 objEmailHelper.ClientUserId = 0; //objCustomerApproveRejectModel.Customer.ToString();
@@ -562,7 +562,7 @@ namespace WorkOrderEMS.Controllers
                                         objEmailog.ModifiedBy = null;
                                         objEmailog.ModifiedOn = null;
                                         objEmailog.SentBy = objADCIM.LocationId;
-                                        objEmailog.SentEmail = "jiteshitaliya@gmail.com";//userEmail.COD_Email; //vendorDetail.COD_Email;
+                                        objEmailog.SentEmail = userEmail.COD_Email; //vendorDetail.COD_Email;
                                         objEmailog.Subject = objEmailHelper.Subject;
                                         objEmailog.SentTo = 0; //objCustomerApproveRejectModel.Customer;
                                         objListEmailog.Add(objEmailog);
@@ -663,8 +663,8 @@ namespace WorkOrderEMS.Controllers
                                 bool IsSent = false;
                                 var objEmailHelper = new EmailHelper();
                                 objEmailHelper.DtInvoiceDetails = DtDetails;
-                                objEmailHelper.ClientName = "Jitesh Italiya";//ClientName.CMP_NameDBA;
-                                objEmailHelper.emailid = "jiteshitaliya@gmail.com";//userEmail.COD_Email; //vendorDetail.COD_Email;
+                                objEmailHelper.ClientName = ClientName.CMP_NameDBA;
+                                objEmailHelper.emailid = userEmail.COD_Email; //vendorDetail.COD_Email;
                                 objEmailHelper.UserName = userData.FirstName + ' ' + userData.LastName; //vendorDetail.CMP_NameLegal;
                                 objEmailHelper.LocationName = locationDetails.LocationName;
                                 objEmailHelper.ClientUserId = 0; //objCustomerApproveRejectModel.Customer.ToString();
@@ -689,7 +689,7 @@ namespace WorkOrderEMS.Controllers
                                         objEmailog.ModifiedBy = null;
                                         objEmailog.ModifiedOn = null;
                                         objEmailog.SentBy = objADCIM.LocationId;
-                                        objEmailog.SentEmail = "jiteshitaliya@gmail.com";//userEmail.COD_Email;  //vendorDetail.COD_Email;
+                                        objEmailog.SentEmail = userEmail.COD_Email;  //vendorDetail.COD_Email;
                                         objEmailog.Subject = objEmailHelper.Subject;
                                         objEmailog.SentTo = 0; //objCustomerApproveRejectModel.Customer;
                                         objListEmailog.Add(objEmailog);
