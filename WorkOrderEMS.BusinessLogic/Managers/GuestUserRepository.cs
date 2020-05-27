@@ -221,6 +221,13 @@ namespace WorkOrderEMS.BusinessLogic
                      AVO_SuspendRevokeLicensePermit = Convert.ToChar(x.AVO_SuspendRevokeLicensePermit),
                      AVO_SuspendRevokeLicensePermitExplanation = x.AVO_SuspendRevokeLicensePermitExplanation
                  }).ToList();
+            commonModel.ListAcadmicCertification = objworkorderEMSEntities.spGetAplicantCertificationDetails(Applicant).Select(x => new AcadmicCertification()
+            {
+                ACD_CertificationName = x.ACD_CertificationName,
+                 ACD_CertificateFileName = x.ACD_CertificateAttached,
+                 ACD_CertificationEarnedYear = x.ACD_CertificationEarnedYear,
+                 ACD_CertifyingAgency = x.ACD_CertifyingAgency
+            }).ToList();
             return commonModel;
         }
         public bool UpdateApplicantInfo(EmployeeVIewModel onboardingDetailRequestModel)

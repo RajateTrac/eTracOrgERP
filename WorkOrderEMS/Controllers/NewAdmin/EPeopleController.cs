@@ -21,6 +21,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 using System.Net.Mail;
+//using WorkOrderEMS.Data.EntityModel;
 
 namespace WorkOrderEMS.Controllers.NewAdmin
 {
@@ -403,7 +404,8 @@ namespace WorkOrderEMS.Controllers.NewAdmin
                     var ObjLoginModel = (eTracLoginModel)(Session["eTrac"]);
                     ViewBag.StateList = _ICommonMethod.GetStateByCountryId(1);
                     //ObjLoginModel.UserId remove this and add selected Id 
-                    model = _IGuestUserRepository.GetEmployee(_UserId);
+                    model = _IGuestUserRepository.GetEmployeeDetails(_UserId);
+                    //model = _IGuestUserRepository.GetEmployee(_UserId);
                     model.Image = model.Image == null ? HostingPrefix + ConstantImages.Replace("~", "") + "no-profile-pic.jpg" : HostingPrefix + ProfilePicPath.Replace("~", "") + model.Image;
                     return PartialView("~/Views/NewAdmin/ePeople/_EditEmployeeInfo.cshtml", model);
                 }
@@ -428,9 +430,27 @@ namespace WorkOrderEMS.Controllers.NewAdmin
         [HttpPost]
         public ActionResult SaveUserEditableInfo(EmployeeVIewModel model)
         {
+            Data.EntityModel.workorderEMSEntities _db = new Data.EntityModel.workorderEMSEntities();
             bool isSaveSuccess = false;
             try
             {
+                eTracLoginModel ObjLoginModel = null;
+                var details = new List<UserModelList>();
+                if (Session["eTrac"] != null)
+                {
+                    ObjLoginModel = (eTracLoginModel)(Session["eTrac"]);
+                }
+                if (model.Image != null)
+                {
+                    string path = Server.MapPath(ConfigurationManager.AppSettings["ProfilePicPath"]);
+                    var pathData= _db.spGetEmployeePersonalInfo(model.EmpId).FirstOrDefault().EMP_Photo;
+                    model.ImagePath = path + "/" + pathData;
+                }
+                else
+                {
+                    model.Image =  _db.spGetEmployeePersonalInfo(model.EmpId).FirstOrDefault().EMP_Photo;
+                }
+                model.CreatedBy = ObjLoginModel.UserId;
                 isSaveSuccess = _IGuestUserRepository.UpdateApplicantInfoEMPMangemnt(model);
                 if (isSaveSuccess)
                     return Json(isSaveSuccess, JsonRequestBehavior.AllowGet);
@@ -477,6 +497,42 @@ namespace WorkOrderEMS.Controllers.NewAdmin
             catch (Exception ex)
             {
                 return Json(null, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        /// <summary>
+        /// Created By : Ashwajit Bansod
+        /// Created Date : 26-05-2020
+        /// Created For : TO upload profile image after edit
+        /// </summary>
+        /// <param name="File"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult UploadedProfileImage(HttpPostedFileBase File)
+        {
+            eTracLoginModel ObjLoginModel = null;
+
+            if (Session["eTrac"] != null)
+            {
+                ObjLoginModel = (eTracLoginModel)(Session["eTrac"]);
+                if (File != null)
+                {
+
+                    string ImageName = ObjLoginModel.UserId + "_" + DateTime.Now.Ticks.ToString() + "_" + File.FileName.ToString();
+                    CommonHelper obj_CommonHelper = new CommonHelper();
+                    var res = obj_CommonHelper.UploadImage(File, Server.MapPath(ConfigurationManager.AppSettings["ProfilePicPath"]), ImageName);
+                    ViewBag.ImageUrl = res;
+                    if (res)
+                    {
+                        return Json(ImageName);
+                    }
+                    else { return Json(""); }
+                }
+                return Json("");
+            }
+            else
+            {
+                return Json("");
             }
         }
         #endregion Employee Management

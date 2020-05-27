@@ -1,7 +1,7 @@
 ﻿var HOBurl = '../HirinngOnBoarding/GetHiringOnBoardingList';
 var base_url = window.location.origin;
 var clients;
-var apt_id = 0;
+var apt_id = 0,applicantId = 0;;
 var JobPostingId = 0, refreshGridId = "";
 var JobStatus;
 var isInterviewDone = false;
@@ -45,7 +45,6 @@ function myOpenings(PostingId) {
             }
         },
         onRefreshing: function (args) {
-            debugger
             $(".jsgrid-insert-row").hide();
             $(".jsgrid-filter-row").hide()
             $(".jsgrid-grid-header").removeClass("jsgrid-header-scrollbar");
@@ -85,7 +84,6 @@ function myOpenings(PostingId) {
 			//},
              {
                  title: "Action", width: 70, css: "text-center", itemTemplate: function (value, item) {
-                     debugger
                      var $iconAssessment, $iconAddAssets, $iconBackground, $iconSendOffer, $iconDiamond, $iconIsInterviewDone, $iconIsOrientation;
                      var $iconFirst = $("<i>").attr({ class: "fa fa-exclamation-triangle whiteR" });
                      var $iconSecond = $("<i>").attr({ class: "fa fa-gg-circle whiteB" }).attr({ style: "color:red;font-size:22px;margin-left:8px;" });
@@ -176,7 +174,7 @@ function myOpenings(PostingId) {
                                      new fn_showMaskloader('Please wait...');
                                  },
                                  success: function (data) {
-                                     debugger
+                                     
                                      if (data != null) {
                                          $("#viewAssetsData").html("");
                                          $("#viewAssetsData").html(data);
@@ -204,7 +202,7 @@ function myOpenings(PostingId) {
                                       new fn_showMaskloader('Please wait...');
                                   },
                                   success: function (data) {
-                                      debugger
+                                      
                                       if (data != null) {
                                           $("#viewOffer").html("");
                                           $("#viewOffer").html(data);
@@ -225,6 +223,7 @@ function myOpenings(PostingId) {
                      var $customViewApplicantButton = $("<span>")
                          .attr({ title: jsGrid.fields.control.prototype.listButtonTooltip })
                          .attr({ id: "btn-first-" + item.ApplicantId }).click(function (e) {
+                             applicantId = item.ApplicantId;
                              ViewApplicantDetails(item.ApplicantId)
                          }).append($iconViewApplicant);
 
@@ -312,8 +311,7 @@ function MyInterviews() {
 			{ title: "Email", width: 60, name: "Email" },
 			{ title: "Status", width: 60, name: "Status" },
 			{
-			    title: '', width: 60, itemTemplate: function (value, item) {
-                    debugger
+			    title: "Action", width: 60, itemTemplate: function (value, item) {                    
 			        return $("<div>")
 						.append($("<div>").addClass("action1 inline actionbox").append($("<a>").attr({ "onclick": "TakeInterview(" + JSON.stringify(item) + ")", "href": "#" }).append("<i>").attr({ "style": "color:darkblue" }).addClass("fa fa-diamond white")));
 			    }
@@ -363,7 +361,6 @@ function MyOpeningSummery() {
             }
         },
         onRefreshed: function (args) {
-            debugger
             $(".jsgrid-insert-row").hide();
             $(".jsgrid-filter-row").hide()
             $(".jsgrid-grid-header").removeClass("jsgrid-header-scrollbar");
@@ -377,19 +374,20 @@ function MyOpeningSummery() {
             }
         },
         fields: [
-			{ name: "JobTitle", type: "text", width: 300 },
-			{ name: "Employee", type: "text", width: 70 },
-			{ name: "Applicant", type: "number", width: 70 },
-			{ name: "DatePosted", type: "text", width: 150 },
+			{ name: "JobTitle", type: "text", title:"Job Title", width: 300 },
+			//{ name: "Employee", type: "text", width: 70 },
+            { name: "PositionCount",title:"Position Count", type: "number", width: 70 },
+			{ name: "Applicant", type: "number", width: 65 },
+			{ name: "DatePosted",title:"Date Posted", type: "text", width: 60 },
 			{
-			    name: "Duration", type: "text", width: 60,
+			    name: "Duration", type: "text", width: 50,
 			    itemTemplate: function (value) {
 			        return $("<span>").text(value + ' ' + 'Days');
 			    }
 			},
 			{ name: "Status", type: "text", width: 50 },
 			{
-			    name: " ", width: 100, align: "center", Title: "",
+			    name: "Action", width: 125, align: "center", Title: "Action",
                 itemTemplate: function (value,item) {
                     var $iconOpenCalendar = $("<i>").attr({ class: "fa fa-clock-o fa-2x whiteS" }).attr({ style: "color:orange;font-size:22px;margin-left:8px;" });                    
                     var $customOpenCalendarButton = $("<span>")
@@ -850,7 +848,6 @@ function RecordNo(isFinal) {
 }
 function SaveAndNext() {
     var formObject = $("#getQuestionAnswerData").serialize();
-    debugger
     //var dataObjetc = JSON.stringify(formObject)
     var myJSON = JSON.stringify(AnswerArr);
     var INA_INQ_Id = $("#q_id").val();
@@ -1036,7 +1033,6 @@ function SaveAndNext() {
                     $("#Comment3").val("");
                     $("#Comment31").val("");
                     $("#Comment32").val("");
-                    debugger
                     var nextMasterId = $("#hdn_qusnum").val();
                     toastr.success("Success");
                     var ApplicantId = $("#applicant_id").val();
@@ -1064,7 +1060,6 @@ function SaveAndNext() {
         });
 }
 function RedirectToApplicantGrid() {
-    debugger
     isInterviewDone = true;
     $("#isScheduled").val("true");
     var link = base_url + '/NewAdmin/HiringOnBoardingDashboard';
@@ -1209,7 +1204,6 @@ function MarkAbsent() {
 
 
 function GetCompanyOpening() {
-    debugger
     refreshGridId = "companyOpening";
     $("#ListMyOpening").hide();
     $("#companyOpening").show();
@@ -1268,7 +1262,7 @@ function GetCompanyOpening() {
 			},
 			{ name: "Status", type: "text", width: 50 },
 			{
-			    name: " ", width: 100, align: "center", Title: "",
+			    name: "Action", width: 100, align: "center", Title: "Action",
 			    itemTemplate: function (value,item) {
 			        return $("<div>").append($("<div id='detailDiv'>").addClass('text').text("asdadfaf")).append($("<div>").addClass("inlineDivdonut").append("<img src='Images/donut.png' class='donutC' onmouseover='GetSummeryDetail(this," + item.JPS_JobPostingId + ");' onmouseout='HideDetail(this)'>"))
 						.append($("<div>").append("<i>").addClass("fa fa-envelope-o fa-lg actionBtn"))
@@ -1291,7 +1285,6 @@ function GoToRecruitee(item) {
 }
 
    function ToAcceptRejectAfterInterview(data) {
-        debugger
         var getAppId = $(data).attr("applicantid");
         var getVal = $("#ToAcceptRejectAfterInterview option:selected").val();
         var getVal = $(data).attr("value");
@@ -1345,8 +1338,7 @@ function ViewApplicantDetails(ApplicantDetailsId) {
         beforeSend: function () {
             new fn_showMaskloader('Please wait...');
         },
-        success: function (getData) {
-            
+        success: function (getData) {            
             $("#ApplicantDetailsDiv").html('');
             $("#ApplicantDetailsDiv").html(getData);
             $("#myModalForGetApplicantDetails").modal('show');
@@ -1367,8 +1359,6 @@ function AppproveRejectApplicant(isApproved) {
             new fn_showMaskloader('Please wait...');
         },
         success: function (message) {
-
-            debugger
             $("#myModalForGetApplicantDetails").modal('hide');
             $("#ApplicantDetailsDiv").html('');
            
@@ -1411,7 +1401,6 @@ function AppproveRejectApplicant(isApproved) {
 var selectedManagers = "";
 var autocomplete;
 function loadInterviewPanelList() {
-    debugger
     selectedManagers = "";
     $("#inpManageName").html('');
     $("#inpManageName").html('<span class="autocomplete-select"></span>');
@@ -1423,9 +1412,6 @@ function loadInterviewPanelList() {
             new fn_showMaskloader('Please wait...');
         },
         success: function (data) {
-            
-            debugger
-           
             if (data.length > 0) {
                 ManagerList = data;
                 autocomplete = new SelectPure(".autocomplete-select", {
@@ -1611,7 +1597,6 @@ function loadInterviewPanel() {
         type: 'GET',
         url: '/NewAdmin/GetManagerList/',
         success: function (response) {
-            debugger
             if (response.length > 0) {
                 ManagerList = response;
                 autocomplete = new SelectPure(".autocomplete-select", {
@@ -1768,7 +1753,6 @@ function CloseHoldJob() {
         url: base_url + "/NewAdmin/CloseHoldOpenJob?JobId=" + JobPostingId + "&JobStatus=" + JobStatus,
         //data: { "ApplicantId": ApplicantId },
         success: function (response) {
-            debugger
             $("#ModalForJobStatusChange").modal("hide");
             if (response)
                 toastr.success("job status change successfully");
@@ -1782,7 +1766,19 @@ function CloseHoldJob() {
 }
 //function RefreshGrid() {
 $("#RefreshGrid").click(function () {
-    debugger
     $("#" + refreshGridId).jsGrid("loadData");
 });
-
+function GetAllDocumetOfApplicant(){
+    $.ajax({
+        type: 'POST',
+        url: base_url + "/NewAdmin/OpenDocuments?applicantId=" + applicantId ,
+        //data: { "ApplicantId": ApplicantId },
+        success: function (response) {
+            $("#myModalGetCertificateApplicant").show();
+            $("#ViewDocument").html(response);
+        },
+        error: function (err) {
+        }
+    });
+    
+}

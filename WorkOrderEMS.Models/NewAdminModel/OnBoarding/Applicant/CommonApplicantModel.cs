@@ -26,6 +26,7 @@ namespace WorkOrderEMS.Models
         public List<ApplicantLicenseHeald> ApplicantLicenseHeald { get; set; }
         public List<ApplicantSchecduleAvaliblity> ApplicantSchecduleAvaliblity { get; set; }
         public AcadmicCertification AcadmicCertification { get; set; }
+        public List<AcadmicCertification> ListAcadmicCertification { get; set; }
         public Desclaimer Desclaimer { get; set; }
 
         public CommonApplicantModel() {

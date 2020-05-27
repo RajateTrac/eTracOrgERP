@@ -1,0 +1,5 @@
+﻿@{ 
+    long applicantId = ViewBag.ApplicantId;
+}
+
+<iframe src="@Url.Action("GetCertificate", new { id = applicantId })#toolbar=0" style="width:101%; height:530px;" frameborder="0"></iframe>

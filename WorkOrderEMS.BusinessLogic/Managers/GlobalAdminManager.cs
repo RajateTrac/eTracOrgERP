@@ -3913,6 +3913,7 @@ namespace WorkOrderEMS.BusinessLogic.Managers
                     Employee = x.PositionCount,
                     JobTitle = x.JobTitle,
                     Status = x.Status,
+                    PositionCount = x.PositionCount,
                     JobPostingId = x.JPS_JobPostingId,
                 }).ToList();
             }
@@ -4917,6 +4918,4 @@ namespace WorkOrderEMS.BusinessLogic.Managers
     {
         public string LocationId { get; set; }
     }
-
-
 }

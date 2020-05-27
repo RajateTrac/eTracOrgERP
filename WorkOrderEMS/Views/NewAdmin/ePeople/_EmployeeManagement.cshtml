@@ -673,31 +673,66 @@
         $('.clockpicker').clockpicker();
         $("#SaveEditInfo").click(function () {
             debugger
-            var dataObject = $("#SaveEditableUserInfo").serialize();
-            $.ajax({
-                type: "POST",
-                url: base_url+ '/EPeople/SaveUserEditableInfo',
-                data: dataObject,
-                beforeSend: function () {
-                    new fn_showMaskloader('Please wait...');
-                },
-                success: function (Data) {
-                    if (Data == true)
-                    {
-                        toastr.success("User Updated Successfully");
-                    }
-                    else {
-                        toastr.success("Exception while updating user");
-                    }
-                    debugger
-                    $("#myModalForeditUserInfoData").modal("hide");
-                },
-                error: function (err) {
-                },
-                complete: function () {
-                    fn_hideMaskloader();
-                }
+            var img = "";
+            form_data = new FormData();
+            var imagebase64 = "";
+            var file_data = "";
+            img = $("#ProfileImage").val();
+            if (img == "" || img == undefined || img == null) {
+            }
+            else {
+                file_data = $("#ProfileImage").prop("files")[0]; // Getting the properties of file from file field
+                form_data.append("file", file_data) // Appending parameter named file with properties of file_field to form_data
+                form_data.append("CallID", 11)
+            }
+            var ImageName = "";
+            if (file_data != undefined || file_data != null) {
+                $.ajax({
+                    url: '@Url.Action("UploadedProfileImage", "EPeople")',
+                    dataType: 'script',
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    data: form_data, // Setting the data attribute of ajax with file_data
+                    type: 'post',
+                    success: function (dataLink) {
+                        debugger
+                        ImageName = dataLink;
+                        var result = ImageName.substring(1, ImageName.length - 1);
+                        $("#HiddenImage").val(result);
+                        var dataObject = $("#SaveEditableUserInfo").serialize();
+                        $.ajax({
+                            type: "POST",
+                            url: base_url+ '/EPeople/SaveUserEditableInfo',
+                            data: dataObject,
+                            beforeSend: function () {
+                                new fn_showMaskloader('Please wait...');
+                            },
+                            success: function (Data) {
+                                debugger
+                                if (Data == true)
+                                {
+                                    toastr.success("User Updated Successfully");
+                                }
+                                else {
+                                    toastr.success("Exception while updating user");
+                                }
+                                debugger
+                                $("#myModalForeditUserInfoData").modal("hide");
+                                $("#ListEmployeeManagement").jsGrid("loadData");
+                            },
+                            error: function (err) {
+                            },
+                            complete: function () {
+                                fn_hideMaskloader();
+                            }
             });
+                    },
+                    error: function (e) { alert("error:" + e); }
+
+                });
+            }
+
         });
 
         $("#HiringOnBoard").click(function () {

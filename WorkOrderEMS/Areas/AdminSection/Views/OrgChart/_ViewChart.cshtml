@@ -88,6 +88,12 @@
         .orgchart .frontend1 .content {
             border-color: #cc0066;
         }
+
+    .SaveCloseCancelCSS {
+        border-radius: 100px;
+        width: 150px;
+        background-image: linear-gradient(to left, #3cffdb, #425fe0);
+    }
 </style>
 @*<script src="~/Scripts/jquery-3.2.1.min.js"></script>*@
 
@@ -179,9 +185,9 @@
                 <br />
                 <br />
                 <div>
-                    <button type="button" class="btn btn-success pull-left" id="ViewVSC" style="border-radius:100px;">View Chart</button>
-                    <button type="button" class="btn btn-secondary pull-right" id="closeVSC" style="border-radius:100px;" data-dismiss="modal">Close</button>
-                    <input type="button" class="btn btn-primary pull-right" id="SaveVSC" style="border-radius:100px;margin-right: 10px;" value="Save" />
+                    <button type="button" class="btn btn-success pull-left SaveCloseCancelCSS" id="ViewVSC">View Chart</button>
+                    <button type="button" class="btn btn-secondary pull-right SaveCloseCancelCSS" id="closeVSC" data-dismiss="modal">Close</button>
+                    <input type="button" class="btn btn-primary pull-right SaveCloseCancelCSS" id="SaveVSC" style="margin-right: 10px;" value="Save" />
                 </div>
             </div>
         </div>
@@ -235,8 +241,8 @@
                 <br />
                 <br />
                 <div>
-                    <button type="button" class="btn btn-secondary pull-right" id="closeJobTitle" style="border-radius:100px;" data-dismiss="modal">Close</button>
-                    <input type="button" class="btn btn-primary pull-right" id="SaveJobTitle" style="border-radius:100px;margin-right: 10px;" value="Save" />
+                    <button type="button" class="btn btn-secondary pull-right SaveCloseCancelCSS" id="closeJobTitle" data-dismiss="modal">Close</button>
+                    <input type="button" class="btn btn-primary pull-right SaveCloseCancelCSS" id="SaveJobTitle" style="margin-right: 10px;" value="Save" />
                 </div>
             </div>
         </div>
@@ -258,8 +264,8 @@
                 <br />
                 <br />
                 <div>
-                    <button type="button" class="btn btn-secondary pull-right" id="closeJobPost" style="border-radius:100px;width:18%;" data-dismiss="modal">Close</button>
-                    <input type="button" class="btn btn-primary pull-right" id="SaveJobPost" style="border-radius:100px;width:18%;margin-right: 10px;" value="Save" />
+                    <button type="button" class="btn btn-secondary pull-right SaveCloseCancelCSS" id="closeJobPost" data-dismiss="modal">Close</button>
+                    <input type="button" class="btn btn-primary pull-right SaveCloseCancelCSS" id="SaveJobPost" style="margin-right: 10px;" value="Save" />
                 </div>
             </div>
         </div>
@@ -298,6 +304,9 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.js")"></script>
 <script src="~/Areas/AdminSection/Content/JQUERY/NewOrgChartForAdmin.js"></script>
 @*<script src="~/Areas/AdminSection/Content/JQUERY/GetOrg.js"></script>*@
 <script src="~/Areas/AdminSection/Content/JQUERY/DynamicAddJobDesc.js"></script>
@@ -305,8 +314,6 @@
 <link href="~/Content/KendoTreeView/kendo.material.min.css" rel="stylesheet" />
 <link href="~/Content/KendoTreeView/kendo.material.mobile.min.css" rel="stylesheet" />
 <script src="~/Scripts/KendoTreeView/kendo.all.min.js"></script>
-
-
 <script type="text/javascript">
     tinymce.init({
         selector: 'textarea', width: 730,height:300, setup: function (editor) {
@@ -368,7 +375,6 @@
 <script type="text/javascript">
 
     $("#BackToAdmin").click(function () {
-        
         var url = "@Url.Action("Index", "AdminDashboard", new { area = "AdminSection" })";
         window.location.href = url;
     });
@@ -382,7 +388,6 @@
             success: function (listData) {
                 $("#myModalForChart").modal("hide");
                 var tabledata = [];
-
                 if (listData != null)
                 {
                     for (var i = 0; i < listData.length; i++)
@@ -422,7 +427,7 @@
                         },
                         nodes: tabledata,
                     });
-                    
+
                     $(".field_0").attr({ "style": "font-size:16px;" });
                     $("tspan").attr("x", "140");
                     $(".field_0").attr("x", "100"); $(".field_0").attr("x", "65");
@@ -555,7 +560,7 @@
     debugger
     $.ajax({
         type: "POST",
-        url: '../AdminSection/AdminDashboard/DeleteJobTitleById?jobId=' + jobId, 
+        url: '../AdminSection/AdminDashboard/DeleteJobTitleById?jobId=' + jobId,
         success: function (Data) {
             debugger
             if (Data == true) {

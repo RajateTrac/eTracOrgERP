@@ -1378,6 +1378,25 @@ namespace WorkOrderEMS.Controllers.NewAdmin
                 return Json(false, JsonRequestBehavior.AllowGet);
             }
         }
+        /// <summary>
+        /// Created By : Ashwajit Bansod
+        /// Created Date : 24-05-2020
+        /// Created For : TO view document for applicant id also bind applicant id through viewbag
+        /// </summary>
+        /// <param name="ApplicantId"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult OpenDocuments(long ApplicantId)
+        {
+            ViewBag.ApplicantId = ApplicantId;
+            return PartialView("~/Views/NewAdmin/ePeople/OnBoarding/_ViewDocument.cshtml");
+        }
+
+        public FileStreamResult GetCertificate(long id)
+        {
+            FileStream fs = new FileStream(Server.MapPath("~/App_Data/resume.pdf"), FileMode.Open, FileAccess.Read);
+            return File(fs, "application/pdf");
+        }
 
         #endregion Hiring onboarding
         [HttpPost]

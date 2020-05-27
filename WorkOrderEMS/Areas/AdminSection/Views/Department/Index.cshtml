@@ -33,8 +33,8 @@
     <link href="~/Content/NewAdminContent/VENDOR/toastr/css/toastr.min.css" rel="stylesheet" />
     <link href="~/Content/NewAdminContent/CSS/style.css" rel="stylesheet" />
     <!--Js Grid-->
-    <link href="~/Content/NewAdminContent/VENDOR/jsgrid/css/jsgrid.min.css" rel="stylesheet" /
-    <link href="~/Content/NewAdminContent/VENDOR/jsgrid/css/jsgrid-theme.min.css" rel="stylesheet" />>
+    <link href="~/Content/NewAdminContent/VENDOR/jsgrid/css/jsgrid.min.css" rel="stylesheet" />
+    <link href="~/Content/NewAdminContent/VENDOR/jsgrid/css/jsgrid-theme.min.css" rel="stylesheet" />
 
 </head>
 <br />
@@ -98,6 +98,7 @@
 <script src="~/Scripts/NewAdminJS/quixnav-init.js"></script>
 <script src="~/Scripts/NewAdminJS/custom.min.js"></script>
 <!--removeIf(production)-->
+
 <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
 <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.js")"></script>
 <!-- Demo scripts -->
@@ -116,7 +117,8 @@
 <script>
     $(document).ready(function () {     
         $('#SaveDeptData').on('click', function () {
-            if ($("#formDepartment").validate({
+            debugger
+            if ($("#formDepartment").valid({
                 rules: {
                    'DepartmentName': {required: true}
             },

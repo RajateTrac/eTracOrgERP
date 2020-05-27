@@ -31,7 +31,8 @@ namespace WorkOrderEMS.Models.NewAdminModel
 		public string DatePosted { get; set; }
 		public int? Duration { get; set; }
 		public string Status { get; set; }
-	}
+        public int? PositionCount { get; set; }
+    }
 	public class InfoFactSheet
 	{
 		public string ResumePath { get; set; }

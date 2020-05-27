@@ -60,30 +60,103 @@ $(document).ready(function () {
     });
     ///To save Form Data 
     $('#SaveVSC').click(function (e) {
-        createAddJobDescArray();
-        var content = tinymce.activeEditor.getContent({ format: 'raw' });
-        $('#RolesAndResponsibility').val(content);
-        var dataObject = $("#SaveVCSChartForm").serialize();
-        
-        $.ajax({
-            type: "POST",
-            url:'../AdminSection/AdminDashboard/SaveVCS', //'@Url.Action("SaveVCS", "AdminDashboard", new { area = "AdminSection" })',
-            data: dataObject,
+        debugger
+        if ($("#SaveVCSChartForm").valid({
+            rules: {
+             'SeatingName': { required: true },
+            'Superior': { required: true},
+            'Department': { required: true },
+            'JobDescription': { required: true },
+            'RolesAndResponsibility': { required: true },
+        },
+            messages: {
+           'SeatingName': { required: "Please enter Seating Name" },
+            'Superior': { required: "Please select Superior" },
+            'Department': { required: "Please select department" },
+            'JobDescription': { required: "Please add job description" },
+            'RolesAndResponsibility': { required: "Please add Roles and responsibility" },
+           }
+        })) {
+            createAddJobDescArray();
+            var content = tinymce.activeEditor.getContent({ format: 'raw' });
+            $('#RolesAndResponsibility').val(content);
+            var dataObject = $("#SaveVCSChartForm").serialize();
+            debugger
+            $.ajax({
+                type: "POST",
+                url: '../AdminSection/AdminDashboard/SaveVCS', //'@Url.Action("SaveVCS", "AdminDashboard", new { area = "AdminSection" })',
+                data: dataObject,
 
-            success: function (Data) {
-                GetDropdownForChar();
-                $("#routeDiv").html("");
-                $("#SeatingName").val("");
-                $("#JobDescription").val("");
-                $("#VCSId").val("");
-                $("#myModalForChart").modal("hide");
-                tinymce.activeEditor.setContent("");
-                var addNewUrl ='../AdminSection/OrgChart/Index';// "@Url.Action("Index", "OrgChart", new { area = "AdminSection" })";
-                $('#RenderPageId').load(addNewUrl);
-            },
-            error: function (err) {
-            }
-        });
+                success: function (Data) {
+                    GetDropdownForChar();
+                    $("#routeDiv").html("");
+                    $("#SeatingName").val("");
+                    $("#JobDescription").val("");
+                    $("#VCSId").val("");
+                    $("#myModalForChart").modal("hide");
+                    tinymce.activeEditor.setContent("");
+                    $("chart-container").html("");
+                    var peopleElement = document.getElementById("chart-container");
+                    $.ajax({
+                        type: "POST",
+                        url: '../AdminSection/AdminDashboard/GetChartDisplayData',
+                        success: function (listData) {
+                            debugger
+                            var tabledata = [];
+
+                            if (listData != null) {
+                                for (var i = 0; i < listData.length; i++) {
+                                    var data = {};
+                                    if (i == 0) {
+                                        listData[i].parentId = null;
+                                    }
+                                    data.id = listData[i].Id;
+                                    data.pid = listData[i].parentId;
+                                    data.SeatingName = listData[i].SeatingName;
+                                    data.JobDescription = listData[i].JobDescription;
+                                    data.DepartmentName = listData[i].DepartmentName;
+                                    tabledata.push(data);
+                                }
+                                var chart = new OrgChart(peopleElement, {
+
+                                    scaleInitial: BALKANGraph.match.boundary,
+                                    //enableDragDrop: true,
+                                    //tags: {
+                                    //    "assistant": {
+                                    //        template: "ula"
+                                    //    }
+                                    //},
+                                    nodeMenu: {
+                                        //add: { text: "Add" },
+                                        add: { text: "Job Title" },
+                                        edit: { text: "Edit" },
+                                    },
+                                    nodeBinding: {
+                                        field_0: "SeatingName",
+                                        field_1: "JobDescription",
+                                        field_2: "DepartmentName",
+                                        //field_2: "DepartmentName"
+                                        //img_0: "img"
+                                    },
+                                    nodes: tabledata,
+                                });
+
+                                $(".field_0").attr({ "style": "font-size:16px;" });
+                                $("tspan").attr("x", "140");
+                                $(".field_0").attr("x", "100"); $(".field_0").attr("x", "65");
+                                $(".field_0").attr("y", "25");
+                            }
+                        },
+                        error: function (err) {
+                        }
+                    });
+                    //var addNewUrl ='../AdminSection/OrgChart/Index';// "@Url.Action("Index", "OrgChart", new { area = "AdminSection" })";
+                    //$('#RenderPageId').load(addNewUrl);
+                },
+                error: function (err) {
+                }
+            });
+        }
     })
 
     ///This is use to add job description seperated by line
