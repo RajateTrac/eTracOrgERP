@@ -19,7 +19,5 @@ namespace WorkOrderEMS.Data.EntityModel
         public long CLC_CLM_Id { get; set; }
         public System.DateTime CLC_Date { get; set; }
         public string CLC_IsActive { get; set; }
-    
-        public virtual CostCodeLocationMapping CostCodeLocationMapping { get; set; }
     }
 }

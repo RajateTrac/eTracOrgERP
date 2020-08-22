@@ -14,11 +14,6 @@ namespace WorkOrderEMS.Data.EntityModel
     
     public partial class CompanyDetail
     {
-        public CompanyDetail()
-        {
-            this.LogCompanyDetails = new HashSet<LogCompanyDetail>();
-        }
-    
         public long COD_Id { get; set; }
         public Nullable<long> COD_CMP_Id { get; set; }
         public string COD_PointOfContact { get; set; }
@@ -37,8 +32,5 @@ namespace WorkOrderEMS.Data.EntityModel
         public string COD_Email { get; set; }
         public string COD_Website { get; set; }
         public string COD_IsActive { get; set; }
-    
-        public virtual Company Company { get; set; }
-        public virtual ICollection<LogCompanyDetail> LogCompanyDetails { get; set; }
     }
 }

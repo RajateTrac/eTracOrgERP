@@ -1,5 +1,8 @@
 ﻿@model WorkOrderEMS.Models.NewAdminModel.InfoFactSheet
 <style>
+    .Setbtn {
+        margin-top: 1.2%;
+    }
     img {
         border-radius: 50%;
         height: auto;
@@ -107,36 +110,49 @@
 </style>
 <div class="row" @*style="padding:3px 15px 0px 15px;"*@ style="margin: 2px -28px -33px -28px;">
 	<div class="col-lg-12">
-		<div class="card">
-			<div class="card-header" style="background-image: linear-gradient(to right, #3588CD, #fff);">
-				<div class="profile_image inline spccing">
-					<img src="@Model.model.Image" alt="Avatar" style="width:60px;">
-				</div>
-				<div class="profile_detail inline spccing">
-					<span class="name">
-						@string.Format("{0} {1}", Model.model.FirstName, Model.model.LastName)
-					</span>
+        <div class="card">
+            <div class="card-header" style="background-image: linear-gradient(to right, #3588CD, #fff);">
+                <div class="profile_image inline spccing">
+                    <img src="@Model.model.Image" alt="Avatar" style="width:60px;">
+                </div>
+                <div class="profile_detail inline spccing">
+                    <span class="name">
+                        @string.Format("{0} {1}", Model.model.FirstName, Model.model.LastName)
+                    </span>
                     @*<span class="profile">
-                        @Model.model.JobTitle
-                    </span>*@
-				</div>
-				<div class="rating inline spccing">
-					<i class="fa fa-star yellow" aria-hidden="true"></i>
-					<i class="fa fa-star yellow" aria-hidden="true"></i>
-					<i class="fa fa-star yellow" aria-hidden="true"></i>
-					<i class="fa fa-star yellow" aria-hidden="true"></i>
-					<i class="fa fa-star" aria-hidden="true"></i>
-				</div>
-				<input type="hidden" id="applicant_id" value="@Model.model.ApplicantId" />
-				<div class="mobile inline spccing"><span style="color:black;">@Model.model.PhoneNumber</span></div>
-				<div class="email inline spccing"><span style="color:black;">@Model.model.Email</span></div>
-				<div class="status inline spccing" style="width: 200px;color:black;"><strong>@Model.model.Status</strong></div>
-			</div>
-			<div class="panel-body">
-				<div class="row">
-                    <div class="col-lg-10" id="interviewArea" style="background:#A0D2FA;margin-left:16px;height:auto;">@* overflow:auto *@
-                                        <iframe src="@Url.Action("GetPDF")#toolbar=0" style="width:101%; height:530px;" frameborder="0"></iframe>
-                                    </div>
+                    @Model.model.JobTitle
+                </span>*@
+                </div>
+                <div class="rating inline spccing">
+                    <i class="fa fa-star yellow" aria-hidden="true"></i>
+                    <i class="fa fa-star yellow" aria-hidden="true"></i>
+                    <i class="fa fa-star yellow" aria-hidden="true"></i>
+                    <i class="fa fa-star yellow" aria-hidden="true"></i>
+                    <i class="fa fa-star" aria-hidden="true"></i>
+                </div>
+                <input type="hidden" id="applicant_id" value="@Model.model.ApplicantId" />
+                <div class="mobile inline spccing"><span style="color:black;">@Model.model.PhoneNumber</span></div>
+                <div class="email inline spccing"><span style="color:black;">@Model.model.Email</span></div>
+                <div class="status inline spccing" style="width: 200px;color:black;"><strong>@Model.model.Status</strong></div>
+                <span>
+                    <i class="fa fa-refresh" style="color:black;font-size:25px;" aria-hidden="true" onclick="RefreshInterview('@Model.model.ApplicantId');"></i>
+                </span>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    @if (Model.ResumePath == "" || Model.ResumePath == null)
+            {
+                <div class="col-lg-10" id="interviewArea" style="background:#A0D2FA;margin-left:16px;height:auto;">
+                    <span style="font-size: 24px;">Resume is not available, please <a href="#" style="color:blue;" onclick="getApplicantInfo(@Model.model.ApplicantId,'@Model.model.Status');">click</a> here to see applicant details</span>
+                </div>
+    }
+    else
+    {
+        <div class="col-lg-10" id="interviewArea" style="background:#A0D2FA;margin-left:16px;height:auto;">
+            @* overflow:auto *@
+        <iframe src="@Url.Action("GetPDF")#toolbar=0" style="width:101%; height:530px;" frameborder="0"></iframe>
+        </div>
+}
                     <div class="col-md-2 rightList" style="float:right">
                         <div class="email-sec right-pad">
                             <i class="fa fa-envelope-o" aria-hidden="true"></i>
@@ -160,20 +176,52 @@
                             <option value="C">Rejected</option>
                         </select>
                     </div>
-				</div>
-			</div>
-			<div class="card-footer" style="background-color: darkgray;">
-				<button class="btn btn-default btnSelected">Resume</button>
-				<button class="btn btn-default btnNotSelected">Notes</button>
-				<button class="btn btn-default btnNotSelected">eMails</button>
-				<button class="btn btn-default btnNotSelected" onclick="GetInterviewers(this,'@Model.model.ApplicantId');">Interview</button>
-				
-			</div>
-		</div>
+                </div>
+            </div>
+            <div class="card-footer" style="background-color: darkgray;height:100px;">
+                <button class="btn btn-default btnSelected Setbtn">Resume</button>
+                <button class="btn btn-default btnNotSelected Setbtn">Notes</button>
+                <button class="btn btn-default btnNotSelected Setbtn">eMails</button>
+                <button class="btn btn-default btnNotSelected Setbtn" onclick="GetInterviewers(this,'@Model.model.ApplicantId');">Interview</button>
+
+            </div>
+            @*<div class="card-footer" style="background-color: darkgray;">
+
+            <button class="btn btn-default btnSelected">Resume</button>
+            <button class="btn btn-default btnNotSelected">Notes</button>
+            <button class="btn btn-default btnNotSelected">eMails</button>
+            <button class="btn btn-default btnNotSelected" onclick="GetInterviewers(this,'@Model.model.ApplicantId');">Interview</button>
+
+        </div>*@
+        </div>
 	</div>
 </div>
 <script>
     $(document).ready(function () {
         $("#showHideHiringOnBoardingDashboard").hide();
     })
+    function getApplicantInfo(applicantId,status){
+        debugger
+        $.ajax({
+            url: base_url + '/Guest/GetApplicantDetails?ApplicantId=' + applicantId  ,
+            method: 'POST',
+            beforeSend: function () {
+                new fn_showMaskloader('Please wait...');
+            },
+            success: function (getData) {            
+                $("#ApplicantDetailsDiv").html('');
+                $("#ApplicantDetailsDiv").html(getData);
+                $("#myModalForGetApplicantDetails").modal('show');
+                if(status == "Applied"){
+                    $(".hideShowApplicant").show();
+                }
+                else{
+                    $(".hideShowApplicant").hide();
+                }
+            },
+            complete: function () {
+                fn_hideMaskloader();
+            }
+        });
+    }
 </script>

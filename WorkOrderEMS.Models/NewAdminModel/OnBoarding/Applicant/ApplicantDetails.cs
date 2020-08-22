@@ -19,4 +19,10 @@ namespace WorkOrderEMS.Models
         public long? IPT_Id { get; set; }
         //public string ApplicantName { get; set; }
     }
+    public class ApplicantCountDetails
+    {
+        public int TotalApplicant { get; set; }
+        public int HiredApplicant { get; set; }
+        public string ApplicantStatus { get; set; }
+    }
 }

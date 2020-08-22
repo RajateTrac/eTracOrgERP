@@ -1,18 +1,18 @@
 ﻿@{
-	string hostingPrefix = System.Configuration.ConfigurationManager.AppSettings["hostingPrefix"];
-	WorkOrderEMS.Models.eTracLoginModel ObjLogin = (WorkOrderEMS.Models.eTracLoginModel)Session["eTrac"];
-	string loginUserName = "", loginUserEmail = "", loginUserContactNo = "", loginUserProfile = "";
-	long loginUserType = 0;
-	long locationId = 0;
-	if (ObjLogin != null)
-	{
-		loginUserName = ObjLogin.FName + "'s";
-		loginUserEmail = ObjLogin.Email;
-		loginUserProfile = ObjLogin.UserProfile;
-		loginUserType = ObjLogin.UserRoleId;
-		//loginUserContactNo = ObjLogin.ContactNo;
-		locationId = ObjLogin.LocationID;
-	}
+    string hostingPrefix = System.Configuration.ConfigurationManager.AppSettings["hostingPrefix"];
+    WorkOrderEMS.Models.eTracLoginModel ObjLogin = (WorkOrderEMS.Models.eTracLoginModel)Session["eTrac"];
+    string loginUserName = "", loginUserEmail = "", loginUserContactNo = "", loginUserProfile = "";
+    long loginUserType = 0;
+    long locationId = 0;
+    if (ObjLogin != null)
+    {
+        loginUserName = ObjLogin.FName + "'s";
+        loginUserEmail = ObjLogin.Email;
+        loginUserProfile = ObjLogin.UserProfile;
+        loginUserType = ObjLogin.UserRoleId;
+        //loginUserContactNo = ObjLogin.ContactNo;
+        locationId = ObjLogin.LocationID;
+    }
 }
 <!DOCTYPE html>
 
@@ -67,6 +67,7 @@
             </div>
         </div>
     </div>
+
     <!--Header-->
     @Html.Partial("_NewControlMenu")
     <div id="RenderPageId">
@@ -75,6 +76,7 @@
             @RenderBody()
         </div>
     </div>
+    
     <!-- Required vendors -->
     <script src="~/Content/NewAdminContent/VENDOR/global/global.min.js"></script>
     <script src="~/Scripts/NewAdminJS/quixnav-init.js"></script>

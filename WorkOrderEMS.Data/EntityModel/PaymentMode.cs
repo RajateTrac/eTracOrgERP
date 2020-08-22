@@ -14,21 +14,17 @@ namespace WorkOrderEMS.Data.EntityModel
     
     public partial class PaymentMode
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public PaymentMode()
         {
             this.CompanyAccountDetails = new HashSet<CompanyAccountDetail>();
-            this.Contracts = new HashSet<Contract>();
-            this.LogCompanyAccountDetails = new HashSet<LogCompanyAccountDetail>();
-            this.LogContracts = new HashSet<LogContract>();
         }
     
         public long PMD_Id { get; set; }
         public string PMD_PaymentMode { get; set; }
         public string PMD_IsActive { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CompanyAccountDetail> CompanyAccountDetails { get; set; }
-        public virtual ICollection<Contract> Contracts { get; set; }
-        public virtual ICollection<LogCompanyAccountDetail> LogCompanyAccountDetails { get; set; }
-        public virtual ICollection<LogContract> LogContracts { get; set; }
     }
 }

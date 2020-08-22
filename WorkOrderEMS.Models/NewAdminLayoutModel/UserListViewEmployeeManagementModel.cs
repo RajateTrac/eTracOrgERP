@@ -21,5 +21,6 @@ namespace WorkOrderEMS.Models
         public string UserId { get; set; }
         public List<string> JobDescList { get; set; }
         public string IsOrientation { get; set; }
+        public string UserEncrptedId { get; set; }
     }
 }

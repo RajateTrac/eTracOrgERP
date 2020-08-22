@@ -1,6 +1,8 @@
 ﻿@model WorkOrderEMS.Models.BackgroundCheckForm
 @{
     Layout = null;
+    string todaydate = DateTime.Now.Day.ToString();
+    long ApplicantId = Convert.ToInt64(Session["ApplicantId"]);
 }
 <style>
     body {
@@ -10,6 +12,7 @@
         width:29%;
     }*/
 </style>
+<link href="~/Content/toastr.min.css" rel="stylesheet" />
 <link href="~/Content/NewAdminContent/CSS/MyGuestStyle.css" rel="stylesheet" />
 <div class="container PADlerig" style="padding-top:45px;">
     <div class="imgMAR">
@@ -21,90 +24,130 @@
     </div>
     @using (Html.BeginForm("_BackGroundCheckForm", "Guest", FormMethod.Post, new { id = "BackGroundCheckForm" }))
     {
-        <div class="form-group">
-            <label for="name" class="BGtext" id="BGMGtop">Name:</label>
-            <span>
-                @Html.TextBoxFor(model => model.ApplicantPersonalInfo.API_FirstName, null, new { @class = "BoxLayout BGBoxLInput col-md-3" })
-                @Html.TextBoxFor(model => model.ApplicantPersonalInfo.API_MiddleName, null, new { @class = "BoxLayout BGBoxLInput col-md-3" })
-                @Html.TextBoxFor(model => model.ApplicantPersonalInfo.API_LastName, null, new { @class = "BoxLayout BGBoxLInput col-md-4" })
-                @*<input type="text" class="BoxLayout BGBoxLInput" name="name" value="">
-                    <input type="text" class="BoxLayout BGBoxLInput" name="name" value="">
-                    <input type="text" class="BoxLayout BGBoxLInput" name="name" value="">*@
-            </span>
+        <input type="hidden" value="@Model.FormStatusw4" name="FormStatusw4" id="FormStatusw4">
+        <input type="hidden" value="@Model.FormStatusI9" name="FormStatusI9" id="FormStatusI9">
+        <input type="hidden" value="@Model.FormStatusdd" name="FormStatusdd" id="FormStatusdd">
+        <input type="hidden" value="@Model.FormStatusEvf" name="FormStatusEvf" id="FormStatusEvf">
+        <input type="hidden" value="@Model.FormStatussif" name="FormStatussif" id="FormStatussif">
+        <input type="hidden" value="@Model.FormStatusbcf" name="FormStatusbcf" id="FormStatusbcf">
+        <input type="hidden" value="@Model.FormStatusrop" name="FormStatusrop" id="FormStatusrop">
+        <input type="hidden" value="@Model.FormStatusprfecf" name="FormStatusprfecf" id="FormStatusprfecf">
+        <input type="hidden" value="@Model.FormStatusprfcaf" name="FormStatusprfcaf" id="FormStatusprfcaf">
+        <input type="hidden" value="@Model.FormStatusprf" name="FormStatusprf" id="FormStatusprf">
+        <input type="hidden" value="@Model.FormStatusff" name="FormStatusff" id="FormStatusff">
+        <div class="row form-group">
+            <div class="col-md-2">
+                <label for="name" class="BGtext" id="BGMGtop">Name:</label>
+            </div>
+
+            <div class="col-md-3">
+                @Html.TextBoxFor(model => model.ApplicantPersonalInfo.API_FirstName, null, new { @class = "BoxLayout BGBoxLInput", @style = "padding-top:58px;width:100%;" })
+            </div>
+            <div class="col-md-3">
+                @Html.TextBoxFor(model => model.ApplicantPersonalInfo.API_MiddleName, null, new { @class = "BoxLayout BGBoxLInput", @style = "padding-top:58px;width:100%;" })
+            </div>
+            <div class="col-md-4">
+                @Html.TextBoxFor(model => model.ApplicantPersonalInfo.API_LastName, null, new { @class = "BoxLayout BGBoxLInput", @style = "padding-top:58px;width:90%;" })
+            </div>
+
+
+
+
+
+
+            @*<input type="text" class="BoxLayout BGBoxLInput" name="name" value="">
+                <input type="text" class="BoxLayout BGBoxLInput" name="name" value="">
+                <input type="text" class="BoxLayout BGBoxLInput" name="name" value="">*@
+
         </div>
         <div class="row ROWalign BGMTop">
-            <div class="col">
+            <div class="col-md-2">
+
+            </div>
+            <div class="col-md-3">
                 <p class="BGtextp">(first)</p>
             </div>
-            <div class="col">
+            <div class="col-md-3">
                 <p class="BGtextp">(middle)</p>
             </div>
-            <div class="col">
+            <div class="col-md-4">
                 <p class="BGtextp">(last)</p>
             </div>
         </div>
 
         <div class="form-group BGMGbottom">
             <label for="name" class="BGtext" id="">Former Names(s) and Dates Used:</label>
-            @Html.TextBoxFor(model => model.ApplicantPersonalInfo.API_FirstName, null, new { @class = "BoxLayout col-md-11", })
+            @Html.TextBoxFor(model => model.ApplicantPersonalInfo.API_FirstName, null, new { @class = "BoxLayout col-md-11", @style = "width:74%;" })
             @*<input type="text" class="BoxLayout" id="BGBoxL4" name="name" value="">*@
         </div>
         if (Model != null && Model.ApplicantAddress.Count() > 0)
         {
             foreach (var item in Model.ApplicantAddress)
             {
-                <div class="form-group">
-                    <label for="name" class="BGtext" id="">Current Address Since:</label>
-                    <span>
+                <div class="row form-group">
+                    <div class="col-md-2"><label for="name" class="BGtext" id="">Current Address Since:</label></div>
+
+                    <div class="col-md-3">
                         @Html.TextBoxFor(model => item.APA_StreetAddress, null, new { @class = "BoxLayout BGBoxLInput" })
-                        @Html.TextBoxFor(model => item.APA_City, null, new { @class = "BoxLayout BGBoxLInput" })
-                        @Html.TextBoxFor(model => item.APA_State, null, new { @class = "BoxLayout BGBoxLInput" })
-                        @Html.TextBoxFor(model => item.APA_Zip, null, new { @class = "BoxLayout BGBoxLInput" })
-                    </span>
+                    </div>
+                    <div class="col-md-3">
+                        @Html.TextBoxFor(model => item.APA_City, null, new { @class = "BoxLayout BGBoxLInput", @style = "margin-left: -6%;" })
+                    </div>
+                    <div class="col-md-2">
+                        @Html.TextBoxFor(model => item.APA_State, null, new { @class = "BoxLayout BGBoxLInput", @style = "margin-left: -35%;" })
+                    </div>
+                    <div class="col-md-2">
+                        @Html.TextBoxFor(model => item.APA_Zip, null, new { @class = "BoxLayout BGBoxLInput", @style = "margin-left: -20%;" })
+                    </div>
+
+
+
+
+
                 </div>
                 <div class="row ROWalign1 BGMTop">
-                    <div class="col">
+                    <div class="col-md-2">
                         <p></p>
                     </div>
-                    <div class="col">
-                        <p class="BGtextp">(Mo/Yr)</p>
+                    <div class="col-md-3">
+                        <p class="BGtextp" style="margin-left:60px;">(Mo/Yr)</p>
                     </div>
-                    <div class="col">
-                        <p class="BGtextp">(Street)</p>
+                    <div class="col-md-3">
+                        <p class="BGtextp" style="margin-left:74px;">(Street)</p>
                     </div>
-                    <div class="col">
-                        <p class="BGtextp">(City)</p>
+                    <div class="col-md-2">
+                        <p class="BGtextp" style="margin-left:70px;">(City)</p>
                     </div>
-                    <div class="col">
-                        <p class="BGtextp">(Zip/State)</p>
+                    <div class="col-md-2">
+                        <p class="BGtextp" style="margin-left:94px;">(Zip/State)</p>
                     </div>
                 </div>
             }
         }
         <div class="row BGMGbottom">
-            <div class="col">
+            <div class="col-md-6">
                 <div class="form-inline">
                     <label for="lastname" class="BGtext">Social Security Number:</label>
-                    @Html.TextBoxFor(model => model.ApplicantPersonalInfo.API_SSN, null, new { @class = "BoxLayout col-md-10"})
+                    @Html.TextBoxFor(model => model.ApplicantPersonalInfo.API_SSN, null, new { @class = "BoxLayout", @style = "width:63%;" })
                 </div>
             </div>
-            <div class="col">
+            <div class="col-md-6">
                 <div class="form-inline">
                     <label for="firstname" class="BGtext">Date of Birth:</label>
-                    @Html.TextBoxFor(model => model.ApplicantPersonalInfo.API_IsActive, null, new { @class = "BoxLayout col-md-10"})
+                    @Html.TextBoxFor(model => model.ApplicantPersonalInfo.DOB, null, new { @class = "BoxLayout", @style = "width:79%;" })
                 </div>
             </div>
         </div>
 
         <div class="form-group BGMGbottom">
             <label for="name" class="BGtext" id="">Telephone Number:</label>
-            @Html.TextBoxFor(model => model.ApplicantPersonalInfo.API_Id, null, new { @class = "BoxLayout col-md-11" })
+            @Html.TextBoxFor(model => model.ApplicantPersonalInfo.API_Id, null, new { @class = "BoxLayout col-md-11", @style = "width:84%;" })
             @*<input type="text" class="BoxLayout" id="BGBoxL9" name="name" value="">*@
         </div>
 
         <div class="form-group BGMGbottom">
             <label for="name" class="BGtext" id="">DriversLicense Number/State:</label>
-            @Html.TextBoxFor(model => model.ApplicantPersonalInfo.API_DLNumber, null, new { @class = "BoxLayout col-md-11" })
+            @Html.TextBoxFor(model => model.ApplicantPersonalInfo.API_DLNumber, null, new { @class = "BoxLayout col-md-11", @style = "width:78%;" })
             @*<input type="text" class="BoxLayout" id="BGBoxL10" name="name" value="">*@
         </div>
 
@@ -139,35 +182,92 @@
             </p>
 
         </div>
-
-        <div class="row BGMGbottom2">
+        @Html.HiddenFor(model => model.Singnature, new { @id = "EmployeeBackgroundCheckSignature" })
+        if (Model.FormStatusbcf == "true")
+        {
             <div class="col-lg-6 col-md-6">
                 <div class="form-inline">
                     <label for="lastname" class="BGtext">Signature:</label>
-                    <img id="openItForSignature" style="display:none;width:163px;height:47px;" />
-                    <span id="ShowHideSignatureSpan">
-                        <input type="text" class="BoxLayout" id="BGBoxL11" name="middlename">
+                    <img id="OpenBackgroundCheckSigntrue" style="width:163px;height:47px;" />
+                  
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="col-lg-6 col-md-6">
+                <div class="form-inline">
+                    <label for="lastname" class="BGtext">Signature:</label>
+                    <img id="OpenBackgroundCheckSign" style="display:none;width:163px;height:47px;" />
+                    <span id="ShowHideSignatureSpan hideTextBoxAndButton">
+                        <input type="text" class="BoxLayout hideTextBoxAndButton" id="BGBoxL11" name="middlename">
                     </span>
-                    <span class="btn btn-success" style="border-radius:100px;width:26%;" id="AddSignature">Add Signature</span>
+                    <span class="btn btn-success hideTextBoxAndButton" style="border-radius: 100px;width: 27%;background-image: linear-gradient(to left, #3cffdb, #425fe0);" id="AddSignatureBackgroundCheck" onclick="OpenSignature('BackgroundCheck','EmployeeBackgroundCheckSignature','OpenBackgroundCheckSign','hideTextBoxAndButton','myModalForSignatureBackgroundCheck','colors_sketchBackgroundCheck')">Add Signature</span>
 
                 </div>
             </div>
-            <div class="col-lg-6 col-md-6  DatePadding">
-                <div class="form-inline">
-                    <label for="firstname" class="BGtext">Date:</label>
-                    <input type="text" class="BoxLayout" id="BGBoxL12" name="ssn">
+        }
+
+        @*<div class="row">
+                <div class="col-lg-6 col-md-6">
+                    <div class="form-inline">
+                        <label for="lastname" class="BGtext">Signature:</label>
+                        <img id="openItForSignature" style="display:none;width:163px;height:47px;" />
+                        <span id="ShowHideSignatureSpan">
+                            <input type="text" class="BoxLayout" id="BGBoxL11" name="middlename">
+                        </span>
+                        <span class="btn btn-success" style="border-radius:100px;width:28%;" id="AddSignature">Add Signature</span>
+
+                    </div>
                 </div>
-            </div>
-        </div>
+                <div class="col-lg-6 col-md-6  DatePadding">
+                    <div class="form-inline">
+                        <label for="firstname" class="BGtext">Date:</label>
+                        <input type="text" class="BoxLayout" id="BGBoxL12" name="ssn" value="@todaydate">
+                    </div>
+                </div>
+            </div>*@
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
     }
 
-    <span style="cursor:pointer;" id="btnNext" onclick="SubmitForm(this, BackGroundCheckForm)" title="Send For Backgroud check">
-        <a><i class="fa fa-long-arrow-right" style="font-size: 40px;color: steelblue;margin-left: 874px;margin-bottom:0px"></i></a>
-    </span>
+    @*<span style="cursor:pointer;" id="btnNext" onclick="SubmitForm(this, BackGroundCheckForm)" title="Send For Backgroud check">
+            <a><i class="fa fa-long-arrow-right" style="font-size: 40px;color: steelblue;margin-left: 874px;margin-bottom:0px"></i></a>
+        </span>*@
+
+</div>
+<div class="row" style="height: 50px;background-color: #292b48;bottom: 0;overflow: hidden;position: fixed;width: 100%;margin-left:0px;">
+    <div class="col-md-4 text-right">
+
+    </div>
+    <div class="col-md-4 text-center">
+        <span>
+            <i class="fa fa-check-square" aria-hidden="true" title="Go To CheckList" onclick="GuestCheckList(this,BackGroundCheckForm)" style="font-size: 20px;margin-top: 15px;color: #6cc387f2;padding-right:30px;cursor:pointer;"></i>
+        </span>
+
+        <span>
+            <a><i class="fa fa-question-circle" aria-hidden="true" title="Help" style="font-size: 20px;color: #f73c3c;margin-top: 6px;padding-right:30px;cursor:pointer;" onclick="SendFormIssueNotification('Background Check', '@ApplicantId');"></i></a>
+        </span>
+
+        <span>
+            <a><i class="fa fa-floppy-o" aria-hidden="true" onclick="SaveBeforeNext(this,BackGroundCheckForm)" title="Save" style="font-size: 20px;color: #6cc387f2;margin-top: 6px;padding-right:30px;cursor:pointer;"></i></a>
+        </span>
+
+    </div>
+    <div class="col-md-4 text-right">
+        <span style="cursor:pointer;" onclick="SubmitForm(this, BackGroundCheckForm)" title="Send For Backgroud check">
+            <a><i class="fa fa-long-arrow-right" title="Next" style="font-size: 45px;color: #6cc387f2;margin-top: 2px;"></i></a>
+        </span>
+    </div>
 </div>
 <div id="openModalForDocument">
     <div class="modal fade bd-example-modal-lg" tabindex="-1" data-keyboard="false" data-backdrop="static" role="dialog" aria-hidden="true" id="myModalToAddDocumentUpload">
-        <div class="modal-dialog modal-lg" style="width:620px;">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header" style="display: inherit;">
                     <h5 class="modal-title">Document Uplaod</h5>
@@ -178,7 +278,7 @@
                 <div class="modal-body" style="margin-right:15px;">
                     <form id="FileUploadModalForm">
                         <div class="form-group row">
-                            <div class="col-sm-3">Add License</div>
+                            <div class="col-sm-3">Driving License Number</div>
                             <div class="col-sm-9">
                                 <div class="input-group">
                                     <div class="custom-file">
@@ -189,7 +289,7 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <div class="col-sm-3">Add SSN</div>
+                            <div class="col-sm-3">SSN Number</div>
                             <div class="col-sm-9">
                                 <div class="input-group">
                                     <div class="custom-file">
@@ -202,7 +302,7 @@
                     </form>
                 </div>
                 <div class="modal-footer" style="background: white;">
-                    <button type="button" class="btn btn-success" id="UploadDocApplicant" style="border-radius:100px;width:18%;">Upload</button>
+                    <button type="button" class="btn btn-success" id="UploadDocApplicant" style="border-radius: 100px; width: 25%; background-image: linear-gradient(to left, #3cffdb, #425fe0);">Upload</button>
                 </div>
             </div>
         </div>
@@ -238,19 +338,50 @@
             </div>
             <div class="modal-footer" style="background: white;">
                 <input type="button" class="btn btn-primary savesignaturInfo" id="btnSave" is-update="true" data-tool="eraser" value="No" />
-            </div>            
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade preview" id="myModalForSignatureBackgroundCheck" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" style="width:40%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Add Signature</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">X</span></button>
+            </div>
+            <div class="modal-body" style="margin-left:0px;">
+                <div id="divDetailPreview" class="">
+                    <div>
+                        <div class="" id="DivSignatureI9">
+                            <div class="form-group">
+                                <div class="col-lg-7 col-md-8 col-sm-8 col-xs-12">
+                                    <div class="tools">
+                                        <a href="#colors_sketch" data-tool="marker">Marker</a> <a href="#colors_sketch" data-tool="eraser">Eraser</a>
+                                    </div>
+                                    <br />
+                                    <canvas id="colors_sketchBackgroundCheck" width="450" height="200"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="background: white;">
+                <input type="button" class="btn btn-primary" id="btnSaveSign" data-dismiss="modal" value="Save as Image" style="border-radius: 100px; width: 25%; background-image: linear-gradient(to left, #3cffdb, #425fe0);" />
+            </div>
         </div>
     </div>
 </div>
 <script>
-     debugger
-     var dt = new Date();
-     var strDate = dt.getFullYear() + "/" + (dt.getMonth() + 1) + "/" + dt.getDate();
-     $("#BGBoxL12").val(strDate);
-     $('body').css('overflow-y', 'auto');
-     $('body').css('padding-right', '0px');
+    debugger
+    var dt = new Date();
+    var strDate = dt.getFullYear() + "/" + (dt.getMonth() + 1) + "/" + dt.getDate();
+    $("#BGBoxL12").val(strDate);
+    $('body').css('overflow-y', 'auto');
+    $('body').css('padding-right', '0px');
 
 </script>
+<script src="~/Scripts/toastr.min.js"></script>
 <script src="~/Scripts/ePeople/ApplicantFunctionality.js"></script>
 <script src="~/Scripts/Guest/SketchSignature.js"></script>
 @*<script src="https://cdn.rawgit.com/mobomo/sketch.js/master/lib/sketch.min.js" type="text/javascript"></script>*@
@@ -258,6 +389,7 @@
 <script>
     $("#myLicensefileUpload").change(function () {
         debugger
+        //var form = new FormData();
         //$("#dvAccountPreview").html("");
         var allowedExtensions = /(\.pdf|\.doc|\.docx|\.txt)$/i;
         //$("#addFileName").html();
@@ -292,4 +424,32 @@
             return false;
         }
     })
+</script>
+<script>
+    $(function () {
+
+         var formbcf = $("#FormStatusbcf").val();
+        if (formbcf == "true") {
+            debugger
+            var bcfSign = $("#EmployeeBackgroundCheckSignature").val();
+            //var neww4Sign = w4Sign.replace("-", "/");
+            $("#OpenBackgroundCheckSigntrue").attr("src", bcfSign);
+        }
+        else {
+              $('#colors_sketchBackgroundCheck').sketch();
+        $(".tools a").eq(0).attr("style", "color:#000");
+        $(".tools a").click(function () {
+            $(".tools a").removeAttr("style");
+            $(this).attr("style", "color:#000");
+        });
+        $("#btnSaveSign").bind("click", function () {
+            var base64 = $('#colors_sketchBackgroundCheck')[0].toDataURL();
+            $("#OpenBackgroundCheckSign").attr("src", base64);
+            $("#OpenBackgroundCheckSign").show();
+            $(".hideTextBoxAndButton").hide();
+            $("#EmployeeBackgroundCheckSignature").val(base64);
+        });
+        }
+      
+    });
 </script>

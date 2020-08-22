@@ -1,65 +1,9 @@
 ﻿@model WorkOrderEMS.Models.I9FormModel
+@{ 
+    long ApplicantId = Convert.ToInt64(Session["ApplicantId"]);
 
+}
 <style>
-    /*table {
-                border-collapse: collapse;
-                width: 100%;
-            }
-
-            table, td, th {
-                border: 1px solid black;
-                margin-top: 20px;
-                padding-left: 20px;
-                padding-right: 20px;
-
-            }
-            .column {
-                float: left;
-                padding: 10px;
-                height: 196px;
-            }
-
-            .left, .right {
-                width: 25%;
-                text-align: center;
-            }
-
-            .middle {
-                width: 50%;
-                text-align: center;
-            }
-
-            * {
-                box-sizing: border-box;
-            }
-
-            hr.new1 {
-                border-top: 7px solid black;
-            }
-
-            hr.new2 {
-                border-top: 2px solid black;
-            }
-
-
-            span.space {
-                margin-left: 212pxpx;
-            }
-
-            .text-line {
-                background-color: transparent;
-                outline: none;
-                outline-style: none;
-                border-top: none;
-                border-left: none;
-                border-right: none;
-                border-bottom: solid #000 1px;
-            }
-
-            row123 {
-                margin-top: 130px;
-            }*/
-
     body {
         font-size: 15px;
         font-family: Times New Roman;
@@ -140,6 +84,22 @@
         border-right: none;
         border-bottom: solid #000 1px;
     }
+    .I9-table1 {
+    width: 61%;
+    position: absolute;
+    top: 50.82%;
+    left: 37.8%;
+}
+    .I9-BorderBottom {
+        width: 408px;
+    }
+
+    .I9-arrow {
+        font-size: 40px;
+        color: steelblue;
+        margin-left: 850px;
+        margin-top: 2%
+    }
 
 
 
@@ -149,74 +109,25 @@
 </style>
 
 
-
-
-
-@*<style>
-        table {
-            border-collapse: collapse;
-            width: 100%;
-        }
-
-        table, td, th {
-            border: 1px solid black;
-            margin-top: 20px;
-        }
-
-        .column {
-            float: left;
-            padding: 10px;
-            height: 196px;
-        }
-
-        .left, .right {
-            width: 25%;
-            text-align: center;
-        }
-
-        .middle {
-            width: 50%;
-            text-align: center;
-        }
-
-        * {
-            box-sizing: border-box;
-        }
-
-        hr.new1 {
-            border-top: 7px solid black;
-        }
-
-        hr.new2 {
-            border-top: 2px solid black;
-        }
-
-
-        span.space {
-            margin-left: 212pxpx;
-        }
-
-        .text-line {
-            background-color: transparent;
-            outline: none;
-            outline-style: none;
-            border-top: none;
-            border-left: none;
-            border-right: none;
-            border-bottom: solid #000 1px;
-        }
-
-        row123 {
-            margin-top: 130px;
-        }
-    </style>*@
-
+<link href="~/Content/toastr.min.css" rel="stylesheet" />
+<link href="~/Content/NewAdminContent/CSS/_MyGuestI9.css" rel="stylesheet" />
 <div style="margin:80px 20px 0px 20px">
 
-    <form method="post" action="/Guest/_I9Form" id = "I9Form">
+    <form method="post" action="/Guest/_I9Form" id="I9Form">
 
         @*@Html.BeginForm("_I9Form", "Guest", FormMethod.Post, new { id = "I9Form" }))
             {*@
+        <input type="hidden" value="@Model.FormStatusw4" name="FormStatusw4" id="FormStatusw4">
+        <input type="hidden" value="@Model.FormStatusI9" name="FormStatusI9" id="FormStatusI9">
+        <input type="hidden" value="@Model.FormStatusdd" name="FormStatusdd" id="FormStatusdd">
+        <input type="hidden" value="@Model.FormStatusEvf" name="FormStatusEvf" id="FormStatusEvf">
+        <input type="hidden" value="@Model.FormStatussif" name="FormStatussif" id="FormStatussif">
+        <input type="hidden" value="@Model.FormStatusbcf" name="FormStatusbcf" id="FormStatusbcf">
+        <input type="hidden" value="@Model.FormStatusrop" name="FormStatusrop" id="FormStatusrop">
+        <input type="hidden" value="@Model.FormStatusprfecf" name="FormStatusprfecf" id="FormStatusprfecf">
+        <input type="hidden" value="@Model.FormStatusprfcaf" name="FormStatusprfcaf" id="FormStatusprfcaf">
+        <input type="hidden" value="@Model.FormStatusprf" name="FormStatusprf" id="FormStatusprf">
+        <input type="hidden" value="@Model.FormStatusff" name="FormStatusff" id="FormStatusff">
         @Html.HiddenFor(x => x.I9F_Id)
         @Html.HiddenFor(x => x.Case_Number)
         <header>
@@ -257,78 +168,78 @@
                         <td colspan="100"><h3>Section 1. Employee Information and Attestation </h3></b>(Employees must complete and sign Section 1 of Form I-9 no later than the <b>first day of employment</b>, but not before accepting a job offer.)</td>
                     </tr>
                     <tr>
-                        <td colspan="25" style="padding-bottom: 33px; width:100px">
+                        <td colspan="25" style="padding-bottom: 10px; width:100px">
                             <p>Last Name <i>(Family Name)</i></p>
 
                             @Html.TextBoxFor(x => x.I9F_Sec1_LastName, new { @class = "text-line", @style = "width:200px;" })
 
                         </td>
-                        <td colspan="25" style="padding-bottom: 33px;" width:150px">
+                        <td colspan="25" style="padding-bottom: 33px; width:150px">
                             <br />
                             <p>First Name <i>(Given Name)</i></p>
 
                             @Html.TextBoxFor(x => x.I9F_Sec1_FirstName, new { @class = "text-line", @style = "width:200px;" })
                             @Html.ValidationMessageFor(x => x.I9F_Sec1_FirstName, "", new { @style = "color:red;" })
                         </td>
-                        <td colspan="15" style="padding-bottom: 33px;" width:100px">
+                        <td colspan="15" style="padding-bottom: 18px; width:100px">
                             <p>Middle Initial</p>
 
                             @Html.TextBoxFor(x => x.I9F_Sec1_MiddleInitiaL, new { @class = "text-line", @style = "width:100px;" })
                             @Html.ValidationMessageFor(x => x.I9F_Sec1_MiddleInitiaL, "", new { @style = "color:red;" })
                         </td>
-                        <td colspan="25" style="padding-bottom: 33px;" width:400px">
+                        <td colspan="25" style="padding-bottom: 24px; width:400px">
                             <p>Other Last Names Used <i>(if any)</i></p>
 
-                            @Html.TextBoxFor(x => x.I9F_Sec1_OtherLastName, new { @class = "text-line", @style = "width:520px;" })
+                            @Html.TextBoxFor(x => x.I9F_Sec1_OtherLastName, new { @class = "text-line", @style = "width:285px;" })
                             @Html.ValidationMessageFor(x => x.I9F_Sec1_OtherLastName, "", new { @style = "color:red;" })
                         </td>
 
                     </tr>
                     <tr>
-                        <td colspan="20" style="padding-bottom: 33px;" width:200px">
+                        <td colspan="20" style="padding-bottom: 33px; width:200px">
                             <p>Address <i>(Street Number and Name)</i></p>
 
-                            @Html.TextBoxFor(x => x.I9F_Sec1_Address, new { @class = "text-line", @style = "width:200px;" })
+                            @Html.TextBoxFor(x => x.I9F_Sec1_Address, new { @class = "text-line", @style = "width:200px;margin-top: 13%;" })
                             @Html.ValidationMessageFor(x => x.I9F_Sec1_Address, "", new { @style = "color:red;" })
                         </td>
-                        <td colspan="10" style="padding-bottom: 33px;" width:100px">
+                        <td colspan="10" style="padding-bottom: 33px; width:100px">
                             <p>Apt. Number</p>
 
-                            @Html.TextBoxFor(x => x.I9F_Sec1_AptNumber, new { @class = "text-line", @style = "width:200px;" })
+                            @Html.TextBoxFor(x => x.I9F_Sec1_AptNumber, new { @class = "text-line", @style = "width:200px;margin-top:26%;" })
                             @Html.ValidationMessageFor(x => x.I9F_Sec1_AptNumber, "", new { @style = "color:red;" })
                         </td>
-                        <td colspan="20" style="padding-bottom: 33px;" width:100px">
+                        <td colspan="20" style="padding-bottom: 33px; width:100px">
                             <p>City or Town</p>
 
-                            @Html.TextBoxFor(x => x.I9F_Sec1_City, new { @class = "text-line", @style = "width:200px;" })
+                            @Html.TextBoxFor(x => x.I9F_Sec1_City, new { @class = "text-line", @style = "width:200px;margin-top: 24%;" })
                             @Html.ValidationMessageFor(x => x.I9F_Sec1_City, "", new { @style = "color:red;" })
                         </td>
-                        <td colspan="10" style="padding-bottom: 33px;" width:100px">
+                        <td colspan="10" style="padding-bottom: 33px; width:100px">
                             <p>State</p>
 
-                            @Html.TextBoxFor(x => x.I9F_Sec1_State, new { @class = "text-line", @style = "width:140px;" })
+                            @Html.TextBoxFor(x => x.I9F_Sec1_State, new { @class = "text-line", @style = "width:140px;margin-top: 33%;" })
                             @Html.ValidationMessageFor(x => x.I9F_Sec1_State, "", new { @style = "color:red;" })
                         </td>
-                        <td colspan="18" style="padding-bottom: 33px;" width:100px">
+                        <td colspan="18" style="padding-bottom: 33px; width:100px">
                             <p>ZIP Code</p>
 
-                            @Html.TextBoxFor(x => x.I9F_Sec1_ZipCode, new { @class = "text-line", @style = "width:200px;" })
+                            @Html.TextBoxFor(x => x.I9F_Sec1_ZipCode, new { @class = "text-line", @style = "width:200px;margin-top: 12%;" })
                             @Html.ValidationMessageFor(x => x.I9F_Sec1_ZipCode, "", new { @style = "color:red;" })
                         </td>
                     </tr>
 
 
                     <tr>
-                        <td colspan="20" style="padding-bottom: 33px;" width:200px">
+                        <td colspan="20" style="padding-bottom: 33px; width:200px">
                             <p>Date of Birth <i>(mm/dd/yyyy)</i></p>
 
                             @Html.TextBoxFor(x => x.I9F_Sec1_dateOfBirth, new { @class = "text-line datepicker", @style = "width:200px;" })
                             @Html.ValidationMessageFor(x => x.I9F_Sec1_dateOfBirth, "", new { @style = "color:red;" })
                         </td>
                         <td colspan="30" width:100px">
-                            <p>U.S. Social Security Number</p>
+                            <p style="margin-top:-30px;">U.S. Social Security Number</p>
 
-                            @Html.TextBoxFor(x => x.I9F_Sec1_SSN, new { @class = "text-line", @style = "width:200px;" })
+                            @Html.TextBoxFor(x => x.I9F_Sec1_SSN, new { @class = "text-line", @style = "width:200px;margin-top:31px;" })
                             @Html.ValidationMessageFor(x => x.I9F_Sec1_SSN, "", new { @style = "color:red;" })
                             @*<table style="margin-bottom: 8px;">
                                 <tr>
@@ -351,16 +262,16 @@
                                 </table>*@
                         </td>
 
-                        <td colspan="20" valign="bottom" style="padding-bottom: 33px;" width:100px">
+                        <td colspan="20" valign="bottom" style="padding-bottom: 33px; width:100px">
                             <p>Employee's E-mail Address</p>
 
-                            @Html.TextBoxFor(x => x.I9F_Sec1_Email, new { @class = "text-line", @style = "width:100px;" })
+                            @Html.TextBoxFor(x => x.I9F_Sec1_Email, new { @class = "text-line", @style = "width:250px;margin-top:31px;" })
                             @Html.ValidationMessageFor(x => x.I9F_Sec1_Email, "", new { @style = "color:red;" })
                         </td>
-                        <td colspan="20" valign="bottom" style="padding-bottom: 33px;" width:100px">
+                        <td colspan="20" valign="bottom" style="padding-bottom: 33px; width:100px">
                             <p>Employee's Telephone Number</p>
 
-                            @Html.TextBoxFor(x => x.I9F_Sec1_EmployeeTelephoneNumber, new { @class = "text-line", @style = "width:200px;" })
+                            @Html.TextBoxFor(x => x.I9F_Sec1_EmployeeTelephoneNumber, new { @class = "text-line", @style = "width:200px;margin-top:8px;" })
                             @Html.ValidationMessageFor(x => x.I9F_Sec1_EmployeeTelephoneNumber, "", new { @style = "color:red;" })
                         </td>
 
@@ -388,7 +299,7 @@
                     <tr>
                         <td colspan="100">
                             <p><input type="checkbox"> <span style="position:absolute;left:70px;">3. A lawful permanent resident(Alien Registration Number/USCIS Number):</span></p>
-                            @Html.TextBoxFor(x => x.I9F_Sec1_AlienRegistrationNum_USCIS, new { @class = "text-line", @style = "width:200px;" })
+                            @Html.TextBoxFor(x => x.I9F_Sec1_AlienRegistrationNum_USCIS, new { @class = "text-line", @style = "width:200px;margin-bottom:20px;" })
                             @Html.ValidationMessageFor(x => x.I9F_Sec1_AlienRegistrationNum_USCIS, "", new { @style = "color:red;" })
 
                         </td>
@@ -516,23 +427,39 @@
             <table>
                 <tbody>
                     <tr>
-                        <td colspan="50">
-                            @Html.HiddenFor(x => x.IsSignature)
-                            <p>Signature of Employee</p>
+                        @Html.HiddenFor(x => x.IsSignature)
+                        @Html.HiddenFor(x => x.EmployeeSignatureName, new { @id = "EmployeeI9Signature" })
+                        @if (Model.FormStatusI9 == "true")
+                        {
+                            <td colspan="50">
+
+                                <p>Signature of Employee</p>
+
+                                <img id="OpenI9Signtrue" class="openItForSignature" style="width:163px;height:47px;" />
+
+
+                            </td>
+                        }
+                        else
+                        {
+                            <td colspan="50">
+                                
+                                <p>Signature of Employee</p>
                                 <span id="ShowHideSignatureSpan" class="ShowHideSignatureSpan">
-                                    @Html.TextBoxFor(x => x.I9F_Sec1_SignatureOfEmployee, new { @class = "text-line", @style = "width:200px;" })
-                                      @*<input type="text" class="BoxLayout" id="BGBoxL11" name="middlename" />*@
+                                    @Html.TextBoxFor(x => x.I9F_Sec1_SignatureOfEmployee, new { @class = "text-line hideTextBoxAndButton", @style = "width:200px;" })
+                                    @*<input type="text" class="BoxLayout" id="BGBoxL11" name="middlename" />*@
                                 </span>
-                            @if (Model.IsSignature == true) {                           
-                                 <img id="openItForSignature" class="openItForSignature" style="display:none;width:163px;height:47px;" />
+                                <img id="OpenI9Sign" class="openItForSignature" style="display:none;width:163px;height:47px;" />
                                 <span>
-                                    <span class="btn btn-success" style="border-radius:100px;width:14%;" id="AddSignature">
+                                    <span class="btn btn-success hideTextBoxAndButton" style="border-radius: 100px; width: 17%; background-image: linear-gradient(to left, #3cffdb, #425fe0);" id="AddSignatureI9" onclick="OpenSignature('I9Form','EmployeeI9Signature','OpenI9Sign','hideTextBoxAndButton','myModalForSignatureI9','colors_sketchI9')">
                                         Add Signature
                                     </span>
                                 </span>
-                                 @Html.HiddenFor(x => x.EmployeeSignatureName, new { @id="getSignName"})
-                            }
-                        </td>
+
+                            </td>
+                        }
+
+
                         <td colspan="50">
                             <p>Today's Date <i>(mm/dd/yyyy)</i></p>
                             @Html.TextBoxFor(x => x.I9F_Sec1_DateOfEmployeeSign, new { @class = "text-line datepicker", @style = "width:200px;" })
@@ -562,20 +489,21 @@
                         <td colspan="50%" style="padding-bottom: 33px;">
                             Signature of Preparer or Translator
                             <br />
-                           
-                                <span id="ShowHideSignatureTranslatorSpan" class="ShowHideSignatureSpan">
-                                    @Html.TextBoxFor(x => x.I9F_Sec1_SignatureOfPreparerOrTranslator, new { @class = "text-line", @style = "width:350px;" })
-                                    @Html.ValidationMessageFor(x => x.I9F_Sec1_SignatureOfPreparerOrTranslator, "", new { @style = "color:red;" })
-                                </span>
-                             @if (Model.IsSignature == true) {                           
-                                 <img id="openForTranslator" class="openItForSignature" style="display:none;width:163px;height:47px;" />
+
+                            <span id="ShowHideSignatureTranslatorSpan" class="ShowHideSignatureSpan">
+                                @Html.TextBoxFor(x => x.I9F_Sec1_SignatureOfPreparerOrTranslator, new { @class = "text-line", @style = "width:350px;" })
+                                @Html.ValidationMessageFor(x => x.I9F_Sec1_SignatureOfPreparerOrTranslator, "", new { @style = "color:red;" })
+                            </span>
+                            @if (Model.IsSignature == true)
+                            {
+                                <img id="openForTranslator" class="openItForSignature" style="display:none;width:163px;height:47px;" />
                                 <span>
-                                    <span class="btn btn-success" style="border-radius:100px;width:22%;" id="AddSignatureTranslator">
+                                    <span class="btn btn-success" style="border-radius:100px;width:25%;" id="AddSignatureTranslator">
                                         Add Signature
                                     </span>
                                 </span>
-                                @Html.HiddenFor(model => model.SignatureImageBase,new { @id= "SignatureImageBase" })
-                             }
+                                @Html.HiddenFor(model => model.SignatureImageBase, new { @id = "SignatureImageBase" })
+                            }
                         </td>
                         <td colspan="50%" style="padding-bottom: 33px;">
                             <p>Today's Date <i>(mm/dd/yyyy)</i></p>
@@ -605,7 +533,7 @@
                     <tr>
                         <td colspan="35" style="padding-bottom: 33px;">
                             <p>Address <i>(Street Number and Name)</i></p>
-                            @Html.TextBoxFor(x => x.I9F_Sec1_Address, new { @class = "text-line", @style = "width:250px;" })
+                            @Html.TextBoxFor(x => x.I9F_Sec1_Address, new { @class = "text-line", @style = "width:250px;margin-top:22px;" })
                             @Html.ValidationMessageFor(x => x.I9F_Sec1_Address, "", new { @style = "color:red;" })
 
                         </td>
@@ -714,7 +642,7 @@
                         <td colspan="25" style="padding-bottom: 33px;">
                             Citizenship/Immigration Status
                             <br />
-                            @Html.TextBoxFor(x => x.I9F_Sec2_CitizenshipImmigrationStatus, new { @class = "text-line", @style = "width:200px;" })
+                            @Html.TextBoxFor(x => x.I9F_Sec2_CitizenshipImmigrationStatus, new { @class = "text-line", @style = "width:200px;margin-top:19px;" })
                         </td>
 
                     </tr>
@@ -840,7 +768,9 @@
                         <td style="padding-bottom: 33px;">
                             Document Title
                             <br />
-                            @Html.TextBoxFor(x => x.I9F_Sec2_ListB_DocumentTitle, new { @class = "text-line", @style = "width:490px;" })
+                            @Html.TextBoxFor(x => x.I9F_Sec2_ListB_DocumentTitle, new
+                            {
+                                @class = "text-line I9-BorderBottom I9-mBorderBottom"@*, @style = "width:350px;"*@})
                             @Html.ValidationMessageFor(x => x.I9F_Sec2_ListB_DocumentTitle, "", new { @style = "color:red;" })
 
                         </td>
@@ -851,7 +781,9 @@
                         <td style="padding-bottom: 33px;">
                             Issuing Authority
                             <br />
-                            @Html.TextBoxFor(x => x.I9F_Sec2_ListB_IssuingAuthority, new { @class = "text-line", @style = "width:490px;" })
+                            @Html.TextBoxFor(x => x.I9F_Sec2_ListB_IssuingAuthority, new
+                            {
+                                @class = "text-line I9-BorderBottom I9-mBorderBottom"@*, @style = "width:350pxpx;"*@})
                             @Html.ValidationMessageFor(x => x.I9F_Sec2_ListB_IssuingAuthority, "", new { @style = "color:red;" })
                         </td>
                         <td style="border-bottom:1px solid white;"></td>
@@ -860,7 +792,9 @@
                         <td style="padding-bottom: 33px;">
                             Document Number
                             <br />
-                            @Html.TextBoxFor(x => x.I9F_Sec2_ListB_DocumentNumber, new { @class = "text-line", @style = "width:490px;" })
+                            @Html.TextBoxFor(x => x.I9F_Sec2_ListB_DocumentNumber, new
+                            {
+                                @class = "text-line I9-BorderBottom I9-mBorderBottom"@*, @style = "width:350px;"*@})
                             @Html.ValidationMessageFor(x => x.I9F_Sec2_ListB_DocumentNumber, "", new { @style = "color:red;" })
                         </td>
                         <td style="border-bottom:1px solid white;"></td>
@@ -869,7 +803,9 @@
                         <td style="padding-bottom: 33px;">
                             Expiration Date (if any)(mm/dd/yyyy)
                             <br />
-                            @Html.TextBoxFor(x => x.I9F_Sec2_ListB_ExpirationDate, new { @class = "text-line datepicker", @style = "width:490px;" })
+                            @Html.TextBoxFor(x => x.I9F_Sec2_ListB_ExpirationDate, new
+                            {
+                                @class = "text-line datepicker I9-BorderBottom I9-mBorderBottom"@*, @style = "width:350px;"*@})
                             @Html.ValidationMessageFor(x => x.I9F_Sec2_ListB_ExpirationDate, "", new { @style = "color:red;" })
                         </td>
                         <td style="border-bottom:1px solid white;"></td>
@@ -878,7 +814,9 @@
                         <td style="padding-bottom: 33px;">
                             Document Title
                             <br />
-                            @Html.TextBoxFor(x => x.I9F_Sec2_ListC_DocumentTitle, new { @class = "text-line", @style = "width:490px;" })
+                            @Html.TextBoxFor(x => x.I9F_Sec2_ListC_DocumentTitle, new
+                            {
+                                @class = "text-line I9-BorderBottom I9-mBorderBottom"@*, @style = "width:350px;"*@})
                             @Html.ValidationMessageFor(x => x.I9F_Sec2_ListC_DocumentTitle, "", new { @style = "color:red;" })
                         </td>
                         <td style="border-bottom:1px solid white;"></td>
@@ -887,7 +825,9 @@
                         <td style="padding-bottom: 33px;">
                             Issuing Authority
                             <br />
-                            @Html.TextBoxFor(x => x.I9F_Sec2_ListC_IssuingAuthority, new { @class = "text-line", @style = "width:490px;" })
+                            @Html.TextBoxFor(x => x.I9F_Sec2_ListC_IssuingAuthority, new
+                            {
+                                @class = "text-line I9-BorderBottom I9-mBorderBottom"@*, @style = "width:350px;"*@})
                             @Html.ValidationMessageFor(x => x.I9F_Sec2_ListC_IssuingAuthority, "", new { @style = "color:red;" })
 
                         </td>
@@ -897,7 +837,9 @@
                         <td style="padding-bottom: 33px;">
                             Document Number
                             <br />
-                            @Html.TextBoxFor(x => x.I9F_Sec2_ListC_DocumentNumber, new { @class = "text-line", @style = "width:490px;" })
+                            @Html.TextBoxFor(x => x.I9F_Sec2_ListC_DocumentNumber, new
+                            {
+                                @class = "text-line I9-BorderBottom I9-mBorderBottom"@*, @style = "width:350px;"*@})
                             @Html.ValidationMessageFor(x => x.I9F_Sec2_ListC_DocumentNumber, "", new { @style = "color:red;" })
                         </td>
                         <td style="border-bottom:1px solid white;"></td>
@@ -906,22 +848,24 @@
                         <td style="padding-bottom: 33px;">
                             Expiration Date (if any)(mm/dd/yyyy)
                             <br />
-                            @Html.TextBoxFor(x => x.I9F_Sec2_ListC_ExpirationDate, new { @class = "text-line datepicker", @style = "width:490px;" })
+                            @Html.TextBoxFor(x => x.I9F_Sec2_ListC_ExpirationDate, new
+                            {
+                                @class = "text-line datepicker I9-BorderBottom I9-mBorderBottom"@*, @style = "width:350px;"*@})
                             @Html.ValidationMessageFor(x => x.I9F_Sec2_ListC_ExpirationDate, "", new { @style = "color:red;" })
                         </td>
                         <td style="border-bottom:1px solid white;"></td>
                     </tr>
                 </tbody>
             </table>
-            <table style="width:40%;position:absolute;top:51.2%;left:37.6%;">
+            <table class="I9-table1 I9-mtable1" @*style="width:40%;position:absolute;top:51%;left:37.6%;"*@>
                 <tr>
-                    <td style="padding-bottom:27.8%">
+                    <td style="padding-bottom:54.1%">
                         <table>
                             <tr>
-                                <td style="padding-bottom:70.6%" width="40%">
+                                <td style="padding-bottom:31.6%" width="40%">
                                     Additional Information
                                     <br />
-                                    @Html.TextBoxFor(x => x.I9F_Sec2_AdditionalInformation, new { @class = "text-line", @style = "width:540px;" })
+                                    @Html.TextBoxFor(x => x.I9F_Sec2_AdditionalInformation, new { @class = "text-line", @style = "width:393px;" })
                                     @Html.ValidationMessageFor(x => x.I9F_Sec2_AdditionalInformation, "", new { @style = "color:red;" })
                                 </td>
                             </tr>
@@ -1027,7 +971,7 @@
                         <td colspan="45" style="padding-bottom: 33px;">
                             Employer's Business or Organization<br /> Address (Street Number and Name)
                             <br />
-                            @Html.TextBoxFor(x => x.I9F_Sec2_EmployersBusinessOrgnization_Address, new { @class = "text-line", @style = "width:300px;" })
+                            @Html.TextBoxFor(x => x.I9F_Sec2_EmployersBusinessOrgnization_Address, new { @class = "text-line", @style = "width:300px;margin-top:44px;" })
                             @Html.ValidationMessageFor(x => x.I9F_Sec2_EmployersBusinessOrgnization_Address, "", new { @style = "color:red;" })
 
 
@@ -1126,7 +1070,7 @@
                         <td colspan="45" style="padding-bottom: 33px;">
                             Document Title
                             <br />
-                            @Html.TextBoxFor(x => x.I9F_Sec3_C_DocumentTitle, new { @class = "text-line", @style = "width:400px;" })
+                            @Html.TextBoxFor(x => x.I9F_Sec3_C_DocumentTitle, new { @class = "text-line", @style = "width:395px;" })
                             @Html.ValidationMessageFor(x => x.I9F_Sec3_C_DocumentTitle, "", new { @style = "color:red;" })
 
                         </td>
@@ -1134,14 +1078,14 @@
                             Document Number
 
                             <br />
-                            @Html.TextBoxFor(x => x.I9F_Sec3_C_DocumentNumber, new { @class = "text-line", @style = "width:400px;" })
+                            @Html.TextBoxFor(x => x.I9F_Sec3_C_DocumentNumber, new { @class = "text-line", @style = "width:395px;" })
                             @Html.ValidationMessageFor(x => x.I9F_Sec3_C_DocumentNumber, "", new { @style = "color:red;" })
 
                         </td>
                         <td colspan="10" style="padding-bottom: 33px;">
                             Expiration Date (if any) (mm/dd/yyyy)
                             <br />
-                            @Html.TextBoxFor(x => x.I9F_Sec3_C_ExpirationDate, new { @class = "text-line datepicker", @style = "width:400px;" })
+                            @Html.TextBoxFor(x => x.I9F_Sec3_C_ExpirationDate, new { @class = "text-line datepicker", @style = "width:395px;" })
                             @Html.ValidationMessageFor(x => x.I9F_Sec3_C_ExpirationDate, "", new { @style = "color:red;" })
 
                         </td>
@@ -1166,14 +1110,14 @@
                             Signature of Employer or
                             <br />Authorized Representative
                             <br />
-                            @Html.TextBoxFor(x => x.I9F_Sec3_C_SignatureOfEmployerOrAuthorized, new { @class = "text-line", @style = "width:500px;" })
+                            @Html.TextBoxFor(x => x.I9F_Sec3_C_SignatureOfEmployerOrAuthorized, new { @class = "text-line", @style = "width:398px;" })
 
                         </td>
                         <td colspan="50%" style="padding-bottom: 33px;">
                             Today's Date (mm/dd/yyyy)
                             <br />
                             <br />
-                            @Html.TextBoxFor(x => x.I9F_Sec3_C_DocumentTitle, new { @class = "text-line", @style = "width:400px;" })
+                            @Html.TextBoxFor(x => x.I9F_Sec3_C_DocumentTitle, new { @class = "text-line", @style = "width:395px;" })
 
 
                         </td>
@@ -1181,7 +1125,7 @@
                             Name of Employer or Authorized Representative
                             <br />
                             <br />
-                            @Html.TextBoxFor(x => x.I9F_Sec3_C_NameOfEmployerOrAuthorized, new { @class = "text-line", @style = "width:510px;" })
+                            @Html.TextBoxFor(x => x.I9F_Sec3_C_NameOfEmployerOrAuthorized, new { @class = "text-line", @style = "width:395px;" })
 
 
                         </td>
@@ -1205,7 +1149,7 @@
                     or a combination of one selection from List B and one selection from List C.
                 </span>
             </div>
-            <table border="1" cellpadding="0" cellspacing="0" style="margin-left:180pt;border-collapse:collapse;border:none;width:100%;">
+            <table border="1" cellpadding="0" cellspacing="0" style="margin-left:160pt;border-collapse:collapse;border:none;width:100%;">
                 <tbody>
 
                     <tr>
@@ -1446,13 +1390,58 @@
             <h3 style="text-align:center;">Examples of many of these documents appear in Part 8 of the Handbook for Employers (M-274).</h3>
             <h3 style="text-align:center;"><b>Refer to the instructions for more information about acceptable receipts.</h3>
         </div>
+        <br><br><br><br><br>
 
+        @*<p> @Html.CheckBoxFor(x => x.IsSave, new { @style = "height: 18px;width: 31px;" })  <span style="color:black">   I hereby declare that the above information is true to the best of my knowledge </span>  </p>*@<br />
+        @*<span style="cursor:pointer;position:absolute;left:30%;top:99%" onclick="SubmitForm(this, I9Form)" title="Go to next Emeregency Contact Form"><a><i class="fa fa-long-arrow-right I9-arrow I9-marrow"></i></a></span>*@
+        @*<span style="cursor:pointer;position:absolute;left:30%;top:99%" onclick="SubmitForm(this, I9Form)" title="Go to next Emeregency Contact Form"><a><i class="fa fa-long-arrow-right" style="font-size: 40px;color: steelblue;margin-left: 850px;margin-top:2%"></i></a></span>
+            }*@
+        @*<div class="row" style="height: 50px;background-color: #292b48;bottom: 0;overflow: hidden;position: fixed;width: 100%;margin-left: -20px;">
+                <div class="col-md-4 text-right">
+                    <span>
+                        <i class="fa fa-check-square" aria-hidden="true" title="Go To CheckList" style="font-size: 25px;margin-top: 15px;color: #6cc387f2;"></i>
+                    </span>
+                </div>
+                <div class="col-md-4 text-center">
 
-        <p> @Html.CheckBoxFor(x => x.IsSave, new { @style = "height: 18px;width: 31px;" })  <span style="color:black">   I hereby declare that the above information is true to the best of my knowledge </span>  </p><br />
-        <span style="cursor:pointer;position:absolute;left:30%;top:99%" onclick="SubmitForm(this, I9Form)" title="Go to next Emeregency Contact Form"><a><i class="fa fa-long-arrow-right" style="font-size: 40px;color: steelblue;margin-left: 967px;margin-top:-10%"></i></a></span>
-        @*}*@
+                    <span>
+                        <a><i class="fa fa-question-circle" aria-hidden="true" title="Help" style="font-size: 45px;color: #f31414;margin-top: 6px;"></i></a>
+                    </span>
+
+                </div>
+                <div class="col-md-4">
+                    <span style="cursor:pointer;" onclick="SubmitForm(this, I9Form)" title="Go to next Emeregency Contact Form">
+                        <a><i class="fa fa-long-arrow-right" title="Next" style="font-size: 42px;color: #6cc387f2;margin-top: 5px;"></i></a>
+                    </span>
+                </div>
+            </div>*@
     </form>
 </div>
+<div class="row" style="height: 50px;background-color: #292b48;bottom: 0;overflow: hidden;position: fixed;width: 100%;margin-left: 0px;">
+    <div class="col-md-4 text-right">
+
+    </div>
+    <div class="col-md-4 text-center">
+        <span>
+            <i class="fa fa-check-square" aria-hidden="true" title="Go To CheckList" onclick="GuestCheckList(this,I9Form)" style="font-size: 20px;margin-top: 15px;color: #6cc387f2;padding-right:30px;cursor:pointer;"></i>
+        </span>
+
+        <span>
+            <a><i class="fa fa-question-circle" aria-hidden="true" title="Help" style="font-size: 20px;color: #f73c3c;margin-top: 6px;padding-right:30px;cursor:pointer;" onclick="SendFormIssueNotification('W4','@ApplicantId')"></i></a>
+        </span>
+
+        <span>
+            <a><i class="fa fa-floppy-o" aria-hidden="true" onclick="SaveBeforeNext(this,I9Form)" title="Save" style="font-size: 20px;color: #6cc387f2;margin-top: 6px;padding-right:30px;cursor:pointer;"></i></a>
+        </span>
+
+    </div>
+    <div class="col-md-4 text-right">
+        <span style="cursor:pointer;" id="SaveAndNextI9Form" onclick="SubmitForm(this, I9Form)" title="Go to next Emeregency Contact Form">
+            <a><i class="fa fa-long-arrow-right" title="Next" style="font-size: 45px;color: #6cc387f2;margin-top: 2px;"></i></a>
+        </span>
+    </div>
+</div>
+
 <div class="modal fade preview" id="myModalForSignatureApplicant" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog" style="width:40%">
         <div class="modal-content">
@@ -1481,16 +1470,80 @@
             </div>
             <div class="modal-footer" style="background: white;">
                 <input type="button" class="btn btn-primary" id="btnSaveTranslator" data-dismiss="modal" value="Save as Image" />
-            </div>           
+            </div>
         </div>
     </div>
 </div>
+<div class="modal fade preview" id="myModalForSignatureI9" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" style="width:40%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Add Signature</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">X</span></button>
+            </div>
+            <div class="modal-body" style="margin-left:0px;">
+                <div id="divDetailPreview" class="">
+                    <div>
+                        <div class="" id="DivSignatureI9">
+                            <div class="form-group">
+                                <div class="col-lg-7 col-md-8 col-sm-8 col-xs-12">
+                                    <div class="tools">
+                                        <a href="#colors_sketch" data-tool="marker">Marker</a> <a href="#colors_sketch" data-tool="eraser">Eraser</a>
+                                    </div>
+                                    <br />
+                                    <canvas id="colors_sketchI9" width="450" height="200"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="background: white;">
+                <input type="button" class="btn btn-primary" id="btnSaveSign" data-dismiss="modal" value="Save as Image" style="border-radius: 100px; width: 25%; background-image: linear-gradient(to left, #3cffdb, #425fe0);" />
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/toastr.min.js"></script>
 <script src="~/Scripts/Guest/ApplicantFormSave.js"></script>
 <script src="~/Scripts/Guest/SketchSignature.js"></script>
 <script>
     $(document).ready(function () {
         $(".datepicker").datepicker();
+
+
+        $(function () {
+
+             var formI9 = $("#FormStatusI9").val();
+            if (formI9 == "true") {
+                debugger
+                var I9Sign = $("#EmployeeI9Signature").val();
+                //var neww4Sign = w4Sign.replace("-", "/");
+                $("#OpenI9Signtrue").attr("src", I9Sign);
+            }
+            else {
+                $('#colors_sketchI9').sketch();
+            $(".tools a").eq(0).attr("style", "color:#000");
+            $(".tools a").click(function () {
+                $(".tools a").removeAttr("style");
+                $(this).attr("style", "color:#000");
+            });
+            $("#btnSaveSign").bind("click", function () {
+                var base64 = $('#colors_sketchI9')[0].toDataURL();
+                $("#OpenI9Sign").attr("src", base64);
+                $("#OpenI9Sign").show();
+                $(".hideTextBoxAndButton").hide();
+                $("#EmployeeI9Signature").val(base64);
+            });
+            }
+            
+        });
+
+
+
     });
+
 </script>
+
 
 

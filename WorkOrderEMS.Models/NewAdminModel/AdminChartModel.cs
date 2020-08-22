@@ -46,8 +46,64 @@ namespace WorkOrderEMS.Models
         //public string[] JDSplitedString { get; set; }
         //public long? MyProperty { get; set; }
         public string VST_Level { get; set; }
-    }
 
+        //New Chart Data properties
+        public string nodeId { get; set; }
+        public string parentNodeId { get; set; }
+        public long width { get; set; }
+        public long height { get; set; }
+        public long borderWidth { get; set; }
+        public long borderRadius { get; set; }
+        public borderColor borderColor { get; set; }
+        public borderColor backgroundColor { get; set; }
+        public nodeImage nodeImage { get; set; }
+        public nodeIcon nodeIcon { get; set; }
+        public string template { get; set; }
+        public borderColor connectorLineColor { get; set; }
+        public int connectorLineWidth { get; set; }
+        public string dashArray { get; set; }
+        public bool expanded { get; set; }
+        public int directSubordinates { get; set; }
+        public int totalSubordinates { get; set; }
+    }
+    public class borderColor
+    {
+        public int red { get; set; }
+        public int green { get; set; }
+        public int blue { get; set; }
+        public int alpha { get; set; }
+    }
+    public class backgroundColor
+    {
+        public int red { get; set; }
+        public int green { get; set; }
+        public int blue { get; set; }
+        public int alpha { get; set; }
+    }
+    public class nodeImage
+    {
+        public string url { get; set; }
+        public int width { get; set; }
+        public int height { get; set; }
+        public int centerTopDistance { get; set; }
+        public int centerLeftDistance { get; set; }
+        public bool shadow { get; set; }
+        public string cornerShape { get; set; }
+        public int borderWidth { get; set; }
+        public borderColor borderColor { get; set; }
+    }
+    public class nodeIcon
+    {
+        public string icon { get; set; }
+        public int size { get; set; }
+    }
+    public class connectorLineColor
+    {
+        public int red { get; set; }
+        public int green { get; set; }
+        public int blue { get; set; }
+        public int alpha { get; set; }
+    }
     public class BindDropDownList
     {
         public List<AddChartModel> listSuperiour { get; set; }
@@ -60,5 +116,26 @@ namespace WorkOrderEMS.Models
         public int? JobTitleCount { get; set; }
         public int? JobTitleLastCount { get; set; }
         public long UserId { get; set; }
+    }
+
+    public class AddChartModelTest
+    {
+        public string nodeId { get; set; }
+        public string parentNodeId { get; set; }
+        public int width { get; set; }
+        public int height { get; set; }
+        public int borderWidth { get; set; }
+        public int borderRadius { get; set; }
+        public borderColor borderColor { get; set; }
+        public backgroundColor backgroundColor { get; set; }
+        public nodeImage nodeImage { get; set; }
+        public nodeIcon nodeIcon { get; set; }
+        public string template { get; set; }
+        public connectorLineColor connectorLineColor { get; set; }
+        public int connectorLineWidth { get; set; }
+        public string dashArray { get; set; }
+        public bool expanded { get; set; }
+        public int directSubordinates { get; set; }
+        public int totalSubordinates { get; set; }
     }
 }

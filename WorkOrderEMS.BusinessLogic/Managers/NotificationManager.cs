@@ -6,9 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WorkOrderEMS.Data.DataRepository;
+using WorkOrderEMS.Data.DataRepository.NewAdminRepository;
 using WorkOrderEMS.Data.EntityModel;
 using WorkOrderEMS.Helper;
 using WorkOrderEMS.Models;
+using WorkOrderEMS.Models.NewAdminModel;
 
 namespace WorkOrderEMS.BusinessLogic
 {
@@ -361,6 +363,7 @@ namespace WorkOrderEMS.BusinessLogic
             var listTask = new List<EmailHelper>();
             var objEmailHelper = new EmailHelper();
             var notification = new List<NotificationDetailModel>();
+         
             var obj = new EmailHelper();
             try
             {
@@ -481,11 +484,12 @@ namespace WorkOrderEMS.BusinessLogic
         {
             
             var _model = new List<NotificationDetailModel>();
+            var _applicantManager = new ApplicantManager();
             try
             {
                 if (userId > 0)
                 {
-                    var data = Context.Notifications.Where(x => x.NTF_AssignTo == Username || x.NTF_CreatedBy == Username).Select(x => new NotificationDetailModel()
+                    var data = Context.Notifications.Where(x => x.NTF_AssignTo == Username  && x.NTF_IsRead == false).Select(x => new NotificationDetailModel()//|| x.NTF_CreatedBy == Username
                     {
                         NotificationId = x.NTF_Id,
                         AssignToUser = x.NTF_AssignTo,
@@ -496,7 +500,8 @@ namespace WorkOrderEMS.BusinessLogic
                         AssignToIsWorkable = x.NTF_AssignToIsWorkable,
                         CreatedByIsWorkable = x.NTF_CreatedByIsWorkable,
                         Details = x.NTF_Details,
-                        SubModuleId1 = x.NTF_SubmoduleId
+                        SubModuleId1 = x.NTF_SubmoduleId,
+                        CreatedBy = x.NTF_CreatedBy
                     }).ToList();
                     foreach (var item in data)
                     {
@@ -516,11 +521,78 @@ namespace WorkOrderEMS.BusinessLogic
                         {
                             var getEMPDetails = Context.Employees.Where(x => x.EMP_EmployeeID == item.AssignToUser &&
                                                                       x.EMP_IsActive == "Y").FirstOrDefault();
-                            if(getEMPDetails != null)
+                            var getassement306090 = Context.spGetAssessmentList306090(item.AssignToUser).Where(x => x.Assesment == 30 || x.Assesment == 60 || x.Assesment == 90).FirstOrDefault();
+                            if (getEMPDetails != null)
                             {
                                 item.Photo = getEMPDetails.EMP_Photo == null ? HostingPrefix + "/Content/Images/ProjectLogo/no-profile-pic.jpg" : HostingPrefix + ApplicantProfilePic.Replace("~", "") + getEMPDetails.EMP_Photo;
+                                item.Days = getassement306090.DayPass;
                                 _model.Add(item);
                             }
+                        }
+                        else if (item.SubModule == ModuleSubModule.InterviewerAcceptDeny && item.SubModuleId1 != null)
+                        {
+                            _model.Add(item);
+                        }
+                        else if (item.SubModule == ModuleSubModule.Interviewer && item.SubModuleId1 != null)
+                        {
+                            _model.Add(item);
+                        }
+                        else if(item.SubModule == ModuleSubModule.ApplicantHired)
+                        {
+                            //item.Photo = getEMPDetails.EMP_Photo == null ? HostingPrefix + "/Content/Images/ProjectLogo/no-profile-pic.jpg" : HostingPrefix + ApplicantProfilePic.Replace("~", "") + getEMPDetails.EMP_Photo;
+                            _model.Add(item);
+                        }
+                        else if (item.SubModule == ModuleSubModule.AssessmentUnlock)
+                        {
+                            //item.Photo = getEMPDetails.EMP_Photo == null ? HostingPrefix + "/Content/Images/ProjectLogo/no-profile-pic.jpg" : HostingPrefix + ApplicantProfilePic.Replace("~", "") + getEMPDetails.EMP_Photo;
+                            _model.Add(item);
+                        }
+                        else if(item.SubModule == ModuleSubModule.EmployeeAppraisalMeeting)
+                        {
+                            _model.Add(item);
+                        }
+                        //else if(item.SubModule == ModuleSubModule.AppriasalMeetingEnd)
+                        //{
+                        //    _model.Add(item);
+                        //}
+                        else if (item.SubModule == ModuleSubModule.HRAknowledgeEvaluation)
+                        {
+                            //item.Photo = getEMPDetails.EMP_Photo == null ? HostingPrefix + "/Content/Images/ProjectLogo/no-profile-pic.jpg" : HostingPrefix + ApplicantProfilePic.Replace("~", "") + getEMPDetails.EMP_Photo;
+                            _model.Add(item);
+                        }
+                        else if (item.SubModule == ModuleSubModule.HRDenyToManager)
+                        {
+                            _model.Add(item);
+                        }
+                        else if (item.SubModule == ModuleSubModule.AppriasalAcceeptDispute48Hour)
+                        {
+                            _model.Add(item);
+                        }
+                        else if (item.SubModule == ModuleSubModule.AcknowledgeNotificationHRMAN)
+                        {
+                            _model.Add(item);
+                        }
+                        else if (item.SubModule == ModuleSubModule.ExtendTimeByHRFABMAN)
+                        {
+                            _model.Add(item);
+                        }
+                        else if (item.SubModule == ModuleSubModule.RequestToVPDeptAT)
+                        {
+                            _model.Add(item);
+                        }
+                        else if (item.SubModule == ModuleSubModule.HRDisputeAppriasal)
+                        {
+                            _model.Add(item);
+                        }
+                        else if (item.SubModule == ModuleSubModule.FinalSubmitEvaluation)
+                        {
+                            _model.Add(item);
+                        }
+                        else if (item.SubModule == ModuleSubModule.AssessmentBlock)
+                        {
+                            var getdata = _applicantManager.GetApplicantAllDetails(Convert.ToInt64(item.SubModuleId1));
+                            item.Photo = getdata.Image == null ? HostingPrefix + "/Content/Images/ProjectLogo/no-profile-pic.jpg" : HostingPrefix + ApplicantProfilePic.Replace("~", "") + getdata.Image;
+                            _model.Add(item);
                         }
                     }
                 }
@@ -531,7 +603,7 @@ namespace WorkOrderEMS.BusinessLogic
             {
                 Exception_B.Exception_B.exceptionHandel_Runtime(ex, "public List<NotificationDetailModel> GetNotification(long userId)", "Exception while getting the list of notification", userId);
             }
-            return _model;
+            return _model.OrderByDescending(x => x.NotificationId).ToList();
         }
         
         /// <summary>
@@ -628,6 +700,169 @@ namespace WorkOrderEMS.BusinessLogic
                 throw;
             }
             return isSaved;
+        }
+        /// <summary>
+        /// Get meeting date and time from notifications table
+        /// Created by: Rajat Toppo
+        /// Date: 15-05-2020
+        /// </summary>
+        /// <param name="EmpId"></param>
+        /// <returns></returns>
+        public NotificationDetailModel NotificationDetailsforMeetingDateTime(NotificationDetailModel obj)
+        {
+            try
+            {
+
+                var NotificationTable = Context.Notifications.Where(x => x.NTF_Id == obj.NotificationId).FirstOrDefault();
+                var ApplicantIsExempt = Context.Employees.Where(c => c.EMP_EmployeeID == obj.emp_id).FirstOrDefault();
+
+                return (new NotificationDetailModel()
+                {
+                    Details = NotificationTable.NTF_Details,
+                    IsExempt = ApplicantIsExempt.EMP_IsExempt,
+                    emp_id = ApplicantIsExempt.EMP_EmployeeID
+
+                });
+            }
+            catch (Exception ex)
+            {
+                Exception_B.Exception_B.exceptionHandel_Runtime(ex, "NotificationDetailModel NotificationDetailsforMeetingDateTime(string EmpId)", "Exception while getting the details of applicant", obj.NotificationId);
+                throw;
+            }
+
+        }
+
+        /// <summary>
+        /// Created by : Ashwajit Bansod
+        /// Created For : To unlock employeee by manager
+        /// Created Date : 28-07-2020
+        /// </summary>
+        /// <param name="EmployeeId"></param>
+        /// <param name="ManagerId"></param>
+        /// <returns></returns>
+        public bool UnlockEmployee(string EmployeeId, string ManagerId)
+        {
+            bool isChange = false;
+            var notification = new NotificationManager();
+            var notificationDetailsModel = new NotificationDetailModel();
+            
+            try
+            {
+                if (EmployeeId != null && ManagerId != null)
+                {
+                    var save = Context.spSetAssessmentLock306090(EmployeeId);
+                    notificationDetailsModel.AssignToUser = EmployeeId;
+                    notificationDetailsModel.AssignToIsWorkable = true;
+                    notificationDetailsModel.CreatedByUser = ManagerId;
+                    notificationDetailsModel.CreatedByIsWorkable = false;
+                    notificationDetailsModel.Message = DarMessage.UnlockEmployee();
+                    notificationDetailsModel.SubModule = ModuleSubModule.AssessmentUnlock;
+                    notificationDetailsModel.Module = ModuleSubModule.Performance;
+                    notificationDetailsModel.SubModuleId1 = EmployeeId;
+                    notificationDetailsModel.Priority = Priority.High;
+                    var saveNotificaion = notification.SaveNotification(notificationDetailsModel);
+                    isChange = true;
+                }
+                else
+                    isChange = false;
+            }
+            catch(Exception ex)
+            {
+                isChange = false;
+                Exception_B.Exception_B.exceptionHandel_Runtime(ex, "public bool UnlockEmployee(string EmployeeId, string ManagerId)", "Exception while change status to unlock", EmployeeId);
+                throw;
+            }
+            return isChange;
+        }
+        /// <summary>
+        /// Created By : Ashwajit Bansod
+        /// Created Date : To send notitifcation to employee to accept or dispute meeting.
+        /// </summary>
+        /// <param name="EmployeeId"></param>
+        /// <param name="ManagerId"></param>
+        /// <returns></returns>
+        public bool ScheduleAppriasalMeetingNotification(string EmployeeId, string ManagerId, string Assessmnt)
+        {
+            bool isChange = false;
+            var notification = new NotificationManager();
+            var notificationDetailsModel = new NotificationDetailModel();
+            var _manager = new ePeopleManager();
+            var objSetupMeeting = new SetupMeeting();
+            var ObjPerformanceRepository = new PerformanceRepository();
+            try
+            {
+                if (EmployeeId != null && ManagerId != null)
+                {
+                    var data = Context.spGetEmployeePersonalInfo(ManagerId).FirstOrDefault();
+                    notificationDetailsModel.AssignToUser = EmployeeId;
+                    notificationDetailsModel.AssignToIsWorkable = true;
+                    notificationDetailsModel.CreatedByUser = ManagerId;
+                    notificationDetailsModel.CreatedByIsWorkable = false;
+                    notificationDetailsModel.Message = DarMessage.MeetingAppriasal(data.EMP_FirstName + " " + data.EMP_LastName);
+                    notificationDetailsModel.SubModule = ModuleSubModule.EmployeeAppraisalMeeting;
+                    notificationDetailsModel.Module = ModuleSubModule.Performance;
+                    notificationDetailsModel.SubModuleId1 = EmployeeId;
+                    notificationDetailsModel.Priority = Priority.High;
+                    var saveNotificaion = notification.SaveNotification(notificationDetailsModel);
+                    objSetupMeeting.ReceipientEmailId = EmployeeId;
+                    objSetupMeeting.FinYear = DateTime.Now.Year.ToString();
+                    objSetupMeeting.FinQrtr = Assessmnt;
+                    ObjPerformanceRepository.SaveMeetingDetails(objSetupMeeting);
+                    var save = _manager.Status(EmployeeId, "Y", ManagerId,null,null);
+                    isChange = true;
+                }
+                else
+                    isChange = false;
+            }
+            catch (Exception ex)
+            {
+                isChange = false;
+                Exception_B.Exception_B.exceptionHandel_Runtime(ex, "public bool UnlockEmployee(string EmployeeId, string ManagerId)", "Exception while change status to unlock", EmployeeId);
+                throw;
+            }
+            return isChange;
+        }
+        /// <summary>
+        /// Created By : Ashwajit Bansod
+        /// Created Date : 08-08-2020
+        /// Created For : TO set notification Common
+        /// </summary>
+        /// <param name="EmployeeId"></param>
+        /// <param name="AssignedId"></param>
+        /// <param name="AssignStatus"></param>
+        /// <param name="Message"></param>
+        /// <param name="SubModule"></param>
+        /// <param name="Module"></param>
+        /// <param name="SubModuleId"></param>
+        /// <param name="Priority"></param>
+        /// <param name="UserName"></param>
+        /// <returns></returns>
+        public NotificationDetailModel GetNotificationData(string EmployeeId, string AssignedId, bool AssignStatus, string Message, string SubModule, string Module, string SubModuleId,string Priority, string UserName)
+        {
+            var data = new NotificationDetailModel();
+            try
+            {
+                if (EmployeeId != null)
+                {
+                    var EmpDetails = Context.spGetEmployeePersonalInfo(EmployeeId).FirstOrDefault();
+                    data.Module = Module;
+                    data.SubModuleId1 = SubModuleId;
+                    data.SubModule = SubModule;
+                    data.Message = Message;
+                    data.Priority = Priority;
+                    data.AssignToUser = AssignedId;
+                    data.CreatedByUser = UserName;
+                    data.AssignToIsWorkable = AssignStatus;
+                    data.CreatedByIsWorkable = false;
+                    SaveNotification(data);
+                }
+            }
+            catch (Exception ex)
+            {
+                Exception_B.Exception_B.exceptionHandel_Runtime(ex, "public NotificationDetailModel GetNotificationData(string EmployeeId)", "Exception while getting notification", EmployeeId);
+                throw;
+            }
+            return data;
         }
         #endregion New Notification
     }

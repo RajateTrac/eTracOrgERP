@@ -14,11 +14,6 @@ namespace WorkOrderEMS.Data.EntityModel
     
     public partial class eForm
     {
-        public eForm()
-        {
-            this.eFormTracks = new HashSet<eFormTrack>();
-        }
-    
         public long EFM_Id { get; set; }
         public long EFM_MDL_Id { get; set; }
         public string EFM_eFormName { get; set; }
@@ -27,6 +22,5 @@ namespace WorkOrderEMS.Data.EntityModel
         public string EFM_IsActive { get; set; }
     
         public virtual Module Module { get; set; }
-        public virtual ICollection<eFormTrack> eFormTracks { get; set; }
     }
 }

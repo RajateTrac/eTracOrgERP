@@ -9,7 +9,7 @@ namespace WorkOrderEMS.Models.Employee
 {
 	public class EducationVarificationModel
 	{
-		[Required(ErrorMessage ="*")]
+		[Required(ErrorMessage = "*")]
 		public string Name { get; set; }
 		[Required(ErrorMessage = "*")]
 		[DataType(DataType.Date)]
@@ -22,13 +22,26 @@ namespace WorkOrderEMS.Models.Employee
 		public string Certificate { get; set; }
 		public string Signature { get; set; }
 		public string Date { get; set; }
-		public bool	IsSave { get; set; }
+		public bool IsSave { get; set; }
 		public string EmpId { get; set; }
 		public long? EvfId { get; set; }
 		public string IsActive { get; set; }
+		public string formName { get; set; }
+		public string FormStatusw4 { get; set; }
+		public string FormStatusI9 { get; set; }
+		public string FormStatusdd { get; set; }
+		public string FormStatusEvf { get; set; }
+		public string FormStatussif { get; set; }
+		public string FormStatusbcf { get; set; }
+		public string FormStatusrop { get; set; }
+		public string FormStatusprfecf { get; set; }
+		public string FormStatusprfcaf { get; set; }
+		public string FormStatusprf { get; set; }
+		public string FormStatusff { get; set; }
+
 
 	}
-	
+
 	public class Education
 	{
 		[Required(ErrorMessage = "*")]
@@ -47,5 +60,5 @@ namespace WorkOrderEMS.Models.Employee
 		public DateTime? AttendTo { get; set; }
 		public string Cretificate { get; set; }
 	}
-	
+
 }

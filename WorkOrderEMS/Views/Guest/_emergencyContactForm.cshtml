@@ -1,4 +1,7 @@
 ﻿@model WorkOrderEMS.Models.Employee.EmergencyContectForm
+    @{ 
+        long ApplicantId = Convert.ToInt64(Session["ApplicantId"]);
+    }
 <style>
     table {
         /*border:2px solid black!important;*/
@@ -81,29 +84,30 @@
         background: none !important;
     }
 </style>
+<link href="~/Content/toastr.min.css" rel="stylesheet" />
 <script type="text/javascript">
 
 
-     $(document).ready(function () {
-         $("#EmpId").focus();
-         $("input").each(function() {
-   var element = $(this);
-   if (element.val() == "") {
-         $("#btnNext").prop("disabled", true);
-             $("#btnNext").attr('disabled','disabled');
-   }
-});
+    $(document).ready(function () {
+        $("#EmpId").focus();
+        $("input").each(function () {
+            var element = $(this);
+            if (element.val() == "") {
+                $("#btnNext").prop("disabled", true);
+                $("#btnNext").attr('disabled', 'disabled');
+            }
+        });
     });
-     //$("#EmpId").focusout(function() {
-     //           if($(this).val()=='') {
-     //               $("#errorEmpId").show();
-     //           }
-     //           else {
+    //$("#EmpId").focusout(function() {
+    //           if($(this).val()=='') {
+    //               $("#errorEmpId").show();
+    //           }
+    //           else {
 
-     //               // If it is not blank.
-     //               $("#errorEmpId").hide();
-     //           }
-     //       }) .trigger("focusout");
+    //               // If it is not blank.
+    //               $("#errorEmpId").hide();
+    //           }
+    //       }) .trigger("focusout");
 
     $("#EmpId").on("blur", function () {
         debugger;
@@ -124,38 +128,38 @@
         }
         else {
             $("#errorEmpId").hide();
-           // $("#FirstName").prop("disabled", false);
+            // $("#FirstName").prop("disabled", false);
             $("#FirstName").focus();
         }
 
-      });
-         //$("#FirstName").focusout(function() {
-         //       if($(this).val()=='') {
-         //           $("#errorFName").show();
-         //       }
-         //       else {
+    });
+    //$("#FirstName").focusout(function() {
+    //       if($(this).val()=='') {
+    //           $("#errorFName").show();
+    //       }
+    //       else {
 
-         //           // If it is not blank.
-         //           $("#errorFName").hide();
-         //       }
-         //   }) .trigger("focusout");
+    //           // If it is not blank.
+    //           $("#errorFName").hide();
+    //       }
+    //   }) .trigger("focusout");
 
-      $("#FirstName").on("blur", function () {
+    $("#FirstName").on("blur", function () {
         var firstname = $(this).val();
 
         if (firstname == '') {
             $("#errorFName").show();
-           // $("#MiddleName").prop("disabled", true);
+            // $("#MiddleName").prop("disabled", true);
         }
         else {
             $("#errorFName").hide();
-           // $("#MiddleName").prop("disabled", false);
+            // $("#MiddleName").prop("disabled", false);
             $("#MiddleName").focus();
         }
 
-      });
+    });
 
-         $("#MiddleName").on("blur", function () {
+    $("#MiddleName").on("blur", function () {
         var middleName = $(this).val();
 
         if (middleName == '') {
@@ -167,79 +171,79 @@
 
         }
 
-         });
+    });
 
-     $("#LastName").on("blur", function () {
+    $("#LastName").on("blur", function () {
         var errorLastName = $(this).val();
 
         if (errorLastName == '') {
             $("#errorLastName").show();
-           // $("#FirstName").prop("disabled", true);
+            // $("#FirstName").prop("disabled", true);
         }
         else {
             $("#errorLastName").hide();
-           // $("#FirstName").prop("disabled", false);
+            // $("#FirstName").prop("disabled", false);
         }
 
-     });
+    });
 
-       $("#NickName").on("blur", function () {
+    $("#NickName").on("blur", function () {
         var NickName = $(this).val();
 
         if (NickName == '') {
             $("#errorNickName").show();
-           // $("#FirstName").prop("disabled", true);
+            // $("#FirstName").prop("disabled", true);
         }
         else {
             $("#errorNickName").hide();
             //$("#FirstName").prop("disabled", false);
         }
 
-       });
+    });
 
-        $("#Gender").on("blur", function () {
+    $("#Gender").on("blur", function () {
         var Gender = $(this).val();
 
         if (Gender == '') {
             $("#errorGender").show();
-           // $("#FirstName").prop("disabled", true);
+            // $("#FirstName").prop("disabled", true);
         }
         else {
             $("#errorGender").hide();
-           // $("#FirstName").prop("disabled", false);
+            // $("#FirstName").prop("disabled", false);
         }
 
-        });
+    });
 
-     $("#HomeAddress").on("blur", function () {
+    $("#HomeAddress").on("blur", function () {
         var HomeAddress = $(this).val();
 
         if (HomeAddress == '') {
             $("#errorHomeAddress").show();
-           // $("#FirstName").prop("disabled", true);
+            // $("#FirstName").prop("disabled", true);
         }
         else {
             $("#errorHomeAddress").hide();
             //$("#FirstName").prop("disabled", false);
         }
 
-     });
+    });
 
-     $("#HomePhone").on("blur", function () {
+    $("#HomePhone").on("blur", function () {
         var HomePhone = $(this).val();
 
         if (HomePhone == '') {
             $("#errorHomePhone").show();
-           // $("#FirstName").prop("disabled", true);
+            // $("#FirstName").prop("disabled", true);
         }
         else {
             $("#errorHomePhone").hide();
-           // $("#FirstName").prop("disabled", false);
+            // $("#FirstName").prop("disabled", false);
         }
 
-     });
+    });
 
-       $("#errorMobile").on("blur", function () {
+    $("#errorMobile").on("blur", function () {
         var Mobile = $(this).val();
 
         if (Mobile == '') {
@@ -251,106 +255,106 @@
             //$("#FirstName").prop("disabled", false);
         }
 
-       });
+    });
 
-           $("#Mobile").on("blur", function () {
+    $("#Mobile").on("blur", function () {
         var Mobile = $(this).val();
 
         if (Mobile == '') {
             $("#errorMobile").show();
-          //  $("#FirstName").prop("disabled", true);
+            //  $("#FirstName").prop("disabled", true);
         }
         else {
             $("#errorMobile").hide();
-           // $("#FirstName").prop("disabled", false);
+            // $("#FirstName").prop("disabled", false);
         }
 
-       });
+    });
 
-           $("#HomeEmail").on("blur", function () {
+    $("#HomeEmail").on("blur", function () {
         var HomeEmail = $(this).val();
 
         if (HomeEmail == '') {
             $("#errorHomeEmail").show();
-           // $("#FirstName").prop("disabled", true);
+            // $("#FirstName").prop("disabled", true);
         }
         else {
             $("#errorHomeEmail").hide();
-           // $("#FirstName").prop("disabled", false);
+            // $("#FirstName").prop("disabled", false);
         }
 
-           });
+    });
 
-          $("#DOB").on("blur", function () {
+    $("#DOB").on("blur", function () {
         var DOB = $(this).val();
 
         if (DOB == '') {
             $("#errorDOB").show();
-           // $("#FirstName").prop("disabled", true);
+            // $("#FirstName").prop("disabled", true);
         }
         else {
             $("#errorDOB").hide();
-           // $("#FirstName").prop("disabled", false);
+            // $("#FirstName").prop("disabled", false);
         }
 
-          });
-          $("#SSN").on("blur", function () {
+    });
+    $("#SSN").on("blur", function () {
         var SSN = $(this).val();
 
         if (SSN == '') {
             $("#errorSSN").show();
-           // $("#FirstName").prop("disabled", true);
+            // $("#FirstName").prop("disabled", true);
         }
         else {
             $("#errorSSN").hide();
-           // $("#FirstName").prop("disabled", false);
+            // $("#FirstName").prop("disabled", false);
         }
 
-          });
+    });
 
-              $("#License").on("blur", function () {
+    $("#License").on("blur", function () {
         var License = $(this).val();
 
         if (License == '') {
             $("#errorLicense").show();
-           // $("#FirstName").prop("disabled", true);
+            // $("#FirstName").prop("disabled", true);
         }
         else {
             $("#errorLicense").hide();
             //$("#FirstName").prop("disabled", false);
         }
 
-              });
+    });
 
-              $("#EmergencyContactName").on("blur", function () {
+    $("#EmergencyContactName").on("blur", function () {
         var ContactName = $(this).val();
 
         if (ContactName == '') {
             $("#errorContactName").show();
-           // $("#FirstName").prop("disabled", true);
+            // $("#FirstName").prop("disabled", true);
         }
         else {
             $("#errorContactName").hide();
-           // $("#FirstName").prop("disabled", false);
+            // $("#FirstName").prop("disabled", false);
         }
 
-              });
+    });
 
-     $("#RelationShip").on("blur", function () {
+    $("#RelationShip").on("blur", function () {
         var RelationShip = $(this).val();
 
         if (RelationShip == '') {
             $("#errorRelationShip").show();
-           // $("#FirstName").prop("disabled", true);
+            // $("#FirstName").prop("disabled", true);
         }
         else {
             $("#errorRelationShip").hide();
-           // $("#FirstName").prop("disabled", false);
+            // $("#FirstName").prop("disabled", false);
         }
 
-     });
+    });
 
-     $("#Address").on("blur", function () {
+    $("#Address").on("blur", function () {
         var Address = $(this).val();
 
         if (Address == '') {
@@ -360,9 +364,9 @@
             $("#errorAddress").hide();
         }
 
-           });
+    });
 
-      $("#ConactInfo").on("blur", function () {
+    $("#ConactInfo").on("blur", function () {
         var ConactInfo = $(this).val();
 
         if (ConactInfo == '') {
@@ -371,10 +375,10 @@
         }
         else {
             $("#errorConactInfo").hide();
-           // $("#FirstName").prop("disabled", false);
+            // $("#FirstName").prop("disabled", false);
         }
 
-           });
+    });
 
 
 
@@ -390,7 +394,7 @@
                 $("#errorMobile").hide();
             } else {
                 // $("#Mobile").focus();
-                    $("#errorMobile").show();
+                $("#errorMobile").show();
                 //alert('Please put 10  digit mobile number');
 
 
@@ -419,8 +423,8 @@
                 $("#errorHomePhone").hide();
             } else {
                 // $("#Mobile").focus();
-                  $("#errorHomePhone").show();
-               // alert('Please put 10  digit mobile number');
+                $("#errorHomePhone").show();
+                // alert('Please put 10  digit mobile number');
 
                 return false;
             }
@@ -460,8 +464,8 @@
 
             } else {
                 // $("#Mobile").focus();
-                    $("#errorConactInfo").show();
-               // alert('Please put 10  digit mobile number');
+                $("#errorConactInfo").show();
+                // alert('Please put 10  digit mobile number');
 
                 return false;
             }
@@ -553,6 +557,18 @@
     @using (Html.BeginForm("_emergencyContactForm", "Guest", FormMethod.Post, new { id = "emergencycontactform" }))
     {
         <br />
+        <input type="hidden" value="@Model.FormStatusw4" name="FormStatusw4" id="FormStatusw4">
+        <input type="hidden" value="@Model.FormStatusI9" name="FormStatusI9" id="FormStatusI9">
+        <input type="hidden" value="@Model.FormStatusdd" name="FormStatusdd" id="FormStatusdd">
+        <input type="hidden" value="@Model.FormStatusEvf" name="FormStatusEvf" id="FormStatusEvf">
+        <input type="hidden" value="@Model.FormStatussif" name="FormStatussif" id="FormStatussif">
+        <input type="hidden" value="@Model.FormStatusbcf" name="FormStatusbcf" id="FormStatusbcf">
+        <input type="hidden" value="@Model.FormStatusrop" name="FormStatusrop" id="FormStatusrop">
+        <input type="hidden" value="@Model.FormStatusprfecf" name="FormStatusprfecf" id="FormStatusprfecf">
+        <input type="hidden" value="@Model.FormStatusprfcaf" name="FormStatusprfcaf" id="FormStatusprfcaf">
+        <input type="hidden" value="@Model.FormStatusprf" name="FormStatusprf" id="FormStatusprf">
+        <input type="hidden" value="@Model.FormStatusff" name="FormStatusff" id="FormStatusff">
+
         @Html.HiddenFor(x => x.EcfId)
         <table>
             <tr>
@@ -561,11 +577,11 @@
                 </td>
                 <td>
                     @Html.TextBoxFor(x => x.EmpId, new { @class = "text-line", @style = "width:590px;" })
-                    @Html.ValidationMessageFor(x => x.EmpId, "", new { @style = "color:red;" })
+                    @*@Html.ValidationMessageFor(x => x.EmpId, "", new { @style = "color:red;" })*@
                 </td>
-                <td>
-                    <span id="errorEmpId" class="error">*</span>
-                </td>
+                @*<td>
+                        <span id="errorEmpId" class="error">*</span>
+                    </td>*@
             </tr>
             <tr>
                 <td>
@@ -573,11 +589,11 @@
                 </td>
                 <td>
                     @Html.TextBoxFor(x => x.FirstName, new { @class = "text-line", @style = "width:590px;" })
-                    @Html.ValidationMessageFor(x => x.FirstName, "", new { @style = "color:red;" })
+                    @*@Html.ValidationMessageFor(x => x.FirstName, "", new { @style = "color:red;" })*@
                 </td>
-                <td>
-                    <span id="errorFName" class="error">*</span>
-                </td>
+                @*<td>
+                        <span id="errorFName" class="error">*</span>
+                    </td>*@
             </tr>
             <tr>
                 <td>
@@ -585,12 +601,12 @@
                 </td>
                 <td>
                     @Html.TextBoxFor(x => x.MiddleName, new { @class = "text-line", @style = "width:590px;" })
-                    @Html.ValidationMessageFor(x => x.MiddleName, "", new { @style = "color:red;" })
+                    @*@Html.ValidationMessageFor(x => x.MiddleName, "", new { @style = "color:red;" })*@
 
                 </td>
-                <td>
-                    <span id="errorMiddleName" class="error">*</span>
-                </td>
+                @*<td>
+                        <span id="errorMiddleName" class="error">*</span>
+                    </td>*@
             </tr>
             <tr>
                 <td>
@@ -598,12 +614,12 @@
                 </td>
                 <td>
                     @Html.TextBoxFor(x => x.LastName, new { @class = "text-line", @style = "width:590px;" })
-                    @Html.ValidationMessageFor(x => x.LastName, "", new { @style = "color:red;" })
+                    @*@Html.ValidationMessageFor(x => x.LastName, "", new { @style = "color:red;" })*@
 
                 </td>
-                <td>
-                    <span id="errorLastName" class="error">*</span>
-                </td>
+                @*<td>
+                        <span id="errorLastName" class="error">*</span>
+                    </td>*@
             </tr>
             <tr>
                 <td>
@@ -611,12 +627,12 @@
                 </td>
                 <td>
                     @Html.TextBoxFor(x => x.NickName, new { @class = "text-line", @style = "width:590px;" })
-                    @Html.ValidationMessageFor(x => x.NickName, "", new { @style = "color:red;" })
+                    @*@Html.ValidationMessageFor(x => x.NickName, "", new { @style = "color:red;" })*@
 
                 </td>
-                <td>
-                    <span id="errorNickName" class="error">*</span>
-                </td>
+                @*<td>
+                        <span id="errorNickName" class="error">*</span>
+                    </td>*@
             </tr>
             <tr>
                 <td>
@@ -624,12 +640,12 @@
                 </td>
                 <td>
                     @Html.TextBoxFor(x => x.Gender, new { @class = "text-line", @style = "width:590px;" })
-                    @Html.ValidationMessageFor(x => x.Gender, "", new { @style = "color:red;" })
+                    @*@Html.ValidationMessageFor(x => x.Gender, "", new { @style = "color:red;" })*@
 
                 </td>
-                <td>
-                    <span id="errorGender" class="error">*</span>
-                </td>
+                @*<td>
+                        <span id="errorGender" class="error">*</span>
+                    </td>*@
             </tr>
             <tr>
                 <td>
@@ -637,12 +653,12 @@
                 </td>
                 <td>
                     @Html.TextBoxFor(x => x.HomeAddress, new { @class = "text-line", @style = "width:590px;" })
-                    @Html.ValidationMessageFor(x => x.HomeAddress, "", new { @style = "color:red;" })
+                    @*@Html.ValidationMessageFor(x => x.HomeAddress, "", new { @style = "color:red;" })*@
 
                 </td>
-                <td>
-                    <span id="errorHomeAddress" class="error">*</span>
-                </td>
+                @*<td>
+                        <span id="errorHomeAddress" class="error">*</span>
+                    </td>*@
             </tr>
             <tr>
                 <td>
@@ -663,12 +679,12 @@
                 </td>
                 <td>
                     @Html.TextBoxFor(x => x.Mobile, new { @class = "text-line", @style = "width:590px;" })
-                    @Html.ValidationMessageFor(x => x.Mobile, "", new { @style = "color:red;" })
+                    @*@Html.ValidationMessageFor(x => x.Mobile, "", new { @style = "color:red;" })*@
 
                 </td>
-                <td>
-                    <span id="errorMobile" class="error">*</span>
-                </td>
+                @*<td>
+                        <span id="errorMobile" class="error">*</span>
+                    </td>*@
             </tr>
             <tr>
                 <td>
@@ -688,13 +704,13 @@
                     BirthDay
                 </td>
                 <td>
-                    @Html.TextBoxFor(x => x.DOB, new { @class = "text-line", @style = "width:590px;" })
-                    @Html.ValidationMessageFor(x => x.DOB, "", new { @style = "color:red;" })
+                    @Html.TextBoxFor(x => x.DOB, new { @class = "text-line", @style = "width:590px;", @id = "DOBForEmergency" })
+                    @*@Html.ValidationMessageFor(x => x.DOB, "", new { @style = "color:red;" })*@
 
                 </td>
-                <td>
-                    <span id="errorDOB" class="error">*</span>
-                </td>
+                @*<td>
+                        <span id="errorDOB" class="error">*</span>
+                    </td>*@
             </tr>
             <tr>
                 <td>
@@ -702,12 +718,12 @@
                 </td>
                 <td>
                     @Html.TextBoxFor(x => x.SSN, new { @class = "text-line", @style = "width:590px;" })
-                    @Html.ValidationMessageFor(x => x.SSN, "", new { @style = "color:red;" })
+                    @*@Html.ValidationMessageFor(x => x.SSN, "", new { @style = "color:red;" })*@
 
                 </td>
-                <td>
-                    <span id="errorSSN" class="error">*</span>
-                </td>
+                @*<td>
+                        <span id="errorSSN" class="error">*</span>
+                    </td>*@
             </tr>
             <tr>
                 <td>
@@ -715,23 +731,13 @@
                 </td>
                 <td>
                     @Html.TextBoxFor(x => x.License, new { @class = "text-line", @style = "width:590px;" })
-                    @Html.ValidationMessageFor(x => x.License, "", new { @style = "color:red;" })
+                    @*@Html.ValidationMessageFor(x => x.License, "", new { @style = "color:red;" })*@
 
                 </td>
-                <td>
-                    <span id="errorLicense" class="error">*</span>
-                </td>
+
 
             </tr>
-            @*<tr>
-                    <td colspan="2">
-                        <h3>
-                            <u style="text-align:center">
-                                Emergency Contact Information
-                            </u>
-                        </h3>
-                    </td>
-                </tr>*@
+
 
             <tr>
 
@@ -759,12 +765,10 @@
                 </td>
                 <td>
                     @Html.TextBoxFor(x => x.RelationShip, new { @class = "text-line", @style = "width:590px;" })
-                    @Html.ValidationMessageFor(x => x.RelationShip, "", new { @style = "color:red;" })
+                    @*@Html.ValidationMessageFor(x => x.RelationShip, "", new { @style = "color:red;" })*@
 
                 </td>
-                <td>
-                    <span id="errorRelationShip" class="error">*</span>
-                </td>
+
             </tr>
             <tr>
                 <td>
@@ -772,12 +776,10 @@
                 </td>
                 <td>
                     @Html.TextBoxFor(x => x.Address, new { @class = "text-line", @style = "width:590px;" })
-                    @Html.ValidationMessageFor(x => x.Address, "", new { @style = "color:red;" })
+                    @*@Html.ValidationMessageFor(x => x.Address, "", new { @style = "color:red;" })*@
 
                 </td>
-                <td>
-                    <span id="errorAddress" class="error">*</span>
-                </td>
+
             </tr>
 
             <tr>
@@ -786,48 +788,58 @@
                 </td>
                 <td>
                     @Html.TextBoxFor(x => x.ConactInfo, new { @class = "text-line", @style = "width:590px;" })
-                    @Html.ValidationMessageFor(x => x.ConactInfo, "", new { @style = "color:red;" })
+                    @*@Html.ValidationMessageFor(x => x.ConactInfo, "", new { @style = "color:red;" })*@
 
                 </td>
-                <td>
-                    <span id="errorConactInfo" class="error">*</span>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    @Html.CheckBoxFor(x => x.IsSave, new { @style = "height: 18px;width: 31px;" })
-                </td>
-                <td>
-                    <span style="position:absolute;bottom:2.3%;">    i hereby declare that the above information is true to the best of my knowledge </span> <p> <span style="cursor:pointer;" id="btnNext" onclick="SubmitForm(this,emergencycontactform)" title="Go to next Direct Deposite form"><a><i class="fa fa-long-arrow-right" style="font-size: 40px;color: steelblue;margin-left: 600px;margin-bottom:0px"></i></a></span></p>
 
-                </td>
             </tr>
+
         </table>
+        <br><br><br>
 
-        @*<p>Employee ID @Html.TextBoxFor(x => x.EmpId, new { @class = "text-line", @style = "width:590px;" }) @Html.ValidationMessageFor(x => x.EmpId, "", new { @style = "color:red;" })</p>
-            <p>First Name @Html.TextBoxFor(x => x.FirstName, new { @class = "text-line", @style = "width:590px;" }) @Html.ValidationMessageFor(x => x.FirstName, "", new { @style = "color:red;" })</p>
-            <p>Middle Name @Html.TextBoxFor(x => x.MiddleName, new { @class = "text-line", @style = "width:590px;" }) @Html.ValidationMessageFor(x => x.MiddleName, "", new { @style = "color:red;" })</p>*@
-        @*<p>Last Name @Html.TextBoxFor(x => x.LastName, new { @class = "text-line", @style = "width:590px;" }) @Html.ValidationMessageFor(x => x.LastName, "", new { @style = "color:red;" })</p>
-            <p>Nick Name @Html.TextBoxFor(x => x.NickName, new { @class = "text-line", @style = "width:590px;" }) @Html.ValidationMessageFor(x => x.NickName, "", new { @style = "color:red;" })</p>*@
-        @*<p>Gender @Html.TextBoxFor(x => x.Gender, new { @class = "text-line", @style = "width:590px;" }) @Html.ValidationMessageFor(x => x.Gender, "", new { @style = "color:red;" })</p>*@
-        @*<p>Citizenship @Html.TextBoxFor(x => x.Citizenship, new { @class = "text-line", @style = "width:590px;" }) @Html.ValidationMessageFor(x => x.Citizenship, "", new { @style = "color:red;" })</p>*@
-        @*<p>Home Address  @Html.TextBoxFor(x => x.HomeAddress, new { @class = "text-line", @style = "width:590px;" }) @Html.ValidationMessageFor(x => x.HomeAddress, "", new { @style = "color:red;" })</p>
-            <p>Home Phone  @Html.TextBoxFor(x => x.HomePhone, new { @class = "text-line", @style = "width:590px;" }) @Html.ValidationMessageFor(x => x.HomePhone, "", new { @style = "color:red;" })</p>*@
-        @*<p>Mobile Phone  @Html.TextBoxFor(x => x.Mobile, new { @class = "text-line", @style = "width:590px;" }) @Html.ValidationMessageFor(x => x.Mobile, "", new { @style = "color:red;" })</p>
-            <p>Home E-mail Address @Html.TextBoxFor(x => x.HomeEmail, new { @class = "text-line", @style = "width:590px;" }) @Html.ValidationMessageFor(x => x.HomeEmail, "", new { @style = "color:red;" })</p>*@
-        @*<p>Birthday(MM/DD/YYYY)@Html.EditorFor(x => x.DOB, new { @class = "text-line", @style = "width:590px;" }) @Html.ValidationMessageFor(x => x.DOB, "", new { @style = "color:red;" })</p>*@
-        @*<p>Government ID or SSN @Html.TextBoxFor(x => x.SSN, new { @class = "text-line", @style = "width:590px;" }) @Html.ValidationMessageFor(x => x.SSN, "", new { @style = "color:red;" })</p>
-            <p>Driver's License/State ID#@Html.TextBoxFor(x => x.License, new { @class = "text-line", @style = "width:590px;" }) @Html.ValidationMessageFor(x => x.License, "", new { @style = "color:red;" })</p>*@
-
-        @*<h3><u>Emergency Contact Information </u></h3>
-            <p>Emergency Contact's Name @Html.TextBoxFor(x => x.EmergencyContactName, new { @class = "text-line", @style = "width:590px;" }) @Html.ValidationMessageFor(x => x.EmergencyContactName, "", new { @style = "color:red;" })</p>
-            <p>Relationship @Html.TextBoxFor(x => x.RelationShip, new { @class = "text-line", @style = "width:590px;" }) @Html.ValidationMessageFor(x => x.RelationShip, "", new { @style = "color:red;" })</p>
-
-            <p>Address @Html.TextBoxFor(x => x.Address, new { @class = "text-line", @style = "width:590px;" }) @Html.ValidationMessageFor(x => x.Address, "", new { @style = "color:red;" })</p>
-
-            <p>Phone Number(s) @Html.TextBoxFor(x => x.ConactInfo, new { @class = "text-line", @style = "width:590px;" }) @Html.ValidationMessageFor(x => x.ConactInfo, "", new { @style = "color:red;" })</p>*@
-        // <p> @Html.CheckBoxFor(x => x.IsSave, new { @style = "height: 18px;width: 31px;", onchange = "SubmitForm(this,emergencycontactform)" })    i hereby declare that the above information is true to the best of my knowledge <span style="cursor:pointer;" onclick="SubmitForm(this, I9Form)" title="Go to next I-9"><a><i class="fa fa-long-arrow-right" style="font-size: 40px;color: steelblue;margin-left: 967px;"></i></a></span></p>
-        @*<p> @Html.CheckBoxFor(x => x.IsSave, new { @style = "height: 18px;width: 31px;" })    i hereby declare that the above information is true to the best of my knowledge <span style="cursor:pointer;" onclick="SubmitForm(this,emergencycontactform)" title="Go to next Direct Deposite form"><a><i class="fa fa-long-arrow-right" style="font-size: 40px;color: steelblue;margin-left: 967px;"></i></a></span></p>*@
     }
 </div>
+<div class="row" style="height: 50px;background-color: #292b48;bottom: 0;overflow: hidden;position: fixed;width: 100%;margin-left: 0px;">
+    <div class="col-md-4 text-right">
+
+    </div>
+    <div class="col-md-4 text-center">
+        <span>
+            <i class="fa fa-check-square" aria-hidden="true" title="Go To CheckList" onclick="GuestCheckList(this,emergencycontactform)" style="font-size: 20px;margin-top: 15px;color: #6cc387f2;padding-right:30px;cursor:pointer;"></i>
+        </span>
+
+        <span>
+            <a><i class="fa fa-question-circle" aria-hidden="true" title="Help" style="font-size: 20px;color: #f73c3c;margin-top: 6px;padding-right:30px;cursor:pointer;" onclick="SendFormIssueNotification('Emergency Contact', '@ApplicantId');"></i></a>
+        </span>
+
+        <span>
+            <a><i class="fa fa-floppy-o" aria-hidden="true" onclick="SaveBeforeNext(this,emergencycontactform)" title="Save" style="font-size: 20px;color: #6cc387f2;margin-top: 6px;padding-right:30px;cursor:pointer;"></i></a>
+        </span>
+
+    </div>
+    <div class="col-md-4 text-right">
+        <span style="cursor:pointer;" onclick="SubmitForm(this,emergencycontactform)" title="Go to next Direct Deposite form">
+            <a><i class="fa fa-long-arrow-right" title="Next" style="font-size: 45px;color: #6cc387f2;margin-top: 2px;"></i></a>
+        </span>
+    </div>
+</div>
+<div id="openConatctModal"></div>
+<script src="~/Scripts/toastr.min.js"></script>
 <script src="~/Scripts/Guest/ApplicantFormSave.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#DOBForEmergency").datepicker();
+        var base_url = window.location.origin;
+        $.ajax({
+            type: "GET",
+            url: base_url + "/Guest/_ContactInfo",
+            success: function (data) {
+                debugger
+                $("#openConatctModal").html(data);
+                $("#myModelForContactDetails").modal("show");
+            },
+            error: function () {
+            }
+        });
+    });
+</script>

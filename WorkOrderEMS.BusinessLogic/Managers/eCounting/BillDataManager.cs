@@ -129,7 +129,7 @@ namespace WorkOrderEMS.BusinessLogic.Managers
                     var getRuleData = objModel.GetApprovalRuleData(approvalInput);
                     if(getRuleData != null)
                     {
-                        objNotify.CreatedBy = objBillDataServiceModel.UserId;
+                        objNotify.CreatedBy = UserName;
                         objNotify.CreatedDate = DateTime.UtcNow;
                         objNotify.AssignTo = getRuleData.UserId;
                         if (objBillDataServiceModel.PODId > 0)

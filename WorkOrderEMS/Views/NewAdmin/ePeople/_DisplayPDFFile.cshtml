@@ -1,0 +1,6 @@
+﻿@{ 
+    Layout = null;
+}
+<div class="col-md-12">
+    <iframe src="@Url.Action("GetPDFDisplay")?fileName='@ViewBag.FileName'#toolbar=0" id="openFileToView_@ViewBag.FileId" class="viewAndPrintFile" style="width:100%; height:550px;" frameborder="0"></iframe>
+</div>

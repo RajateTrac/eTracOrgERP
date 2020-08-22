@@ -20,7 +20,7 @@ namespace WorkOrderEMS.Data.EntityModel
         public Nullable<System.DateTime> UVM_Date { get; set; }
         public string UVM_IsActive { get; set; }
     
-        public virtual UserRegistration UserRegistration { get; set; }
         public virtual VehicleSeating VehicleSeating { get; set; }
+        public virtual UserRegistration UserRegistration { get; set; }
     }
 }

@@ -14,11 +14,6 @@ namespace WorkOrderEMS.Data.EntityModel
     
     public partial class PODetailEmergency
     {
-        public PODetailEmergency()
-        {
-            this.LogPODetailEmergencies = new HashSet<LogPODetailEmergency>();
-        }
-    
         public long POE_Id { get; set; }
         public long POE_LocationId { get; set; }
         public long POE_POT_Id { get; set; }
@@ -29,10 +24,5 @@ namespace WorkOrderEMS.Data.EntityModel
         public Nullable<System.DateTime> POE_PODate { get; set; }
         public string POE_EmergencyPODocument { get; set; }
         public string POE_IsActive { get; set; }
-    
-        public virtual LocationMaster LocationMaster { get; set; }
-        public virtual ICollection<LogPODetailEmergency> LogPODetailEmergencies { get; set; }
-        public virtual PONumber PONumber { get; set; }
-        public virtual POType POType { get; set; }
     }
 }

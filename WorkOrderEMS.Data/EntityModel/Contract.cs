@@ -14,12 +14,6 @@ namespace WorkOrderEMS.Data.EntityModel
     
     public partial class Contract
     {
-        public Contract()
-        {
-            this.ContractLocationAllocations = new HashSet<ContractLocationAllocation>();
-            this.LogContracts = new HashSet<LogContract>();
-        }
-    
         public long CNT_Id { get; set; }
         public long CNT_CMP_IdFirsParty { get; set; }
         public long CNT_CMP_IdSecondParty { get; set; }
@@ -41,13 +35,5 @@ namespace WorkOrderEMS.Data.EntityModel
         public string CNT_ContractDocument { get; set; }
         public string CNT_IsActive { get; set; }
         public string CNT_IsReoccurring { get; set; }
-    
-        public virtual Company Company { get; set; }
-        public virtual Company Company1 { get; set; }
-        public virtual ContractType ContractType { get; set; }
-        public virtual PaymentMode PaymentMode { get; set; }
-        public virtual PaymentTerm PaymentTerm { get; set; }
-        public virtual ICollection<ContractLocationAllocation> ContractLocationAllocations { get; set; }
-        public virtual ICollection<LogContract> LogContracts { get; set; }
     }
 }

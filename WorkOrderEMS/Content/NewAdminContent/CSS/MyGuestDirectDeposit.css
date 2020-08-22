@@ -1,0 +1,52 @@
+﻿@media only screen and (max-width:768px){
+
+    #DDimage-width {
+        margin-left: -83px;
+        margin-top: 28px;
+    }
+
+    #DD-h3Width {
+        margin-top: 18px;
+        margin-left: 140px;
+    }
+
+    #DD-P-heading {
+        margin-left: -24px;
+        margin-right: -77px;
+        margin-top: 22px;
+    }
+
+    #DD-arrow {
+        margin-left: 463px;
+    }
+
+    #DD-tablewidth {
+        padding: 0px 0px 0px 0px;
+        margin-bottom: 10%;
+    }
+
+    #DD-pwidth {
+        margin-left: 24px;
+        margin-bottom: 10%;
+    }
+
+    #DD-lowertable {
+        margin-bottom: 10%;
+    }
+
+    #DD-checkbox-table{
+        margin-top:6%;
+    }
+
+    .DD-responsive{
+        left:14%;
+    }
+
+    .DD-checkboxwidth{
+        left:76px;
+    }
+
+    
+
+
+}

@@ -1,11 +1,18 @@
 ﻿@model IEnumerable<WorkOrderEMS.Models.NotificationDetailModel>
 @{
     Layout = null;
+    WorkOrderEMS.Models.eTracLoginModel ObjLogin = (WorkOrderEMS.Models.eTracLoginModel)Session["eTrac"];
+    string UserName = ObjLogin.UserName;
 }
 <style>
     .table th, .table td {
         padding: 0.5rem;
         font-size: 11.6px;
+    }
+
+    .btnNotification {
+        width: 100px;
+        font-size: 10px;
     }
 </style>
 @if (Model.Count() > 0 && Model != null)
@@ -22,62 +29,279 @@
         <tbody>
 
             @if (Model.Count() > 0 && Model != null)
+            
             {
                 foreach (var item in Model)
                 {
-                    <tr>
+            <tr>
 
-                        <td><img src="@item.Photo" style="height: 39px;width: 39px;border-radius: 19px;" /></td>
-                        <td>@item.SubModule</td>
-                        <td>@item.Details</td>
-                        @if (item.SubModule == WorkOrderEMS.Helper.ModuleSubModule.OnBoarding && item.OfferAcceptRejectCounterStatus == WorkOrderEMS.Helper.ApplicantIsActiveStatus.OfferAccepted)
+
+
+                @*@if (item.SubModule == WorkOrderEMS.Helper.ModuleSubModule.ScheduleMeeting)
+        {
+            <td><img src="@item.Photo" style="height: 39px;width: 39px;border-radius: 19px;" /></td>
+            <td>@item.SubModule</td>
+            string[] CRdatetimedetails = item.Details.Split(',');
+            <td>@CRdatetimedetails[0]</td>
+        }*@
+
+                @if (item.SubModule == WorkOrderEMS.Helper.ModuleSubModule.OnBoarding && item.OfferAcceptRejectCounterStatus == WorkOrderEMS.Helper.ApplicantIsActiveStatus.OfferAccepted)
+                {
+                    <td><img src="@item.Photo" style="height: 39px;width: 39px;border-radius: 19px;" /></td>
+                    <td>@item.SubModule</td>
+                    <td>@item.Details</td>
+                    <td><button class="btn btn-success btnNotification" modulename="@WorkOrderEMS.Helper.ModuleSubModule.OnBoarding" notificationId="@item.NotificationId" submoduleId="@item.SubModuleId1" status="@item.OfferAcceptRejectCounterStatus" style="font-size: 12px;padding: 4px;width: 91px;border-radius: 20px;" onclick="OpenCommonView(this,'View')">View</button></td>
+                }
+                else if (item.SubModule == WorkOrderEMS.Helper.ModuleSubModule.ApplicantHired)
+                {
+                    <td><img src="@item.Photo" style="height: 39px;width: 39px;border-radius: 19px;" /></td>
+                    <td>@item.SubModule</td>
+                    <td>@item.Details</td>
+                    <td><button class="btn btn-success btnNotification" modulename="@WorkOrderEMS.Helper.ModuleSubModule.ApplicantHired" notificationId="@item.NotificationId" submoduleId="@item.SubModuleId1" status="@item.OfferAcceptRejectCounterStatus" style="font-size: 12px;padding: 4px;width: 91px;border-radius: 20px;" onclick="OpenCommonView(this,'View')">View</button></td>
+                }
+                else if (item.SubModule == WorkOrderEMS.Helper.ModuleSubModule.OnBoarding && item.OfferAcceptRejectCounterStatus == WorkOrderEMS.Helper.ApplicantIsActiveStatus.OfferCounter)
+                {
+                    <td><img src="@item.Photo" style="height: 39px;width: 39px;border-radius: 19px;" /></td>
+                    <td>@item.SubModule</td>
+                    <td>@item.Details</td>
+                    <td><button class="btn btn-success btnNotification" modulename="@WorkOrderEMS.Helper.ModuleSubModule.OnBoarding" notificationId="@item.NotificationId" submoduleId="@item.SubModuleId1" style="font-size: 12px;padding: 4px;border-radius: 20px;width: 91px;" status="@item.OfferAcceptRejectCounterStatus" onclick="OpenCommonView(this,'View')">View</button></td>
+                }
+                else if (item.SubModule == WorkOrderEMS.Helper.ModuleSubModule.OnBoarding && item.OfferAcceptRejectCounterStatus == WorkOrderEMS.Helper.ApplicantIsActiveStatus.OfferRejected)
+                {
+                    <td><img src="@item.Photo" style="height: 39px;width: 39px;border-radius: 19px;" /></td>
+                    <td>@item.SubModule</td>
+                    <td>@item.Details</td>
+                    <td><button class="btn btn-success btnNotification" modulename="@WorkOrderEMS.Helper.ModuleSubModule.OnBoarding" notificationId="@item.NotificationId" submoduleId="@item.SubModuleId1" style="font-size: 12px;padding: 4px;border-radius: 20px;" status="@item.OfferAcceptRejectCounterStatus" onclick="OpenCommonView(this, 'Acknowledge')">Acknowledge</button></td>
+                }
+                else if (item.SubModule == WorkOrderEMS.Helper.ModuleSubModule.Interviewer)
+                {
+                    <td><img src="@item.Photo" style="height: 39px;width: 39px;border-radius: 19px;" /></td>
+                    <td>@item.SubModule</td>
+                    <td>@item.Details</td>
+                    <td><button class="btn btn-success btnNotification" modulename="@WorkOrderEMS.Helper.ModuleSubModule.Interviewer" notificationId="@item.NotificationId" submoduleId="@item.SubModuleId1" style="font-size: 12px;padding: 4px;border-radius: 20px;" status="@item.OfferAcceptRejectCounterStatus" onclick="OpenCommonView(this, 'Acknowledge')">Acknowledge</button></td>
+                }
+                else if (item.SubModule == WorkOrderEMS.Helper.ModuleSubModule.InterviewerAcceptDeny)
+                {
+                    <td><img src="@item.Photo" style="height: 39px;width: 39px;border-radius: 19px;" /></td>
+                    <td>@item.SubModule</td>
+                    <td>@item.Details</td>
+                    <td><button class="btn btn-success btnNotification" modulename="@WorkOrderEMS.Helper.ModuleSubModule.InterviewerAcceptDeny" notificationId="@item.NotificationId" submoduleId="@item.SubModuleId1" style="font-size: 12px;padding: 4px;border-radius: 20px;" status="@item.OfferAcceptRejectCounterStatus" onclick="OpenCommonView(this, 'Acknowledge')">Acknowledge</button></td>
+                }
+                else if (item.SubModule == WorkOrderEMS.Helper.ModuleSubModule.AssessmentStatus)
+                {
+                    <td><img src="@item.Photo" style="height: 39px;width: 39px;border-radius: 19px;" /></td>
+                    <td>@item.SubModule</td>
+                    <td>@item.Details</td>
+                    <td><button class="btn btn-success btnNotification" modulename="@WorkOrderEMS.Helper.ModuleSubModule.AssessmentStatus" notificationId="@item.NotificationId" submoduleId="@item.SubModuleId1" style="font-size: 12px;padding: 4px;border-radius: 20px;" status="@item.ApplicantStatus" onclick="OpenCommonView(this, 'Acknowledge')">Acknowledge</button></td>
+                }
+                else if (item.SubModule == WorkOrderEMS.Helper.ModuleSubModule.OnBoardingComplete)
+                {
+                    <td><img src="@item.Photo" style="height: 39px;width: 39px;border-radius: 19px;" /></td>
+                    <td>@item.SubModule</td>
+                    <td>@item.Details</td>
+                    <td><button class="btn btn-success btnNotification" modulename="@WorkOrderEMS.Helper.ModuleSubModule.OnBoardingComplete" notificationId="@item.NotificationId" submoduleId="@item.SubModuleId1" style="font-size: 12px;padding: 4px;border-radius: 20px;" status="@item.ApplicantStatus" onclick="OpenCommonView(this, 'Acknowledge')">Acknowledge</button></td>
+                }
+                else if (item.SubModule == WorkOrderEMS.Helper.ModuleSubModule.OnBoarded)
+                {
+                    <td><img src="@item.Photo" style="height: 39px;width: 39px;border-radius: 19px;" /></td>
+                    <td>@item.SubModule</td>
+                    <td>@item.Details</td>
+                    <td><button class="btn btn-success btnNotification" modulename="@WorkOrderEMS.Helper.ModuleSubModule.OnBoarded" notificationId="@item.NotificationId" submoduleId="@item.SubModuleId1" style="font-size: 12px;padding: 4px;border-radius: 20px;" status="@item.ApplicantStatus" onclick="OpenCommonView(this, 'Acknowledge')">Acknowledge</button></td>
+                }
+                else if (item.SubModule == WorkOrderEMS.Helper.ModuleSubModule.HRAknowledgeEvaluation)
+                {
+                    <td><img src="@item.Photo" style="height: 39px;width: 39px;border-radius: 19px;" /></td>
+                    <td>@item.SubModule</td>
+                    <td>@item.Details</td>
+                    <td>
+                        <button class="btn btn-success btnNotification" modulename="@WorkOrderEMS.Helper.ModuleSubModule.HRAknowledgeEvaluation" notificationId="@item.NotificationId" submoduleId="@item.SubModuleId1" style="font-size: 12px;padding: 4px;border-radius: 20px;" status="@item.ApplicantStatus" onclick="OpenCommonView(this, 'ApproveEvaluation')">Approve</button>
+                        <button class="btn btn-success btnNotification" modulename="@WorkOrderEMS.Helper.ModuleSubModule.HRAknowledgeEvaluation" notificationId="@item.NotificationId" submoduleId="@item.SubModuleId1" style="font-size: 12px;padding: 4px;border-radius: 20px;background-color:red;" status="@item.ApplicantStatus" onclick="OpenCommonView(this, 'DenyEvaluation')">Deny</button>
+                    </td>
+                }
+                else if (item.SubModule == WorkOrderEMS.Helper.ModuleSubModule.AssessmentUnlock)
+                {
+                    <td><img src="@item.Photo" style="height: 39px;width: 39px;border-radius: 19px;" /></td>
+                    <td>@item.SubModule</td>
+                    <td>@item.Details</td>
+                    <td><button class="btn btn-success btnNotification" modulename="@WorkOrderEMS.Helper.ModuleSubModule.AssessmentUnlock" notificationId="@item.NotificationId" submoduleId="@item.SubModuleId1" style="font-size: 12px;padding: 4px;border-radius: 20px;" status="@item.ApplicantStatus" onclick="OpenCommonView(this, 'Acknowledge')">Acknowledge</button></td>
+                }
+                else if (item.SubModule == WorkOrderEMS.Helper.ModuleSubModule.EmployeeAppraisalMeeting)
+                {
+                    <td><img src="@item.Photo" style="height: 39px;width: 39px;border-radius: 19px;" /></td>
+                    <td>@item.SubModule</td>
+                    <td>@item.Details</td>
+                    <td>
+                        <button class="btn btn-success btnNotification" modulename="@WorkOrderEMS.Helper.ModuleSubModule.AssessmentUnlock" notificationId="@item.NotificationId" submoduleId="@item.SubModuleId1" style="font-size: 12px;padding: 4px;border-radius: 20px;" status="@item.ApplicantStatus" onclick="OpenCommonView(this, 'Acknowledge')">Acknowledge</button>
+                        @*<button class="btn btn-success btnNotification" modulename="@WorkOrderEMS.Helper.ModuleSubModule.HRAknowledgeEvaluation" notificationId="@item.NotificationId" submoduleId="@item.SubModuleId1" style="font-size: 12px;padding: 4px;border-radius: 20px;" status="@item.ApplicantStatus" onclick="OpenCommonView(this, 'AcceptMeetingAppriasal')">Accept</button>
+                <button class="btn btn-success btnNotification" modulename="@WorkOrderEMS.Helper.ModuleSubModule.HRAknowledgeEvaluation" notificationId="@item.NotificationId" submoduleId="@item.SubModuleId1" style="font-size: 12px;padding: 4px;border-radius: 20px;background-color:red;" status="@item.ApplicantStatus" onclick="OpenCommonView(this, 'DisputeMeetingAppriasal')">Dispute</button>*@
+                    </td>
+                }
+                else if (item.SubModule == WorkOrderEMS.Helper.ModuleSubModule.FinalSubmitEvaluation)
+                {
+                    <td><img src="@item.Photo" style="height: 39px;width: 39px;border-radius: 19px;" /></td>
+                    <td>@item.SubModule</td>
+                    <td>@item.Details</td>
+                    <td>
+                        <button class="btn btn-success btnNotification" modulename="@WorkOrderEMS.Helper.ModuleSubModule.AppriasalMeetingEnd" notificationId="@item.NotificationId" submoduleId="@item.SubModuleId1" style="font-size: 12px;padding: 4px;border-radius: 20px;" status="@item.ApplicantStatus" onclick="OpenCommonView(this, 'AcceptAppriasal')">Accept</button>
+                        <button class="btn btn-success btnNotification" modulename="@WorkOrderEMS.Helper.ModuleSubModule.AppriasalMeetingEnd" notificationId="@item.NotificationId" submoduleId="@item.SubModuleId1" style="font-size: 12px;padding: 4px;border-radius: 20px;background-color:red;" status="@item.ApplicantStatus" onclick="OpenCommonView(this, 'DisputeAppriasal')">Dispute</button>
+                    </td>
+                }
+                else if (item.SubModule == WorkOrderEMS.Helper.ModuleSubModule.AppriasalAcceeptDispute48Hour)
+                {
+                    <td><img src="@item.Photo" style="height: 39px;width: 39px;border-radius: 19px;" /></td>
+                    <td>@item.SubModule</td>
+                    <td>@item.Details</td>
+                    <td>
+                        <button class="btn btn-success btnNotification" modulename="@WorkOrderEMS.Helper.ModuleSubModule.AppriasalMeetingEnd" notificationId="@item.NotificationId" submoduleId="@item.SubModuleId1" style="font-size: 12px;padding: 4px;border-radius: 20px;" status="@item.ApplicantStatus" onclick="OpenCommonView(this, 'AcceptAppriasal')">Accept</button>
+                        <button class="btn btn-success btnNotification" modulename="@WorkOrderEMS.Helper.ModuleSubModule.AppriasalMeetingEnd" notificationId="@item.NotificationId" submoduleId="@item.SubModuleId1" style="font-size: 12px;padding: 4px;border-radius: 20px;background-color:red;" status="@item.ApplicantStatus" onclick="OpenCommonView(this, 'DisputeAppriasal')">Dispute</button>
+                    </td>
+                }
+                else if (item.SubModule == WorkOrderEMS.Helper.ModuleSubModule.AcknowledgeNotificationHRMAN && item.SubModuleId1 != UserName)
+                {
+                    <td><img src="@item.Photo" style="height: 39px;width: 39px;border-radius: 19px;" /></td>
+                    <td>@item.SubModule</td>
+                    <td>@item.Details</td>
+                    <td>
+                        <button class="btn btn-success btnNotification" modulename="@WorkOrderEMS.Helper.ModuleSubModule.AcknowledgeNotificationHRMAN" notificationId="@item.NotificationId" submoduleId="@item.SubModuleId1" style="font-size: 12px;padding: 4px;border-radius: 20px;" status="@item.ApplicantStatus" onclick="OpenCommonView(this, 'FollowUp')">Follow Up</button>
+                        <button class="btn btn-success btnNotification" modulename="@WorkOrderEMS.Helper.ModuleSubModule.AcknowledgeNotificationHRMAN" notificationId="@item.NotificationId" submoduleId="@item.SubModuleId1" style="font-size: 12px;padding: 4px;border-radius: 20px;background-color:red;" status="@item.ApplicantStatus" onclick="OpenCommonView(this, 'Refusal')">Refusal</button>
+                    </td>
+                }
+                else if (item.SubModule == WorkOrderEMS.Helper.ModuleSubModule.ExtendTimeByHRFABMAN)
+                {
+                    <td><img src="@item.Photo" style="height: 39px;width: 39px;border-radius: 19px;" /></td>
+                    <td>@item.SubModule</td>
+                    <td>@item.Details</td>
+                    <td>
+                        <button class="btn btn-success btnNotification" modulename="@WorkOrderEMS.Helper.ModuleSubModule.ExtendTimeByHRFABMAN" notificationId="@item.NotificationId" submoduleId="@item.SubModuleId1" style="font-size: 12px;padding: 4px;border-radius: 20px;" status="@item.ApplicantStatus" onclick="OpenCommonView(this, 'ExtendTime')">Extend Time</button>
+                        <button class="btn btn-success btnNotification" modulename="@WorkOrderEMS.Helper.ModuleSubModule.ExtendTimeByHRFABMAN" notificationId="@item.NotificationId" submoduleId="@item.SubModuleId1" style="font-size: 12px;padding: 4px;border-radius: 20px;background-color:red;" status="@item.ApplicantStatus" onclick="OpenCommonView(this, 'RefusalByHR')">Refusal</button>
+                    </td>
+                }
+                else if (item.SubModule == WorkOrderEMS.Helper.ModuleSubModule.HRDisputeAppriasal)
+                {
+                    <td><img src="@item.Photo" style="height: 39px;width: 39px;border-radius: 19px;" /></td>
+                    <td>@item.SubModule</td>
+                    <td>@item.Details</td>
+                    <td>
+                        <button class="btn btn-success btnNotification" modulename="@WorkOrderEMS.Helper.ModuleSubModule.HRDisputeAppriasal" notificationId="@item.NotificationId" submoduleId="@item.SubModuleId1" style="font-size: 12px;padding: 4px;border-radius: 20px;" status="@item.ApplicantStatus" onclick="OpenCommonView(this, 'AcceptByHR')">Accept</button>
+                        <button class="btn btn-success btnNotification" modulename="@WorkOrderEMS.Helper.ModuleSubModule.HRDisputeAppriasal" notificationId="@item.NotificationId" submoduleId="@item.SubModuleId1" style="font-size: 12px;padding: 4px;border-radius: 20px;background-color:red;" status="@item.ApplicantStatus" onclick="OpenCommonView(this, 'DisputeByHR')">Dispute</button>
+                    </td>
+                }
+                else if (item.SubModule == WorkOrderEMS.Helper.ModuleSubModule.AcknowledgeNotificationHRMAN && item.SubModuleId1 == UserName)
+                {
+                    <td><img src="@item.Photo" style="height: 39px;width: 39px;border-radius: 19px;" /></td>
+                    <td>@item.SubModule</td>
+                    <td>@item.Details</td>
+                    <td>
+                        <button class="btn btn-success btnNotification" modulename="@WorkOrderEMS.Helper.ModuleSubModule.AcknowledgeNotificationHRMAN" notificationId="@item.NotificationId" submoduleId="@item.SubModuleId1" style="font-size: 12px;padding: 4px;border-radius: 20px;" status="@item.ApplicantStatus" onclick="OpenCommonView(this, 'Acknowledge')">Acknowledge</button>
+                    </td>
+                }
+                else if (item.SubModule == WorkOrderEMS.Helper.ModuleSubModule.RequestToVPDeptAT)
+                {
+                    <td><img src="@item.Photo" style="height: 39px;width: 39px;border-radius: 19px;" /></td>
+                    <td>@item.SubModule</td>
+                    <td>@item.Details</td>
+                    <td>
+                        <button class="btn btn-success btnNotification" modulename="@WorkOrderEMS.Helper.ModuleSubModule.RequestToVPDeptAT" notificationId="@item.NotificationId" submoduleId="@item.SubModuleId1" style="font-size: 12px;padding: 4px;border-radius: 20px;" status="@item.ApplicantStatus" onclick="OpenCommonView(this, 'Acknowledge')">Acknowledge</button>
+                    </td>
+                }
+                else if (item.SubModule == WorkOrderEMS.Helper.ModuleSubModule.TerminationRequest)
+                {
+                    <td><img src="@item.Photo" style="height: 39px;width: 39px;border-radius: 19px;" /></td>
+                    <td>@item.SubModule</td>
+                    <td>@item.Details</td>
+                    <td><button class="btn btn-success" modulename="@WorkOrderEMS.Helper.ModuleSubModule.TerminationRequest" notificationId="@item.NotificationId" submoduleId="@item.SubModuleId1" style="font-size: 12px;padding: 4px;border-radius: 20px;" status="@item.ApplicantStatus" onclick="OpenCommonView(this, 'Acknowledge')">Acknowledge</button></td>
+
+                }
+                else if (item.SubModule == WorkOrderEMS.Helper.ModuleSubModule.AssessmentStart && item.AssignToUser == ObjLogin.UserName)
+                {
+                    <td><img src="@item.Photo" style="height: 39px;width: 39px;border-radius: 19px;" /></td>
+                    <td>@item.SubModule</td>
+                    <td>
+                        @item.Details @if (item.Days > 3)
+                        {<span style="color:red"> (@item.Days) out of days</span>}
+                    else
+                    {<span style="color:green"> (@item.Days) remaining</span>}
+                    </td>
+                    <td>
+                        @if (item.CreatedBy != UserName)
                         {
-                            <td><button class="btn btn-success" modulename="@WorkOrderEMS.Helper.ModuleSubModule.OnBoarding" notificationId ="@item.NotificationId" submoduleId="@item.SubModuleId1" status="@item.OfferAcceptRejectCounterStatus" style="font-size: 12px;padding: 4px;width: 91px;border-radius: 20px;" onclick="OpenCommonView(this,'View')">View</button></td>
+                            if (item.Days <= 3)
+                            {
+                                <button class="btn btn-success btnNotification" modulename="@WorkOrderEMS.Helper.ModuleSubModule.AssessmentStart" notificationId="@item.NotificationId" submoduleId="@item.SubModuleId1" style="font-size: 12px;padding: 4px;border-radius: 20px;" onclick="OpenCommonView(this, 'CompleteAssessment')">Complete Now</button>
+                                <button class="btn btn-success btnNotification" modulename="@WorkOrderEMS.Helper.ModuleSubModule.AssessmentStart" notificationId="@item.NotificationId" submoduleId="@item.SubModuleId1" style="font-size: 12px;padding: 4px;border-radius: 20px;" onclick="OpenCommonView(this, 'LaterAssessment')">Later</button>
+                            }
+                            else
+                            { <button class="btn btn-success btnNotification" modulename="@WorkOrderEMS.Helper.ModuleSubModule.AssessmentStart" notificationId="@item.NotificationId" submoduleId="@item.SubModuleId1" style="font-size: 12px;padding: 4px;border-radius: 20px;" onclick="OpenCommonView(this, 'CompleteAssessment')" title="Permission Denied">Complete Now</button>
+                                <button class="btn btn-success btnNotification" modulename="@WorkOrderEMS.Helper.ModuleSubModule.AssessmentStart" notificationId="@item.NotificationId" submoduleId="@item.SubModuleId1" style="font-size: 12px;padding: 4px;border-radius: 20px;" onclick="OpenCommonView(this, 'LaterAssessment')" title="Permission Denied">Later</button>}
                         }
-                        else if (item.SubModule == WorkOrderEMS.Helper.ModuleSubModule.OnBoarding && item.OfferAcceptRejectCounterStatus == WorkOrderEMS.Helper.ApplicantIsActiveStatus.OfferCounter)
+                        else
                         {
-                            <td><button class="btn btn-success" modulename="@WorkOrderEMS.Helper.ModuleSubModule.OnBoarding" notificationId ="@item.NotificationId" submoduleId="@item.SubModuleId1" style="font-size: 12px;padding: 4px;border-radius: 20px;width: 91px;" status="@item.OfferAcceptRejectCounterStatus" onclick="OpenCommonView(this,'View')">View</button></td>
+                            <button class="btn btn-success btnNotification" modulename="@WorkOrderEMS.Helper.ModuleSubModule.OnBoarded" notificationId="@item.NotificationId" submoduleId="@item.SubModuleId1" style="font-size: 12px;padding: 4px;border-radius: 20px;" status="@item.ApplicantStatus" onclick="OpenCommonView(this, 'Acknowledge')">Acknowledge</button>
                         }
-                        else if (item.SubModule == WorkOrderEMS.Helper.ModuleSubModule.OnBoarding && item.OfferAcceptRejectCounterStatus == WorkOrderEMS.Helper.ApplicantIsActiveStatus.OfferRejected)
+                    </td>
+                }
+                else if (item.SubModule == WorkOrderEMS.Helper.ModuleSubModule.EvaluationStart && item.AssignToUser == ObjLogin.UserName)
+                {
+                    <td><img src="@item.Photo" style="height: 39px;width: 39px;border-radius: 19px;" /></td>
+                    <td>@item.SubModule</td>
+                    <td>
+                        @item.Details @if (item.Days > 3)
+                        {<span style="color:red"> (@item.Days) out of days</span>}
+                    else
+                    {<span style="color:green"> (@item.Days) remaining</span>}
+                    </td>
+                    <td>
+                        @if (item.CreatedBy != UserName)
                         {
-                            <td><button class="btn btn-success" modulename="@WorkOrderEMS.Helper.ModuleSubModule.OnBoarding" notificationId ="@item.NotificationId" submoduleId="@item.SubModuleId1" style="font-size: 12px;padding: 4px;border-radius: 20px;" status="@item.OfferAcceptRejectCounterStatus" onclick="OpenCommonView(this, 'Acknowledge')">Acknowledge</button></td>
+                            if (item.Days <= 3)
+                            {
+                                <button class="btn btn-success btnNotification" modulename="@WorkOrderEMS.Helper.ModuleSubModule.EvaluationStart" notificationId="@item.NotificationId" submoduleId="@item.SubModuleId1" style="font-size: 12px;padding: 4px;border-radius: 20px;" onclick="OpenCommonView(this, 'CompleteEvaluation')">Complete Now</button>
+                                <button class="btn btn-success btnNotification" modulename="@WorkOrderEMS.Helper.ModuleSubModule.EvaluationStart" notificationId="@item.NotificationId" submoduleId="@item.SubModuleId1" style="font-size: 12px;padding: 4px;border-radius: 20px;" onclick="OpenCommonView(this, 'LaterEvaluation')">Later</button>
+                            }
+                            else
+                            {
+                                <button class="btn btn-success btnNotification" modulename="@WorkOrderEMS.Helper.ModuleSubModule.EvaluationStart" notificationId="@item.NotificationId" submoduleId="@item.SubModuleId1" style="font-size: 12px;padding: 4px;border-radius: 20px;" onclick="OpenCommonView(this, 'CompleteEvaluation')" title="Permission Denied" disabled>Complete Now</button>
+                                <button class="btn btn-success btnNotification" modulename="@WorkOrderEMS.Helper.ModuleSubModule.EvaluationStart" notificationId="@item.NotificationId" submoduleId="@item.SubModuleId1" style="font-size: 12px;padding: 4px;border-radius: 20px;" onclick="OpenCommonView(this, 'LaterEvaluation')" title="Permission Denied" disabled>Later</button>
+                            }
                         }
-                        else if (item.SubModule == WorkOrderEMS.Helper.ModuleSubModule.Interviewer)
+                        else
                         {
-                            <td><button class="btn btn-success" modulename="@WorkOrderEMS.Helper.ModuleSubModule.Interviewer" notificationId ="@item.NotificationId" submoduleId="@item.SubModuleId1" style="font-size: 12px;padding: 4px;border-radius: 20px;" status="@item.OfferAcceptRejectCounterStatus" onclick="OpenCommonView(this, 'Acknowledge')">Acknowledge</button></td>
+                            <button class="btn btn-success btnNotification" modulename="@WorkOrderEMS.Helper.ModuleSubModule.OnBoarded" notificationId="@item.NotificationId" submoduleId="@item.SubModuleId1" style="font-size: 12px;padding: 4px;border-radius: 20px;" status="@item.ApplicantStatus" onclick="OpenCommonView(this, 'Acknowledge')">Acknowledge</button>
                         }
-                        else if (item.SubModule == WorkOrderEMS.Helper.ModuleSubModule.InterviewerAcceptDeny)
-                        {
-                            <td><button class="btn btn-success" modulename="@WorkOrderEMS.Helper.ModuleSubModule.InterviewerAcceptDeny" notificationId ="@item.NotificationId" submoduleId="@item.SubModuleId1" style="font-size: 12px;padding: 4px;border-radius: 20px;" status="@item.OfferAcceptRejectCounterStatus" onclick="OpenCommonView(this, 'Acknowledge')">Acknowledge</button></td>
-                        }
-                        else if (item.SubModule == WorkOrderEMS.Helper.ModuleSubModule.AssessmentStatus)
-                        {
-                            <td><button class="btn btn-success" modulename="@WorkOrderEMS.Helper.ModuleSubModule.AssessmentStatus" notificationId ="@item.NotificationId" submoduleId="@item.SubModuleId1" style="font-size: 12px;padding: 4px;border-radius: 20px;" status="@item.ApplicantStatus" onclick="OpenCommonView(this, 'Acknowledge')">Acknowledge</button></td>
-                        }
-                        else if (item.SubModule == WorkOrderEMS.Helper.ModuleSubModule.OnBoardingComplete)
-                        {
-                            <td><button class="btn btn-success" modulename="@WorkOrderEMS.Helper.ModuleSubModule.OnBoardingComplete" notificationId ="@item.NotificationId" submoduleId="@item.SubModuleId1" style="font-size: 12px;padding: 4px;border-radius: 20px;" status="@item.ApplicantStatus" onclick="OpenCommonView(this, 'Acknowledge')">Acknowledge</button></td>
-                        }
-                        else if (item.SubModule == WorkOrderEMS.Helper.ModuleSubModule.OnBoarded)
-                        {
-                            <td><button class="btn btn-success" modulename="@WorkOrderEMS.Helper.ModuleSubModule.OnBoarded" notificationId ="@item.NotificationId" submoduleId="@item.SubModuleId1" style="font-size: 12px;padding: 4px;border-radius: 20px;" status="@item.ApplicantStatus" onclick="OpenCommonView(this, 'Acknowledge')">Acknowledge</button></td>
-                        }
-                        else if (item.SubModule == WorkOrderEMS.Helper.ModuleSubModule.AssessmentStart)
-                        {
-                            <td><button class="btn btn-success" modulename="@WorkOrderEMS.Helper.ModuleSubModule.AssessmentStart" notificationId ="@item.NotificationId" submoduleId="@item.SubModuleId1" style="font-size: 12px;padding: 4px;border-radius: 20px;"  onclick="OpenCommonView(this, 'CompleteAssessment')">Complete Now</button>
-                            <button class="btn btn-success" modulename="@WorkOrderEMS.Helper.ModuleSubModule.AssessmentStart" notificationId ="@item.NotificationId" submoduleId="@item.SubModuleId1" style="font-size: 12px;padding: 4px;border-radius: 20px;"  onclick="OpenCommonView(this, 'LaterAssessment')">Later</button></td>
-                        }
-                        else if (item.SubModule == WorkOrderEMS.Helper.ModuleSubModule.EvaluationStart)
-                        {
-                            <td><button class="btn btn-success" modulename="@WorkOrderEMS.Helper.ModuleSubModule.EvaluationStart" notificationId ="@item.NotificationId" submoduleId="@item.SubModuleId1" style="font-size: 12px;padding: 4px;border-radius: 20px;" onclick="OpenCommonView(this, 'CompleteEvaluation')">Complete Now</button>
-                           <button class="btn btn-success" modulename="@WorkOrderEMS.Helper.ModuleSubModule.EvaluationStart" notificationId ="@item.NotificationId" submoduleId="@item.SubModuleId1" style="font-size: 12px;padding: 4px;border-radius: 20px;" onclick="OpenCommonView(this, 'LaterEvaluation')">Later</button></td>
-                        }
-                        else if (item.SubModule == WorkOrderEMS.Helper.ModuleSubModule.EvaluationComplete)
-                        {
-                            <td><button class="btn btn-success" modulename="@WorkOrderEMS.Helper.ModuleSubModule.EvaluationComplete" notificationId ="@item.NotificationId" submoduleId="@item.SubModuleId1" style="font-size: 12px;padding: 4px;border-radius: 20px;"  onclick="OpenCommonView(this, 'View')">View</button></td>
-                            @*<td><button class="btn btn-success" modulename="@WorkOrderEMS.Helper.ModuleSubModule.EvaluationComplete" notificationId ="@item.NotificationId" submoduleId="@item.SubModuleId1" style="font-size: 12px;padding: 4px;border-radius: 20px;"  onclick="OpenCommonView(this, 'LaterEvaluation')">Later</button></td>*@
-                        }
-                    </tr>
+                    </td>
+                }
+                else if (item.SubModule == WorkOrderEMS.Helper.ModuleSubModule.HRDenyToManager)
+                {
+                    <td><img src="@item.Photo" style="height: 39px;width: 39px;border-radius: 19px;" /></td>
+                    <td>@item.SubModule</td>
+                    <td>@item.Details</td>
+                    <td><button class="btn btn-success btnNotification" modulename="@WorkOrderEMS.Helper.ModuleSubModule.HRDenyToManager" notificationId="@item.NotificationId" submoduleId="@item.SubModuleId1" style="font-size: 12px;padding: 4px;border-radius: 20px;" status="@item.ApplicantStatus" onclick="OpenCommonView(this, 'Acknowledge')">Acknowledge</button></td>
+                }
+                else if (item.SubModule == WorkOrderEMS.Helper.ModuleSubModule.AssessmentBlock && item.AssignToUser == ObjLogin.UserName)
+                {
+                    <td><img src="@item.Photo" style="height: 39px;width: 39px;border-radius: 19px;" /></td>
+                    <td>@item.SubModule</td>
+                    <td>@item.Details</td>
+                    <td><button class="btn btn-success btnNotification" modulename="@WorkOrderEMS.Helper.ModuleSubModule.AssessmentBlock" notificationId="@item.NotificationId" submoduleId="@item.SubModuleId1" style="font-size: 12px;padding: 4px;border-radius: 20px;" onclick="OpenCommonView(this, 'UnBlockAssessment')">Unblock</button></td>
+                }
+                else if (item.SubModule == WorkOrderEMS.Helper.ModuleSubModule.EvaluationComplete)
+                {
+                    <td><img src="@item.Photo" style="height: 39px;width: 39px;border-radius: 19px;" /></td>
+                    <td>@item.SubModule</td>
+                    <td>@item.Details</td>
+                    <td><button class="btn btn-success btnNotification" modulename="@WorkOrderEMS.Helper.ModuleSubModule.EvaluationComplete" notificationId="@item.NotificationId" submoduleId="@item.SubModuleId1" style="font-size: 12px;padding: 4px;border-radius: 20px;" onclick="OpenCommonView(this, 'View')">View</button></td>
+                    @*<td><button class="btn btn-success" modulename="@WorkOrderEMS.Helper.ModuleSubModule.EvaluationComplete" notificationId ="@item.NotificationId" submoduleId="@item.SubModuleId1" style="font-size: 12px;padding: 4px;border-radius: 20px;"  onclick="OpenCommonView(this, 'LaterEvaluation')">Later</button></td>*@
+                }
+                else if (item.SubModule == WorkOrderEMS.Helper.ModuleSubModule.ScheduleMeeting)
+                {
+                    <td><img src="@item.Photo" style="height: 39px;width: 39px;border-radius: 19px;" /></td>
+                    <td>@item.SubModule</td>
+                    string[] CRdatetimedetails = item.Details.Split(',');
+                    <td>@CRdatetimedetails[0]</td>
+                    <td><button class="btn btn-success btnNotification" modulename="@WorkOrderEMS.Helper.ModuleSubModule.ScheduleMeeting" notificationId="@item.NotificationId" submoduleId="@item.SubModuleId1" status="@item.ApplicantStatus" style="font-size: 12px;padding: 4px;border-radius: 20px;" onclick="OpenCommonView(this, 'View')">Accept</button></td>
+
+                }
+            </tr>
                 }
             }
         </tbody>
@@ -87,6 +311,8 @@ else
 {
     <div>No Notification</div>
 }
+<script src="~/Content/NewAdminContent/VENDOR/toastr/js/toastr.min.js"></script>
+<script src="~/Scripts/BootStrap-Multiselect/JS/bootbox.js"></script>
 <script src="~/Scripts/Notification/NotificationFunctionality.js"></script>
 <script>
     $("#getNotificationCount").text(@Model.Count());

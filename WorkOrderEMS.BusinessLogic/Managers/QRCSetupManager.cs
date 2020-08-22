@@ -1124,7 +1124,7 @@ namespace WorkOrderEMS.BusinessLogic.Managers
                                     else
                                     {
                                         var objNotification = new NotificationDetailModel();
-                                        objNotification.CreatedBy = authuser.UserId;
+                                        objNotification.CreatedBy = authuser.UserId.ToString();
                                         objNotification.CreatedDate = DateTime.Now;
                                         objNotification.AssignTo = authuser.ManagerForUser;
                                         objNotification.eScanQRCID = ObjServiceQRCModel.QrcId;
@@ -2097,7 +2097,7 @@ namespace WorkOrderEMS.BusinessLogic.Managers
                                 }
                                 //Push Notification
                                 var objNotification = new NotificationDetailModel();
-                                objNotification.CreatedBy = obj.UserId;
+                                objNotification.CreatedBy = obj.UserId.ToString();
                                 objNotification.CreatedDate = DateTime.UtcNow;
                                 objNotification.AssignTo = item.ManagerUserId;
                                 objNotification.eScanQRCID = obj.QrcId;
@@ -2164,7 +2164,7 @@ namespace WorkOrderEMS.BusinessLogic.Managers
                                 }
                                 //Push Notification
                                 var objNotification = new NotificationDetailModel();
-                                objNotification.CreatedBy = obj.UserId;
+                                objNotification.CreatedBy = obj.UserId.ToString();
                                 objNotification.CreatedDate = DateTime.UtcNow;
                                 objNotification.AssignTo = item.ManagerUserId;
                                 objNotification.eScanQRCID = obj.QrcId;

@@ -88,6 +88,12 @@
         .orgchart .frontend1 .content {
             border-color: #cc0066;
         }
+
+    .SaveCloseCancelCSS {
+        border-radius: 100px;
+        width: 150px;
+        background-image: linear-gradient(to left, #3cffdb, #425fe0);
+    }
 </style>
 @*<script src="~/Scripts/jquery-3.2.1.min.js"></script>*@
 
@@ -148,13 +154,35 @@
                                         </div>
                                     </div>
                                     <div class="form-group row">
+                                       <div class="col-sm-6">
+                                            @Html.DropDownListFor(x => x.EmploymentStatus, new List<SelectListItem>
+                                            {
+                                                 new SelectListItem() {Text = "--Select Job type--", Value=""},
+                                                 new SelectListItem() {Text = "Full Time", Value="FT"},
+                                                 new SelectListItem() {Text = "Part Time", Value="PT"},
+                                                 new SelectListItem() {Text = "TEMP", Value="TEMP"}
+                                            }, new { @class = "form-control input-rounded requiredselect", @id = "EmploymentStatus" })
+                                        </div>
+                                        <div class="col-sm-6">
+                                             @Html.DropDownListFor(x => x.EmploymentClassification, new List<SelectListItem>
+                                            {
+                                                 new SelectListItem() {Text = "--Employee type--", Value=""},
+                                                 new SelectListItem() {Text = "EXEMPT", Value="Y"},
+                                                 new SelectListItem() {Text = "NON-EXEMPT", Value="N"}
+                                            }, new { @class = "form-control input-rounded requiredselect", @id = "EmploymentClassification" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
                                         @*@Html.LabelFor(model => model.Department, new { @class = "col-sm-2 col-form-label" })*@
-                                        <div class="col-sm-12">
+                                        <div class="col-sm-6">
 
                                             <select id="Department" name="Department" class="form-control input-rounded requiredselect"><option value="-1">--Select Superior--</option></select>
                                             @*@Html.DropDownListFor(model => model.Department, new SelectList(ViewBag.DepartmentList, "DeptId", "DepartmentName"), "Department", new { @class = "form-control input-rounded required requiredselect", @id = "Department" })*@
                                             @*@Html.TextBoxFor(model => model.Department, new { @Placeholder = "Seating Name", @class = "form-control input-rounded required isValidLocationName" })*@
 
+                                        </div>
+                                        <div class="col-sm-6">
+                                            @Html.TextBoxFor(model => model.RateOfPay, new { @Placeholder = "Rate Of Pay", @id = "RateOfPay", @class = "form-control input-rounded required " })
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -179,9 +207,9 @@
                 <br />
                 <br />
                 <div>
-                    <button type="button" class="btn btn-success pull-left" id="ViewVSC" style="border-radius:100px;">View Chart</button>
-                    <button type="button" class="btn btn-secondary pull-right" id="closeVSC" style="border-radius:100px;" data-dismiss="modal">Close</button>
-                    <input type="button" class="btn btn-primary pull-right" id="SaveVSC" style="border-radius:100px;margin-right: 10px;" value="Save" />
+                    <button type="button" class="btn btn-success pull-left SaveCloseCancelCSS" id="ViewVSC">View Chart</button>
+                    <button type="button" class="btn btn-secondary pull-right SaveCloseCancelCSS" id="closeVSC" data-dismiss="modal">Close</button>
+                    <input type="button" class="btn btn-primary pull-right SaveCloseCancelCSS" id="SaveVSC" style="margin-right: 10px;" value="Save" />
                 </div>
             </div>
         </div>
@@ -217,14 +245,16 @@
                                     </span>
                                     <div class="form-group row">
                                         <div class="col-sm-8">
-                                            @Html.TextBoxFor(model => model.JobTitle, new { @Placeholder = "Job Title", @id = "JobTitle", @style = "width: 441px;", @class = "form-control input-rounded required" })
+                                            @Html.TextBoxFor(model => model.JobTitle, new { @Placeholder = "Job Title", @id = "JobTitle", @style = "width: 441px;", @class = "form-control input-rounded required removeContent" })
                                         </div>
                                         <div class="col-sm-3">
-                                            @Html.TextBoxFor(model => model.JobTitleCount, new { @Placeholder = "Job Count", @id = "JobCount", @style = "width: 130px;", @class = "form-control input-rounded required" })
+                                            @Html.TextBoxFor(model => model.JobTitleCount, new { @Placeholder = "Job Count", @id = "JobCount", @style = "width: 130px;", @class = "form-control input-rounded required removeContent" })
                                             @*<input type="text" class="form-control input-rounded required" placeholder="Job Count" value="" style="width: 130px;" />*@
                                         </div>
                                         <a class="addjobtitlerows col-sm-1"><i class="fa fa-plus-circle fa-2x addColorPlusMinus" style="cursor:pointer;margin-left:30px;" aria-hidden="true"></i></a>
                                     </div>
+                                    <span id="showerrorjobtitle" style="display:none;color:red;">please add at least one job title with count</span>
+
                                     <span id="jobTitleDiv">
                                     </span>
                                 </div>
@@ -235,8 +265,8 @@
                 <br />
                 <br />
                 <div>
-                    <button type="button" class="btn btn-secondary pull-right" id="closeJobTitle" style="border-radius:100px;" data-dismiss="modal">Close</button>
-                    <input type="button" class="btn btn-primary pull-right" id="SaveJobTitle" style="border-radius:100px;margin-right: 10px;" value="Save" />
+                    <button type="button" class="btn btn-secondary pull-right SaveCloseCancelCSS" id="closeJobTitle" data-dismiss="modal">Close</button>
+                    <input type="button" class="btn btn-primary pull-right SaveCloseCancelCSS" id="SaveJobTitle" style="margin-right: 10px;" value="Save" />
                 </div>
             </div>
         </div>
@@ -258,14 +288,13 @@
                 <br />
                 <br />
                 <div>
-                    <button type="button" class="btn btn-secondary pull-right" id="closeJobPost" style="border-radius:100px;width:18%;" data-dismiss="modal">Close</button>
-                    <input type="button" class="btn btn-primary pull-right" id="SaveJobPost" style="border-radius:100px;width:18%;margin-right: 10px;" value="Save" />
+                    <button type="button" class="btn btn-secondary pull-right SaveCloseCancelCSS" id="closeJobPost" data-dismiss="modal">Close</button>
+                    <input type="button" class="btn btn-primary pull-right SaveCloseCancelCSS" id="SaveJobPost" style="margin-right: 10px;" value="Save" />
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 
 <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true" id="myModalForAccessManagementTree">
     <div class="modal-dialog modal-lg">
@@ -299,6 +328,9 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.js")"></script>
 <script src="~/Areas/AdminSection/Content/JQUERY/NewOrgChartForAdmin.js"></script>
 @*<script src="~/Areas/AdminSection/Content/JQUERY/GetOrg.js"></script>*@
 <script src="~/Areas/AdminSection/Content/JQUERY/DynamicAddJobDesc.js"></script>
@@ -306,8 +338,6 @@
 <link href="~/Content/KendoTreeView/kendo.material.min.css" rel="stylesheet" />
 <link href="~/Content/KendoTreeView/kendo.material.mobile.min.css" rel="stylesheet" />
 <script src="~/Scripts/KendoTreeView/kendo.all.min.js"></script>
-
-
 <script type="text/javascript">
     tinymce.init({
         selector: 'textarea', width: 730,height:300, setup: function (editor) {
@@ -369,7 +399,6 @@
 <script type="text/javascript">
 
     $("#BackToAdmin").click(function () {
-        
         var url = "@Url.Action("Index", "AdminDashboard", new { area = "AdminSection" })";
         window.location.href = url;
     });
@@ -383,7 +412,6 @@
             success: function (listData) {
                 $("#myModalForChart").modal("hide");
                 var tabledata = [];
-
                 if (listData != null)
                 {
                     for (var i = 0; i < listData.length; i++)
@@ -423,11 +451,11 @@
                         },
                         nodes: tabledata,
                     });
-                    
-                    $(".field_0").attr({ "style": "font-size:16px;" });
-                    $("tspan").attr("x", "140");
-                    $(".field_0").attr("x", "100"); $(".field_0").attr("x", "65");
-                    $(".field_0").attr("y", "25");
+
+                    //$(".field_0").attr({ "style": "font-size:16px;" });
+                    //$("tspan").attr("x", "140");
+                    //$(".field_0").attr("x", "100"); $(".field_0").attr("x", "65");
+                    //$(".field_0").attr("y", "25");
                 }
             },
             error: function (err) {
@@ -550,3 +578,45 @@
         background-position: 0 -64px;
     }
 </style>
+
+<script>
+    function DeleteJobTitle(jobId, $_this) {
+    debugger
+    $.ajax({
+        type: "POST",
+        url: '../AdminSection/AdminDashboard/DeleteJobTitleById?jobId=' + jobId,
+        success: function (Data) {
+            debugger
+            if (Data == true) {
+                var rem = $_this.previousElementSibling.parentElement.remove();
+            }
+            else {
+
+            }
+            //$(".removeContent input[type='text']").val("");
+            //if (Data.length > 0) {
+            //    $("#addJobTitleLabel").html("");
+            //    $("#JobTitleId").val("");
+            //    for (var ii = 0; ii < Data.length; ii++) {
+            //        //$("#JobTitleId").val(Data[ii].parentId);
+
+            //        var divID = $('#addJobTitleLabel div.dymanicDelete').length;
+            //        $('#addJobTitleLabel').append('<div class="form-group row dymanicDelete d_' + ii + '"><div class="col-sm-10 getJobTitleData"><label class="col-sm-5 col-form-label">' + Data[ii].JobTitleLabel + '</label></div><a onclick="DeleteJobTitle(' + Data[ii].Id + ')" class="addjobtitleDeleterows col-sm-1"  id=d' + ii + ' jobtitleid =' + Data[ii].Id + '><i class="fa fa-trash addColorTrash fa-2x" style="cursor:pointer;margin-left: 30px;color:#cd0a2499;" aria-hidden="true" ></i></a></div>');
+            //    }
+            //    $("#myModalForAddingJobTitle").modal('show');
+            //    /// $("#myModalForAddingJobTitle")
+            //} else {
+
+            //    $("#addJobTitleLabel").html("");
+            //    $("#JobTitleId").val("");
+            //    $("#myModalForAddingJobTitle").modal('show');
+
+            //}
+
+            $("#parentIdForJobTitle").val(i.pid);
+        },
+        error: function (err) {
+        }
+    });
+}
+</script>

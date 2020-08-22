@@ -1,0 +1,359 @@
+﻿@model  WorkOrderEMS.Models.NewAdminModel.FormsModel.FormNameStatus
+<style>
+    #pageTop {
+        margin-top: 6%;
+        cursor: pointer;
+    }
+
+    #Cl-imgWID {
+        width: 30%;
+    }
+
+    #ListPadding {
+        padding-left: 250px;
+        padding-right: 250px;
+        margin-top: 5%;
+    }
+
+    .LiTMargin {
+        margin-top: 3%;
+    }
+
+    .cursorCsss {
+        cursor: pointer;
+    }
+    .modal-open {
+    overflow: scroll;
+}
+</style>
+
+<div class="container" id="pageTop">
+    <form id="checkList">
+        <input type="hidden" value="@Model.FormStatusw4" name="FormStatusw4" id="FormStatusw4">
+        <input type="hidden" value="@Model.FormStatusI9" name="FormStatusI9" id="FormStatusI9">
+        <input type="hidden" value="@Model.FormStatusdd" name="FormStatusdd" id="FormStatusdd">
+        <input type="hidden" value="@Model.FormStatusEvf" name="FormStatusEvf" id="FormStatusEvf">
+        <input type="hidden" value="@Model.FormStatussif" name="FormStatussif" id="FormStatussif">
+        <input type="hidden" value="@Model.FormStatusbcf" name="FormStatusbcf" id="FormStatusbcf">
+        <input type="hidden" value="@Model.FormStatusrop" name="FormStatusrop" id="FormStatusrop">
+        <input type="hidden" value="@Model.FormStatusprfecf" name="FormStatusprfecf" id="FormStatusprfecf">
+        <input type="hidden" value="@Model.FormStatusprfcaf" name="FormStatusprfcaf" id="FormStatusprfcaf">
+        <input type="hidden" value="@Model.FormStatusprf" name="FormStatusprf" id="FormStatusprf">
+        <input type="hidden" value="@Model.FormStatusff" name="FormStatusff" id="FormStatusff">
+        <input type="hidden" value="@Model.IsExempt" name="IsExempt" id="IsExempt">
+        <input type="hidden" value="@Model.EEOstatus" name="EEOstatus" id="EEOstatus">
+
+
+        <div>
+            <img id="Cl-imgWID" src="~/Images/FormImages/image-form.jpg" alt="Elite Parking" />
+        </div>
+        <div>
+            <h3 class="text-center"><u>OnBoarding Forms</u></h3>
+        </div>
+
+        <div id="ListPadding">
+            <div>
+                <h4>Government related Forms</h4>
+            </div>
+
+            <div class="row LiTMargin">
+                <div class="col-sm-6 col-md-6">
+                    <span onclick="FromCheckList('w4form')" class="cursorCsss">W-4</span>
+
+                </div>
+                <div class="col-sm-6 col-md-6 text-right">
+                    <span id="unCheckedw4form"><i class="fa fa-square-o" aria-hidden="true"></i></span>
+                    <span style="display:none;" id="Checkw4form"><i class="fa fa-check-square-o" aria-hidden="true"></i></span>
+                </div>
+
+            </div>
+            <div class="row LiTMargin">
+                <div class="col-sm-6 col-md-6">
+                    <span onclick="FromCheckList('I9Form')" class="cursorCsss">I-9</span>
+                </div>
+                <div class="col-sm-6 col-md-6 text-right">
+                    <span id="unCheckedI9form"><i class="fa fa-square-o" aria-hidden="true"></i></span>
+                    <span style="display:none;" id="CheckI9form"><i class="fa fa-check-square-o" aria-hidden="true"></i></span>
+                </div>
+            </div>
+            <hr>
+            <div style="margin-top:3%;">
+                <h4>Elite Forms</h4>
+            </div>
+
+
+            <div class="row LiTMargin">
+                <div class="col-sm-6 col-md-6">
+                    <span onclick="FromCheckList('BackGroundCheckForm')" class="cursorCsss">Background Check Form</span>
+                </div>
+                <div class="col-sm-6 col-md-6 text-right">
+                    <span id="unCheckedbcfform"><i class="fa fa-square-o" aria-hidden="true"></i></span>
+                    <span id="Checkbcfform" style="display:none;"><i class="fa fa-check-square-o" aria-hidden="true"></i></span>
+                </div>
+            </div>
+            <div class="row LiTMargin">
+                <div class="col-sm-6 col-md-6">
+                    <span onclick="FromCheckList('emergencycontactform')" class="cursorCsss">Emergency Contact Form</span>
+                </div>
+                <div class="col-sm-6 col-md-6 text-right">
+                    <span id="unCheckedecfform"><i class="fa fa-square-o" aria-hidden="true"></i></span>
+                    <span id="Checkecfform" style="display:none;"><i class="fa fa-check-square-o" aria-hidden="true"></i></span>
+                </div>
+            </div>
+            @*<div class="row LiTMargin">
+                <div class="col-sm-6 col-md-6">
+                    <span onclick="">Contact Conform Pop up</span>
+                </div>
+                <div class="col-sm-6 col-md-6 text-right">
+                    <span><i class="fa fa-square-o" aria-hidden="true"></i></span>
+                    <span style="display:none;"><i class="fa fa-check-square-o" aria-hidden="true"></i></span>
+                </div>
+            </div>*@
+            <div class="row LiTMargin">
+                <div class="col-sm-6 col-md-6">
+                    <span onclick="FromCheckList('depositeForm')" class="cursorCsss">Direct Deposit Form</span>
+                </div>
+                <div class="col-sm-6 col-md-6 text-right">
+                    <span id="unCheckedddform"><i class="fa fa-square-o" aria-hidden="true"></i></span>
+                    <span id="Checkddform" style="display:none;"><i class="fa fa-check-square-o" aria-hidden="true"></i></span>
+                </div>
+            </div>
+            <div class="row LiTMargin">
+                <div class="col-sm-6 col-md-6">
+                    <span onclick="FromCheckList('educationverificationform')" class="cursorCsss">Education Verification Form</span>
+                </div>
+                <div class="col-sm-6 col-md-6 text-right">
+                    <span id="unCheckedevfform"><i class="fa fa-square-o" aria-hidden="true"></i></span>
+                    <span id="Checkevfform" style="display:none;"><i class="fa fa-check-square-o" aria-hidden="true"></i></span>
+                </div>
+            </div>
+            <div class="row LiTMargin">
+                <div class="col-sm-6 col-md-6">
+                    <span onclick="FromCheckList('RateOfPay')" class="cursorCsss">Rate Of Pay</span>
+                </div>
+                <div class="col-sm-6 col-md-6 text-right">
+                    <span id="unCheckedropform"><i class="fa fa-square-o" aria-hidden="true"></i></span>
+                    <span id="Checkropform" style="display:none;"><i class="fa fa-check-square-o" aria-hidden="true"></i></span>
+                </div>
+            </div>
+            <div class="row LiTMargin" id="IsExemptCaf" style="display:none">
+                <div class="col-sm-6 col-md-6">
+                    <span onclick="FromCheckList('confidentialityagreementform')" class="cursorCsss">Confidentiality Agreement Form</span>
+                </div>
+                <div class="col-sm-6 col-md-6 text-right">
+                    <span id="unCheckedcafform"><i class="fa fa-square-o" aria-hidden="true"></i></span>
+                    <span id="Checkcafform" style="display:none;"><i class="fa fa-check-square-o" aria-hidden="true"></i></span>
+                </div>
+            </div>
+            <div class="row LiTMargin">
+                <div class="col-sm-6 col-md-6">
+                    <span onclick="FromCheckList('photoreleaseform')" class="cursorCsss">Photo Release Form</span>
+                </div>
+                <div class="col-sm-6 col-md-6 text-right">
+                    <span id="unCheckedprfform"><i class="fa fa-square-o" aria-hidden="true"></i></span>
+                    <span id="Checkprfform" style="display:none;"><i class="fa fa-check-square-o" aria-hidden="true"></i></span>
+                </div>
+            </div>
+            <div class="row LiTMargin" id="checkSif" style="display:none">
+                <div class="col-sm-6 col-md-6">
+                    <span onclick="FromCheckList('selfIdentificationForm')" class="cursorCsss">Self Identification Form</span>
+                </div>
+                <div class="col-sm-6 col-md-6 text-right">
+                    <span id="unCheckedsifform"><i class="fa fa-square-o" aria-hidden="true"></i></span>
+                    <span id="Checksifform" style="display:none;"><i class="fa fa-check-square-o" aria-hidden="true"></i></span>
+                </div>
+            </div>
+
+            <hr>
+            <div style="margin-top:3%;">
+                <h4>Others</h4>
+            </div>
+
+            @*<div class="row LiTMargin">
+                <div class="col-sm-6 col-md-6">
+                    <span onclick="OpenPdfOnboarding()" class="cursorCsss">OnBoarding Pdf</span>
+                </div>
+                <div class="col-sm-6 col-md-6 text-right">
+
+                </div>
+
+
+            </div>*@
+            @*<div class="row LiTMargin">
+                <div class="col-sm-6 col-md-6">
+                    <span onclick="OpenPdfOnboarding()" class="cursorCsss">AssesmentEvaulation</span>
+                </div>
+                <div class="col-sm-6 col-md-6 text-right">
+
+                </div>
+
+
+            </div>*@
+            <div class="row LiTMargin">
+                <div class="col-sm-6 col-md-6">
+                    <span onclick="FromCheckList('ApplicantFunFactForm')" class="cursorCsss">Fun facts</span>
+                </div>
+                <div class="col-sm-6 col-md-6 text-right">
+                    <span id="unCheckedffform"><i class="fa fa-square-o" aria-hidden="true"></i></span>
+                    <span id="Checkffform" style="display:none;"><i class="fa fa-check-square-o" aria-hidden="true"></i></span>
+                </div>
+
+                <br><br><br><br><br><br>
+            </div>
+    </form>
+</div>
+</div>
+<div class="row" style="height: 50px;background-color: #292b48;bottom: 0;overflow: hidden;position: fixed;width: 100%;margin-left: 0px;">
+    <div class="col-md-4 text-right">
+
+    </div>
+    <div class="col-md-4 text-center">
+        <span>
+
+        </span>
+
+        <span>
+            <a><i class="fa fa-question-circle" aria-hidden="true" title="Help" style="font-size: 20px;color: #f73c3c;margin-top: 6px;padding-right:30px;"></i></a>
+        </span>
+
+        <span>
+
+        </span>
+
+    </div>
+    <div class="col-md-4 text-right">
+
+    </div>
+</div>
+
+
+
+
+<script>
+    debugger
+
+    var FormStatusw4 = $("#FormStatusw4").val();
+    var FormStatusI9 = $("#FormStatusI9").val();
+    var FormStatusbcf = $("#FormStatusbcf").val();
+    var FormStatusprfecf = $("#FormStatusprfecf").val();
+    var FormStatusdd = $("#FormStatusdd").val();
+    var FormStatusEvf = $("#FormStatusEvf").val();
+    var FormStatusprfcaf = $("#FormStatusprfcaf").val();
+    var FormStatusrop = $("#FormStatusrop").val();
+    var FormStatussif = $("#FormStatussif").val();
+    var FormStatusprf = $("#FormStatusprf").val();
+    var FormStatusff = $("#FormStatusff").val();
+    var IsExemptCAF = $("#IsExempt").val();
+    var EEOstatus = $("#EEOstatus").val();
+
+
+    showsavedform();
+    'use strict';
+    function showsavedform() {
+        debugger
+        if (FormStatusw4 === "true") {
+            $("#Checkw4form").css('display', 'block');
+            $("#unCheckedw4form").css('display', 'none');
+        }
+        if (FormStatusI9 === "true") {
+            $("#CheckI9form").css('display', 'block');
+            $("#unCheckedI9form").css('display', 'none');
+        }
+        if (FormStatusbcf === "true") {
+            $("#Checkbcfform").css('display', 'block');
+            $("#unCheckedbcfform").css('display', 'none');
+        }
+
+        if (FormStatusdd === "true") {
+            $("#Checkddform").css('display', 'block');
+            $("#unCheckedddform").css('display', 'none');
+        }
+        if (FormStatusprfecf === "true") {
+            $("#Checkecfform").css('display', 'block');
+            $("#unCheckedecfform").css('display', 'none');
+        }
+        if (FormStatusEvf === "true") {
+            $("#Checkevfform").css('display', 'block');
+            $("#unCheckedevfform").css('display', 'none');
+        }
+        if (FormStatusrop === "true") {
+            $("#Checkropform").css('display', 'block');
+            $("#unCheckedropform").css('display', 'none');
+        }
+        if (FormStatusprfcaf === "true") {
+            $("#Checkcafform").css('display', 'block');
+            $("#unCheckedcafform").css('display', 'none');
+        }
+        if (FormStatussif === "true") {
+            $("#Checksifform").css('display', 'block');
+            $("#unCheckedsifform").css('display', 'none');
+            $("#checkSif").css('display', 'flex');
+        }
+        if (FormStatusprf === "true") {
+            $("#Checkprfform").css('display', 'block');
+            $("#unCheckedprfform").css('display', 'none');
+        }
+        if (FormStatusff === "true") {
+            $("#Checkffform").css('display', 'block');
+            $("#unCheckedffform").css('display', 'none');
+        }
+        if (IsExemptCAF === "Y") {
+            $("#IsExemptCaf").css('display', 'flex');
+
+        }
+
+    }
+    function OpenPdfOnboarding() {
+        debugger
+        var base_url = window.location.origin;
+        $.ajax({
+        type: "GET",
+        url: base_url + '/Guest/AssessmentEvaulation',
+        
+        beforeSend: function () {
+            new fn_showMaskloader('Please wait...');
+        },
+        success: function (Data) {
+            debugger
+            $("#RenderPageId").html(Data);
+           
+
+          
+        },
+        complete: function () {
+            fn_hideMaskloader();
+        }
+    });
+
+    }
+    //function OpenPdfOnboarding() {
+    //    debugger
+    //    var base_url = window.location.origin;
+    //    $.ajax({
+    //    type: "GET",
+    //    url: base_url + '/Guest/OnboardingFormPdf',
+        
+    //    beforeSend: function () {
+    //        new fn_showMaskloader('Please wait...');
+    //    },
+    //    success: function (Data) {
+    //        debugger
+    //        $("#RenderPageId").html(Data);
+           
+
+          
+    //    },
+    //    complete: function () {
+    //        fn_hideMaskloader();
+    //    }
+    //});
+
+    //}    
+    
+
+
+</script>
+
+
+
+

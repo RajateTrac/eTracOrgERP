@@ -14,17 +14,7 @@ namespace WorkOrderEMS.Data.EntityModel
     
     public partial class PreBillNumber
     {
-        public PreBillNumber()
-        {
-            this.BillFacilityItems = new HashSet<BillFacilityItem>();
-            this.LogPreBills = new HashSet<LogPreBill>();
-        }
-    
         public long PBN_Id { get; set; }
         public string PBN_IsActive { get; set; }
-    
-        public virtual ICollection<BillFacilityItem> BillFacilityItems { get; set; }
-        public virtual ICollection<LogPreBill> LogPreBills { get; set; }
-        public virtual PreBill PreBill { get; set; }
     }
 }

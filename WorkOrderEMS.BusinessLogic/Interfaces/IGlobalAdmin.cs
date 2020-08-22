@@ -8,6 +8,7 @@ using WorkOrderEMS.Models;
 using WorkOrderEMS.Models.CommonModels;
 using WorkOrderEMS.Models.Employee;
 using WorkOrderEMS.Models.NewAdminModel;
+using WorkOrderEMS.Models.NewAdminModel.OnBoarding;
 using WorkOrderEMS.Models.SuperAdminModels;
 using WorkOrderEMS.Models.UserModels;
 
@@ -269,7 +270,7 @@ namespace WorkOrderEMS.BusinessLogic
 
         List<MyOpeningModel> GetMyOpenings(long PostingId);
         List<WorkOrderEMS.Models.NewAdminModel.JobPosting> GetJobPostong(long userId);
-        List<spGetApplicantInfo_Result2> GetApplicantInfo(long userId);
+        List<spGetApplicantInfo_Result> GetApplicantInfo(long userId);
         bool SaveApplicantInfo(OnboardingDetailRequestModel onboardingDetailRequestModel);
         bool SaveGuestEmployeeBasicInfo(GuestEmployeeBasicInfoRequestModel guestEmployeeBasicInfoRequestModel);
         InterviewersViewModel GetInterviewersList(long applicantId, long userId);       
@@ -291,7 +292,7 @@ namespace WorkOrderEMS.BusinessLogic
         bool VerifyEmployee(OnboardingDetailRequestModel onboardingDetailRequestModel);
         //List<spGetJobPostingDetails_ForCompanyOpening_Result> GetJobPostingDetailsForCompanyOpening(long JPS_JobPostingId);
         // BudgetDetails GetListBudgetDetails(long? LocationId, long? UserId, int? pageIndex, int? numberOfRows, string sortColumnName, string sortOrderBy, long? locationId, string textSearch, string statusType);
-        List<spGetJobPosting_ForCompanyOpening_Result1> GetJobPostingForCompanyOpening(string HiringManagerId);
+        List<spGetJobPosting_ForCompanyOpening_Result> GetJobPostingForCompanyOpening(string HiringManagerId);
         bool saveQEvaluations(List<GWCQUestionModel> data, string action);
         bool SetupMeetingEmail(SetupMeeting objSetupMeeting);
         string GetMeetingDetail(string Id,string  FinYear, string FinQuarter);
@@ -304,13 +305,18 @@ namespace WorkOrderEMS.BusinessLogic
         List<EventModel> GetBookedSlots(string UserName);
         List<EventModel> GetOutlookMeetingDetails(string start, string end);
         List<ChildrenQuestionModel> GetInterviewChildQuestions(int num);
-        AnswerModel GetInterviewAnswerByApplicantId(int Applicant);
-		        PerformanceModel GetManagerAssessmentDetails(string userId);
+        AnswerModel GetInterviewAnswerByApplicantId(int Applicant, string EmployeeId);
+		PerformanceModel GetManagerAssessmentDetails(string userId);
 
         bool saveChangedExpectations(List<GWCQUestionModel> data, string action,string Manager);
 
         List<GWCQUestionModel> GetSelfAssessmentView(string Id, string AssessmetType);
         List<GWCQUestionModel> GetGWCQuestions(string Id, string AssessmetType, string type);
         bool UpdateInterviewPanel(string selectedManagers, string Manager, string JobId, string JobTitle);
+        bool MakeAbsent(string InterviewrID, long ApplicantId, string Comment);
+        bool UpdateInterviewPanelForMyOpening(string selectedManagers, string Manager, string JobId, string JobTitle, long ApplicantId);
+        List<JobSummaryModel> GetEMP_ApplicantCount(long JobPostingId);
+        List<MyOpeningModel> GetOnbaordingList(long userId);
+        spGetEmployeePersonalInfo_Result GetEmployeeDetails(string EmployeeId);
     }
 }

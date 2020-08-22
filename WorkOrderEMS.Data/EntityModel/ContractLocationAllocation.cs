@@ -20,7 +20,6 @@ namespace WorkOrderEMS.Data.EntityModel
         public Nullable<decimal> CLA_Allocation { get; set; }
         public string CLA_IsActive { get; set; }
     
-        public virtual Contract Contract { get; set; }
         public virtual LocationMaster LocationMaster { get; set; }
     }
 }

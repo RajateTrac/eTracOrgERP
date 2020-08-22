@@ -28,7 +28,7 @@ namespace WorkOrderEMS
             //if (objNotificationAlertRepository.IsServerConnected(connString) == true)
             //{
             //Start SqlDependency with application initializationAuthenticat
-            System.Data.SqlClient.SqlDependency.Start(connString);
+                System.Data.SqlClient.SqlDependency.Start(connString);
             objNotificationAlertRepository.WorkOrderDetailsForPushNotificationSignalRGlobal(true);
             //}
         }        

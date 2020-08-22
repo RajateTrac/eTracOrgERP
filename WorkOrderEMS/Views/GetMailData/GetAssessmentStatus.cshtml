@@ -83,7 +83,7 @@
             type: "POST",            
             url: base_url + '/GetMailData/ClearedNotCleared?IsActive=' + getIsActiveVal + "&ActionVal=" + getActionValue + "&ApplicantId=" + ApplicantId,
             success: function (message) {
-                window.location.href = '@Url.Action("Index", "Login")'
+                window.location.href = '@Url.Action("ThankYou", "GetMailData")'
             },
         });
         ///window.location.href = base_url + '/GetMailData/ClearedNotCleared?IsActive=' + getIsActiveVal + "&ActionVal=" + getActionValue + "&ApplicantId=" + ApplicantId;

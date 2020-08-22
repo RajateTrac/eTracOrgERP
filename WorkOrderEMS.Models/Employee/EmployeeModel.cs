@@ -16,6 +16,7 @@ namespace WorkOrderEMS.Models.Employee
         public string Action { get; set; }
         public string EmpId { get; set; }
         public string Image { get; set; }
+        public HttpPostedFileBase ProfileImage { get; set; }
         [Required]
         public string FirstName { get; set; }
         [Required]
@@ -51,7 +52,8 @@ namespace WorkOrderEMS.Models.Employee
         public string LicenseNumber { get; set; }
         public string ActionValue { get; set; }
         public string Status { get; set; }
-
+        public string ImagePath { get; set; }
+        public long? CreatedBy { get; set; }
         //Added for Applicant
 
         public string StreetAddress { get; set; }
@@ -77,6 +79,6 @@ namespace WorkOrderEMS.Models.Employee
         public string Assessment { get; set; }
         public HttpPostedFileBase AssessmentFile { get; set; }
         public string HiringManager { get; set; }
-
+        public string EMP_Gender { get; set; }
     }
 }

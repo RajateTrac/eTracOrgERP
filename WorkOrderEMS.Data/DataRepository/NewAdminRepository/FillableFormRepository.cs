@@ -18,7 +18,7 @@ namespace WorkOrderEMS.Data.DataRepository
         /// </summary>
         /// <param name="EmployeeId"></param>
         /// <returns></returns>
-        public spGetEducationVerificationForm_Result1 GetEducationFormDetails(string EmployeeId)
+        public spGetEducationVerificationForm_Result GetEducationFormDetails(string EmployeeId)
         {
             try
             {
@@ -36,7 +36,7 @@ namespace WorkOrderEMS.Data.DataRepository
         /// </summary>
         /// <param name="EmployeeId"></param>
         /// <returns></returns>
-        public spGetDirectDepositForm_Result2 GetDirectDepositeDetails(string EmployeeId)
+        public spGetDirectDepositForm_Result GetDirectDepositeDetails(string EmployeeId)
         {
             try
             {
@@ -54,7 +54,7 @@ namespace WorkOrderEMS.Data.DataRepository
         /// </summary>
         /// <param name="EmployeeId"></param>
         /// <returns></returns>
-        public spGetEmergencyContactForm_Result4 GetEmergencyContactForm(string EmployeeId)
+        public spGetEmergencyContactForm_Result GetEmergencyContactForm(string EmployeeId)
         {
             try
             {
@@ -94,6 +94,25 @@ namespace WorkOrderEMS.Data.DataRepository
             try
             {
                 return _workorderems.FileTypes.ToList();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        /// <summary>
+        /// Created By : Ashwajit Bansod
+        /// Created Date : 12-08-2020
+        /// Created For : TO get file details by file name and employee id
+        /// </summary>
+        /// <param name="EmployeeId"></param>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        public FileUpload GetFileDataByEmployeeId(string EmployeeId, string fileName)
+        {
+            try
+            {
+                return _workorderems.FileUploads.Where(x => x.FLU_FileName == fileName && x.FLU_EMP_EmployeeId == EmployeeId).FirstOrDefault();
             }
             catch (Exception ex)
             {

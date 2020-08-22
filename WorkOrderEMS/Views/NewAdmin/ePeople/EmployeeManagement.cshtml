@@ -592,7 +592,27 @@
     $(document).ready(function () {
         var base_url = window.location.origin;
         $("#SaveEditInfo").click(function () {
-            debugger
+            //debugger
+            //var img = "";
+            //form_data = new FormData();
+            //var imagebase64 = "";
+            //var file_data = "";
+            //img = $("#ProfileImage").val();
+            //if (img == "" || img == undefined || img == null) {
+            //}
+            //else {
+            //    var file = element.files[0];
+            //    var reader = new FileReader();
+            //    reader.onloadend = function () {
+            //        imagebase64 = reader.result;
+            //    }
+            //    reader.readAsDataURL(file);
+            //    $("#HiddenImage").val(imagebase64);
+
+            //    file_data = $("#ProfileImage").prop("files")[0]; // Getting the properties of file from file field
+            //    form_data.append("file", file_data) // Appending parameter named file with properties of file_field to form_data
+            //    form_data.append("CallID", 11)
+            //}
             var dataObject = $("#SaveEditableUserInfo").serialize();
             $.ajax({
                 type: "POST",

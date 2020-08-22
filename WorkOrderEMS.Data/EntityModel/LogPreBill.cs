@@ -30,8 +30,6 @@ namespace WorkOrderEMS.Data.EntityModel
         public string LPBL_IsApprove { get; set; }
         public string LPBL_IsActive { get; set; }
     
-        public virtual Company Company { get; set; }
         public virtual LocationMaster LocationMaster { get; set; }
-        public virtual PreBillNumber PreBillNumber { get; set; }
     }
 }

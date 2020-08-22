@@ -26,5 +26,6 @@ namespace WorkOrderEMS.Data.EntityModel
         public string JPS_IsActive { get; set; }
         public Nullable<long> JPS_LocationId { get; set; }
         public string JPS_DrivingType { get; set; }
+        public string JPS_MinimumQulification { get; set; }
     }
 }

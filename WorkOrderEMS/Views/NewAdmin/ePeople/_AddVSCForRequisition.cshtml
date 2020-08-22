@@ -21,8 +21,8 @@
                         @Html.DropDownListFor(x => x.EmploymentStatus, new List<SelectListItem>
                          {
                               new SelectListItem() {Text = "--Select Job type--", Value=""},
-                              new SelectListItem() {Text = "FT", Value="FT"},
-                              new SelectListItem() {Text = "PT", Value="PT"},
+                              new SelectListItem() {Text = "Full Time", Value="FT"},
+                              new SelectListItem() {Text = "Part Time", Value="PT"},
                               new SelectListItem() {Text = "TEMP", Value="TEMP"}
                          }, new { @class = "form-control input-rounded requiredselect", @id = "EmploymentStatus" })
                     </div>

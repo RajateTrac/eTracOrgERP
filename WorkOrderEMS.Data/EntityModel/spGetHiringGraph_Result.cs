@@ -14,18 +14,30 @@ namespace WorkOrderEMS.Data.EntityModel
     public partial class spGetHiringGraph_Result
     {
         public Nullable<int> Applied { get; set; }
+        public Nullable<int> Screened { get; set; }
         public Nullable<int> IntervieweSchedule { get; set; }
-        public Nullable<int> Interviewed { get; set; }
+        public Nullable<int> InterviewCanceled { get; set; }
+        public Nullable<int> InterviewCompleted { get; set; }
         public Nullable<int> Shortlisted { get; set; }
         public Nullable<int> AssessmentSend { get; set; }
         public Nullable<int> AssessmentPass { get; set; }
         public Nullable<int> AssessmentFail { get; set; }
+        public Nullable<int> OnHold { get; set; }
+        public Nullable<int> Hired { get; set; }
+        public Nullable<int> OfferSent { get; set; }
+        public Nullable<int> OfferAccepted { get; set; }
+        public Nullable<int> OfferCountered { get; set; }
+        public Nullable<int> OfferDeclined { get; set; }
+        public Nullable<int> OfferCancled { get; set; }
+        public Nullable<int> Onboarding { get; set; }
+        public Nullable<int> Onboarded { get; set; }
+        public Nullable<int> OnboardingDrop { get; set; }
         public Nullable<int> BackgroundCheckSend { get; set; }
         public Nullable<int> BackgroundCheckPass { get; set; }
         public Nullable<int> BackgroundCheckFail { get; set; }
-        public Nullable<int> OnHold { get; set; }
-        public Nullable<int> Hired { get; set; }
-        public Nullable<int> Onboarded { get; set; }
-        public Nullable<int> OnboardedDrop { get; set; }
+        public Nullable<int> OrientationSchedule { get; set; }
+        public Nullable<int> OrientationDone { get; set; }
+        public Nullable<int> OrientationNotDone { get; set; }
+        public Nullable<int> Reject { get; set; }
     }
 }

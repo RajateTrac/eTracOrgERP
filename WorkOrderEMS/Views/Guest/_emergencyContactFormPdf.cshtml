@@ -1,0 +1,399 @@
+﻿@model WorkOrderEMS.Models.Employee.EmergencyContectForm
+<style>
+    table {
+    }
+
+    tr {
+        padding-left: 20px !important;
+        padding-right: 20px !important;
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+
+    td {
+        padding-left: 20px;
+        padding-right: 20px;
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+
+    .tableHeading {
+        font-size: 20px;
+        font-weight: 200;
+        //background-color: lightgray;
+        text-align: center
+    }
+
+    .p1 {
+        font-size: 20px;
+        font-family: Times New Roman;
+        margin: 73px 149px 0px 277px;
+        text-align: justify;
+        color: #000;
+    }
+
+    h3 {
+        margin: 100px 0px 0px 83px;
+    }
+
+    .text-line {
+        background-color: transparent;
+        outline: none;
+        outline-style: none;
+        border-top: none;
+        border-left: none;
+        border-right: none;
+        border-bottom: solid #000 1px;
+    }
+
+    p {
+        margin-left: 106px;
+    }
+
+    .center {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .row {
+        display: flex;
+    }
+
+    .error {
+        color: red;
+    }
+
+    input[type="checkbox"]:after {
+        line-height: 1.5em !important;
+        content: '' !important;
+        display: block !important;
+        margin-top: -3px !important;
+        margin-left: -3px !important;
+        border: 1px solid transparent !important;
+        border-radius: 0px !important;
+        line-height: 1.3 !important;
+        background: none !important;
+    }
+</style>
+<script type="text/javascript">
+
+
+     $(document).ready(function () {
+         $("#EmpId").focus();
+         $("input").each(function() {
+   var element = $(this);
+   if (element.val() == "") {
+         $("#btnNext").prop("disabled", true);
+             $("#btnNext").attr('disabled','disabled');
+   }
+});
+    });
+
+    function NumericOnly(e) {
+        var regex = new RegExp("^[0-9]+$");
+        var str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
+        if (regex.test(str)) {
+            return true;
+        }
+        e.preventDefault();
+        return false;
+    }
+    $('#ConactInfo').keypress(function (e) {
+        debugger
+        NumericOnly(e);
+
+    });
+
+
+    $('#FirstName').keypress(function (e) {
+
+        var firstname = $('#FirstName').val();
+
+        var regex = new RegExp("^[a-zA-Z ]+$");
+        var strigChar = String.fromCharCode(!e.charCode ? e.which : e.charCode);
+        if (regex.test(strigChar)) {
+
+            return true;
+
+        }
+        return false
+    });
+    $('#MiddleName').keypress(function (e) {
+        var regex = new RegExp("^[a-zA-Z ]+$");
+        var strigChar = String.fromCharCode(!e.charCode ? e.which : e.charCode);
+        if (regex.test(strigChar)) {
+            return true;
+        }
+        return false
+    });
+    $('#LastName').keypress(function (e) {
+        var regex = new RegExp("^[a-zA-Z ]+$");
+        var strigChar = String.fromCharCode(!e.charCode ? e.which : e.charCode);
+        if (regex.test(strigChar)) {
+            return true;
+        }
+        return false
+    });
+    $('#NickName').keypress(function (e) {
+        var regex = new RegExp("^[a-zA-Z ]+$");
+        var strigChar = String.fromCharCode(!e.charCode ? e.which : e.charCode);
+        if (regex.test(strigChar)) {
+            return true;
+        }
+        return false
+    });
+    $('#Gender').keypress(function (e) {
+        var regex = new RegExp("^[a-zA-Z]+$");
+        var strigChar = String.fromCharCode(!e.charCode ? e.which : e.charCode);
+        if (regex.test(strigChar)) {
+            return true;
+        }
+        return false
+    });
+    $('#EmergencyContactName').keypress(function (e) {
+        var regex = new RegExp("^[a-zA-Z ]+$");
+        var strigChar = String.fromCharCode(!e.charCode ? e.which : e.charCode);
+        if (regex.test(strigChar)) {
+            return true;
+        }
+        return false
+    });
+    $('#RelationShip').keypress(function (e) {
+        var regex = new RegExp("^[a-zA-Z ]+$");
+        var strigChar = String.fromCharCode(!e.charCode ? e.which : e.charCode);
+        if (regex.test(strigChar)) {
+            return true;
+        }
+        return false
+    });
+
+
+
+</script>
+<div class="p1" style="font-size: 20px;font-family: Times New Roman;margin: 73px 149px 0px 120px;text-align: justify;color: #000;">
+    <div class="row">
+        <img src="~/Images/FormImages/image-form.jpg" alt="background image" />
+        <h3><u>Emergency Contact Form</u></h3>
+    </div>
+    @using (Html.BeginForm("_emergencyContactForm", "Guest", FormMethod.Post, new { id = "emergencycontactform" }))
+    {
+        <br />
+        @Html.HiddenFor(x => x.EcfId)
+        <table>
+            <tr>
+                <td>
+                    Employee ID
+                </td>
+                <td>
+                    @Html.TextBoxFor(x => x.EmpId, new { @class = "text-line", @style = "width:590px;" })
+                    
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    First Name
+                </td>
+                <td>
+                    @Html.TextBoxFor(x => x.FirstName, new { @class = "text-line", @style = "width:590px;" })
+                    
+                </td>
+                @*<td>
+                        <span id="errorFName" class="error">*</span>
+                    </td>*@
+            </tr>
+            <tr>
+                <td>
+                    Middle Name
+                </td>
+                <td>
+                    @Html.TextBoxFor(x => x.MiddleName, new { @class = "text-line", @style = "width:590px;" })
+                    
+
+                </td>
+                @*<td>
+                        <span id="errorMiddleName" class="error">*</span>
+                    </td>*@
+            </tr>
+            <tr>
+                <td>
+                    Last Name
+                </td>
+                <td>
+                    @Html.TextBoxFor(x => x.LastName, new { @class = "text-line", @style = "width:590px;" })
+                    
+
+                </td>
+                @*<td>
+                        <span id="errorLastName" class="error">*</span>
+                    </td>*@
+            </tr>
+            <tr>
+                <td>
+                    Nick Name
+                </td>
+                <td>
+                    @Html.TextBoxFor(x => x.NickName, new { @class = "text-line", @style = "width:590px;" })
+                    
+
+                </td>
+                @*<td>
+                        <span id="errorNickName" class="error">*</span>
+                    </td>*@
+            </tr>
+            <tr>
+                <td>
+                    Gender
+                </td>
+                <td>
+                    @Html.TextBoxFor(x => x.Gender, new { @class = "text-line", @style = "width:590px;" })
+                    
+
+                </td>
+                @*<td>
+                        <span id="errorGender" class="error">*</span>
+                    </td>*@
+            </tr>
+            <tr>
+                <td>
+                    Home Address
+                </td>
+                <td>
+                    @Html.TextBoxFor(x => x.HomeAddress, new { @class = "text-line", @style = "width:590px;" })
+                    
+
+                </td>
+                @*<td>
+                        <span id="errorHomeAddress" class="error">*</span>
+                    </td>*@
+            </tr>
+            <tr>
+                <td>
+                    Home Phone
+                </td>
+                <td>
+                    @Html.TextBoxFor(x => x.HomePhone, new { @class = "text-line", @style = "width:590px;" })
+                    
+
+                </td>
+                <td>
+                    <span id="errorHomePhone" class="error">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Mobile Phone
+                </td>
+                <td>
+                    @Html.TextBoxFor(x => x.Mobile, new { @class = "text-line", @style = "width:590px;" })
+                    
+
+                </td>
+                @*<td>
+                        <span id="errorMobile" class="error">*</span>
+                    </td>*@
+            </tr>
+            <tr>
+                <td>
+                    Home Email Address
+                </td>
+                <td>
+                    @Html.TextBoxFor(x => x.HomeEmail, new { @class = "text-line", @style = "width:590px;" })
+                    
+
+                </td>
+                <td>
+                    <span id="errorHomeEmail" class="error">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    BirthDay
+                </td>
+                <td>
+                    @Html.TextBoxFor(x => x.DOB, new { @class = "text-line", @style = "width:590px;", @id = "DOBForEmergency" })
+                    
+
+                </td>
+                @*<td>
+                        <span id="errorDOB" class="error">*</span>
+                    </td>*@
+            </tr>
+            <tr>
+                <td>
+                    Goverment ID or SSN
+                </td>
+                <td>
+                    @Html.TextBoxFor(x => x.SSN, new { @class = "text-line", @style = "width:590px;" })
+                    
+
+                </td>
+                @*<td>
+                        <span id="errorSSN" class="error">*</span>
+                    </td>*@
+            </tr>
+            <tr>
+                <td>
+                    Driver's License/State ID#
+                </td>
+                <td>
+                    @Html.TextBoxFor(x => x.License, new { @class = "text-line", @style = "width:590px;" })
+                    
+
+                </td>
+                @*<td>
+                        <span id="errorLicense" class="error">*</span>
+                    </td>*@
+
+            </tr>
+            <tr>
+                <td class="tableHeading" colspan="2">
+                    Emergency Contact Information
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    Emergency Contact's Name
+                </td>
+                <td>
+                    @Html.TextBoxFor(x => x.EmergencyContactName, new { @class = "text-line", @style = "width:590px;" })
+                    
+
+                </td>
+                <td>
+                    <span id="errorContactName" class="error">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    RelationShip
+                </td>
+                <td>
+                    @Html.TextBoxFor(x => x.RelationShip, new { @class = "text-line", @style = "width:590px;" })                  
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Address
+                </td>
+                <td>
+                    @Html.TextBoxFor(x => x.Address, new { @class = "text-line", @style = "width:590px;" })
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Phone Number(s)
+                </td>
+                <td>
+                    @Html.TextBoxFor(x => x.ConactInfo, new { @class = "text-line", @style = "width:590px;" })
+                </td>
+            </tr>
+        </table>
+    }
+</div>
+<script>
+    $(document).ready(function () {
+        $("#DOBForEmergency").datepicker();
+    });
+</script>

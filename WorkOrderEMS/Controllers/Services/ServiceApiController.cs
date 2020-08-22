@@ -5884,37 +5884,37 @@ namespace WorkOrderEMS.Controllers.Services
             {
                 if (obj != null)
                 {
-                    if(obj.ApplicantPhoto != null && obj.ApplicantPhoto != "")
-                    {
-                        string ImagePath = string.Empty;
-                        string ImageUniqueName = string.Empty;
-                        string url = string.Empty;
-                        string ImageURL = string.Empty;
-                        if (obj != null)
-                        {
-                            if (obj.ApplicantPhoto != null && obj.ApplicantPhoto != "")
-                            {
-                                ImagePath = HttpContext.Current.Server.MapPath(ConfigurationManager.AppSettings["ApplicantSignature"].ToString());
-                                ImageUniqueName = DateTime.Now.ToString("yyyyMMddHHmm") + obj.FName + "_" + obj.LName;
-                                url = HostingPrefix + ApplicantSignature.Replace("~", "") + ImageUniqueName + ".jpg";
-                                ImageURL = ImageUniqueName + ".jpg";
-                                if (!Directory.Exists(ImagePath))
-                                {
-                                    Directory.CreateDirectory(ImagePath);
-                                }
-                                var ImageLocation = ImagePath + ImageURL;
-                                //Save the image to directory
-                                using (MemoryStream ms = new MemoryStream(Convert.FromBase64String(obj.ApplicantPhoto)))
-                                {
-                                    using (Bitmap bm2 = new Bitmap(ms))
-                                    {
-                                        bm2.Save(ImageLocation);
-                                        obj.ApplicantPhoto = ImageURL;
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    //if(obj.ApplicantPhoto != null && obj.ApplicantPhoto != "")
+                    //{
+                    //    string ImagePath = string.Empty;
+                    //    string ImageUniqueName = string.Empty;
+                    //    string url = string.Empty;
+                    //    string ImageURL = string.Empty;
+                    //    if (obj != null)
+                    //    {
+                    //        if (obj.ApplicantPhoto != null && obj.ApplicantPhoto != "")
+                    //        {
+                    //            ImagePath = HttpContext.Current.Server.MapPath(ConfigurationManager.AppSettings["ApplicantSignature"].ToString());
+                    //            ImageUniqueName = DateTime.Now.ToString("yyyyMMddHHmm") + obj.FName + "_" + obj.LName;
+                    //            url = HostingPrefix + ApplicantSignature.Replace("~", "") + ImageUniqueName + ".jpg";
+                    //            ImageURL = ImageUniqueName + ".jpg";
+                    //            if (!Directory.Exists(ImagePath))
+                    //            {
+                    //                Directory.CreateDirectory(ImagePath);
+                    //            }
+                    //            var ImageLocation = ImagePath + ImageURL;
+                    //            //Save the image to directory
+                    //            using (MemoryStream ms = new MemoryStream(Convert.FromBase64String(obj.ApplicantPhoto)))
+                    //            {
+                    //                using (Bitmap bm2 = new Bitmap(ms))
+                    //                {
+                    //                    bm2.Save(ImageLocation);
+                    //                    obj.ApplicantPhoto = ImageURL;
+                    //                }
+                    //            }
+                    //        }
+                    //    }
+                    //}
                     var getDetails = _IApplicantManager.SignUpApplicant(obj);
 
                     if (getDetails != null)
@@ -6009,6 +6009,48 @@ namespace WorkOrderEMS.Controllers.Services
                     obj.ApplicantSchecduleAvaliblity.RemoveAll(x => x.ASA_Action == '\0');
                     obj.ApplicantTrafficConvictions.RemoveAll(x => x.ATC_Action == '\0');
                     obj.ApplicantVehiclesOperated.RemoveAll(x => x.AVO_Action == '\0');
+
+                    //obj.ApplicantAdditionalInfo.RemoveAll(x => x.AAI_Action == '\0');
+                    //obj.ApplicantAddress.RemoveAll(x => x.APA_Action == '\0');
+                    //obj.ApplicantBackgroundHistory.RemoveAll(x => x.ABH_Action == '\0');
+                    //obj.ApplicantContactInfo.RemoveAll(x => x.ACI_Action == '\0');
+                    //obj.ApplicantLicenseHeald.RemoveAll(x => x.ALH_Action == '\0');
+                    //obj.ApplicantPositionTitle.RemoveAll(x => x.APT_Action == '\0');
+                    //obj.ApplicantSchecduleAvaliblity.RemoveAll(x => x.ASA_Action == '\0');
+                    //obj.ApplicantTrafficConvictions.RemoveAll(x => x.ATC_Action == '\0');
+                    //obj.ApplicantVehiclesOperated.RemoveAll(x => x.AVO_Action == '\0');
+
+                    if (obj.ApplicantPhoto != null && obj.ApplicantPhoto != "")
+                    {
+                        string ImagePath = string.Empty;
+                        string ImageUniqueName = string.Empty;
+                        string url = string.Empty;
+                        string ImageURL = string.Empty;
+                        if (obj != null)
+                        {
+                            if (obj.ApplicantPhoto != null && obj.ApplicantPhoto != "" && obj.ApplicantPersonalInfo.Count() > 0)
+                            {
+                                ImagePath = HttpContext.Current.Server.MapPath(ConfigurationManager.AppSettings["ApplicantSignature"].ToString());
+                                ImageUniqueName = DateTime.Now.ToString("yyyyMMddHHmm") + obj.ApplicantPersonalInfo[0].API_FirstName + "_" + obj.ApplicantPersonalInfo[0].API_LastName;
+                                url = HostingPrefix + ApplicantSignature.Replace("~", "") + ImageUniqueName + ".jpg";
+                                ImageURL = ImageUniqueName + ".jpg";
+                                if (!Directory.Exists(ImagePath))
+                                {
+                                    Directory.CreateDirectory(ImagePath);
+                                }
+                                var ImageLocation = ImagePath + ImageURL;
+                                //Save the image to directory
+                                using (MemoryStream ms = new MemoryStream(Convert.FromBase64String(obj.ApplicantPhoto)))
+                                {
+                                    using (Bitmap bm2 = new Bitmap(ms))
+                                    {
+                                        bm2.Save(ImageLocation);
+                                        obj.ApplicantPhoto = ImageURL;
+                                    }
+                                }
+                            }
+                        }
+                    }
                     var getDetails = _IApplicantManager.SaveApplicantData(obj);
                     if (getDetails == true)
                     {
@@ -6250,7 +6292,173 @@ namespace WorkOrderEMS.Controllers.Services
             }
             return ObjServiceResponseModel.Message;
         }
+        /// <summary>
+        /// Created By  :Ashwajit bansod
+        /// Created Date : 12-05-2020
+        /// Created For : To accept reject and couter offer by applicant from applicant portal.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public IHttpActionResult AceeptCounterRejectOffer(OfferAcceptRejectCounterModel obj)
+        {
+            var ObjServiceResponseModel = new ServiceResponseModel<string>();
+            try
+            {
+                if (obj != null)
+                {
+                    var isSaved = _IePeopleManager.ClearedOrNot(obj.IsActive, obj.Action, obj.ApplicantId);
+                    if (isSaved == true)
+                    {
+                        ObjServiceResponseModel.Response = Convert.ToInt32(ServiceResponse.SuccessResponse, CultureInfo.CurrentCulture);
+                        ObjServiceResponseModel.Message = CommonMessage.Successful();
+                        ObjServiceResponseModel.Data = null;                        
+                    }
+                    else
+                    {
+                        ObjServiceResponseModel.Response = Convert.ToInt32(ServiceResponse.FailedResponse, CultureInfo.CurrentCulture);
+                        ObjServiceResponseModel.Message = CommonMessage.FailureMessage();
+                        ObjServiceResponseModel.Data = null;                      
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ObjServiceResponseModel.Message = ex.Message;
+                ObjServiceResponseModel.Response = -1;
+                ObjServiceResponseModel.Data = null;
+               
+            }
+            return Ok(ObjServiceResponseModel);
+        }
 
+        /// <summary>
+        /// Created by : Ashwajit Bansod
+        /// Created For : To get applicant Status
+        /// Created Date : 13-05-2020
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public IHttpActionResult ApplicantStatusDetails(eTracLoginModel obj)
+        {
+            var ObjServiceResponseModel = new ServiceResponseModel<string>();
+            try
+            {
+                var getStatus = _IePeopleManager.GetApplicantStatus(Convert.ToInt64(obj.ApplicantId));
+                if (getStatus != null)
+                {
+                    ObjServiceResponseModel.Response = Convert.ToInt32(ServiceResponse.SuccessResponse, CultureInfo.CurrentCulture);
+                    ObjServiceResponseModel.Message = CommonMessage.Successful();
+                    ObjServiceResponseModel.Data = getStatus;
+                    return Ok(ObjServiceResponseModel);
+                }
+                else
+                {
+                    ObjServiceResponseModel.Response = Convert.ToInt32(ServiceResponse.FailedResponse, CultureInfo.CurrentCulture);
+                    ObjServiceResponseModel.Message = CommonMessage.FailureMessage();
+                    ObjServiceResponseModel.Data = getStatus;
+                    return Ok(ObjServiceResponseModel);
+                }
+            }
+            catch (Exception ex)
+            {
+                ObjServiceResponseModel.Message = ex.Message;
+                ObjServiceResponseModel.Response = -1;
+                ObjServiceResponseModel.Data = null;
+                return Ok(ObjServiceResponseModel);
+            }
+        }
+
+
+        [HttpPost]
+        public IHttpActionResult VSC(eTracLoginModel obj)
+        {
+            var tt = new VehicleSeatingChartManager();
+            var ObjServiceResponseModel = new ServiceResponseModel<List<AddChartModelTest>>();
+            try
+            {
+                var getStatus = tt.ListVehicleSeatingChartTest(0);
+                if (getStatus != null)
+                {
+                    ObjServiceResponseModel.Response = Convert.ToInt32(ServiceResponse.SuccessResponse, CultureInfo.CurrentCulture);
+                    ObjServiceResponseModel.Message = CommonMessage.Successful();
+                    ObjServiceResponseModel.Data = getStatus;
+                    return Ok(ObjServiceResponseModel);
+                }
+                else
+                {
+                    ObjServiceResponseModel.Response = Convert.ToInt32(ServiceResponse.FailedResponse, CultureInfo.CurrentCulture);
+                    ObjServiceResponseModel.Message = CommonMessage.FailureMessage();
+                    ObjServiceResponseModel.Data = getStatus;
+                    return Ok(ObjServiceResponseModel);
+                }
+            }
+            catch (Exception ex)
+            {
+                ObjServiceResponseModel.Message = ex.Message;
+                ObjServiceResponseModel.Response = -1;
+                ObjServiceResponseModel.Data = null;
+                return Ok(ObjServiceResponseModel);
+            }
+        }
+
+
+        [HttpPost]
+        public async Task<string> UploadAllEmployeeFiles()
+        {
+            var _FillableFormRepository = new FillableFormRepository();
+            var ObjServiceResponseModel = new ServiceResponseModel<string>();
+            var Obj = new UploadedFiles();
+            string name = string.Empty;
+            bool isSave = false;
+            var ctx = HttpContext.Current;
+            var root = ctx.Server.MapPath("~/Content/ApplicantFiles/UploadDocument");
+            var provider = new MultipartFormDataStreamProvider(root);
+            try
+            {
+                await Request.Content.ReadAsMultipartAsync(provider);
+                var FileType = provider.FormData.GetValues("FileType")[0];
+                var Id = provider.FormData.GetValues("Id")[0];
+                if (FileType == "Resume") { 
+                    foreach (var file in provider.FileData)
+                    {
+                        name = file.Headers.ContentDisposition.FileName;
+                        name = name.Trim('"');
+                            name = Id + "_" + DateTime.Now.Ticks.ToString() + "_" + name;
+                            var localname = file.LocalFileName;
+                            var filepath = Path.Combine(root, name);
+                            File.Move(localname, filepath);
+                            isSave = _IApplicantManager.SaveResume(name, Convert.ToInt64(Id));
+                            //var getDetails = _FillableFormRepository.GetFileList().Where(x => x.FLT_FileType == "Yellow" && x.FLT_Id == Convert.ToInt64(FileTypeId.W4)).FirstOrDefault();
+                            //Obj.FileName = name;
+                            //Obj.FileId = Convert.ToInt64(getDetails.FLT_Id);
+                            //Obj.FileEmployeeId = EMPId;
+                            //string LoginEmployeeId = EMPId;
+                            //Obj.AttachedFileName = name;
+                            //_IFillableFormManager.SaveFile(Obj, LoginEmployeeId);                        
+                    }
+                }
+                if (isSave == true)
+                {
+                    ObjServiceResponseModel.Response = Convert.ToInt32(ServiceResponse.SuccessResponse, CultureInfo.CurrentCulture);
+                    ObjServiceResponseModel.Message = CommonMessage.Successful();
+                }
+                else
+                {
+                    ObjServiceResponseModel.Response = Convert.ToInt32(ServiceResponse.FailedResponse, CultureInfo.CurrentCulture);
+                    ObjServiceResponseModel.Message = CommonMessage.FailureMessage();
+                }
+            }
+            catch (Exception ex)
+            {
+                ObjServiceResponseModel.Message = ex.Message;
+                ObjServiceResponseModel.Response = -1;
+                ObjServiceResponseModel.Data = null;
+                return ObjServiceResponseModel.Message;
+            }
+            return ObjServiceResponseModel.Message;
+        }
         //[HttpPost]
         //public async Task<string> UploadFile()
         //{

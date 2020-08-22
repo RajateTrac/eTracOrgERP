@@ -1,0 +1,26 @@
+﻿@media only screen and (max-width:768px) {
+
+    .SIF-fafaarrow {
+        margin-left: 687px;
+    }
+
+    .SIF-flname {
+        width: 74%;
+    }
+
+    .SIF-mname {
+        width: 70%;
+    }
+
+    .SIF-ssnumber {
+        width: 74.8%;
+        border: 0;
+        outline: 0;
+        background: transparent;
+        border-bottom: 1px solid black;
+        border-radius: 0;
+        margin-left: 79px;
+    }
+    
+
+}

@@ -10,19 +10,19 @@ namespace WorkOrderEMS.Models.Employee
 	public class EmergencyContectForm
 	{
 		public long? EcfId { get; set; }
-		[Required(ErrorMessage ="*")]
+		[Required(ErrorMessage = "*")]
 		public string NickName { get; set; }
 		[Required(ErrorMessage = "*")]
 		[DataType(DataType.PhoneNumber)]
 		[RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "Not a valid phone number")]
 		public long? HomePhone { get; set; }
 		[Required(ErrorMessage = "*")]
-		[EmailAddress(ErrorMessage ="Invalid Email")]
+		[EmailAddress(ErrorMessage = "Invalid Email")]
 		public string HomeEmail { get; set; }
 		public DateTime? EcfDate { get; set; }
 		public string IsActive { get; set; }
 		public string EmpId { get; set; }
-		public bool	IsSave { get; set; }
+		public bool IsSave { get; set; }
 		[Required(ErrorMessage = "*")]
 		public string FirstName { get; set; }
 		[Required(ErrorMessage = "*")]
@@ -54,6 +54,18 @@ namespace WorkOrderEMS.Models.Employee
 		public string Address { get; set; }
 		[Required(ErrorMessage = "*")]
 		public string ConactInfo { get; set; }
+		public string formName { get; set; }
+		public string FormStatusw4 { get; set; }
+		public string FormStatusI9 { get; set; }
+		public string FormStatusdd { get; set; }
+		public string FormStatusEvf { get; set; }
+		public string FormStatussif { get; set; }
+		public string FormStatusbcf { get; set; }
+		public string FormStatusrop { get; set; }
+		public string FormStatusprfecf { get; set; }
+		public string FormStatusprfcaf { get; set; }
+		public string FormStatusprf { get; set; }
+		public string FormStatusff { get; set; }
 	}
 
 }

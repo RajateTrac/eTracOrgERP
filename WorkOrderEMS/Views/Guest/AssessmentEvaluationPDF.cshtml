@@ -1,0 +1,95 @@
+﻿@model WorkOrderEMS.Models.Performance.AssessmentEvaluationModel
+   
+    <div style="padding: 100px 15px 100px 15px">
+        <div style="display:flex;">
+            <table style="border:1px solid;width:15%;">
+                <tr style="border:1px solid white;">
+                    <td colspan="100" style="border:1px solid white;padding: 15px 0 15px 0;background-color: #e6f5f7;">
+                        <p style="color:black;font-size:13px;font-weight:500;text-align:center;">Self</p>
+                    </td>
+                </tr>
+                <tr style="border:1px solid white;background-color: #efababa6;">
+                    <td colspan="50" style="padding: 18px 0 18px 0;">
+                        <p style="color:black;font-size:13px;font-weight:500;padding-left:10px;">G</p>
+                    </td>
+                    <td colspan="50" style="padding: 18px 0 18px 0;">
+                        <p style="color:black;font-size:13px;font-weight:500;padding-left:10px;">N</p>
+                    </td>
+                </tr>
+
+            </table>
+
+            <table style="border: 1px solid white; width: 85%;">
+                <tr style="border:1px solid white;background-color: #8299ee99;">
+
+                    <td colspan="50">
+                    </td>
+                    <td colspan="30" style="padding: 15px 0 15px 0;">
+                        <p style="color:black;font-size:13px;font-weight:500;">Manager Eval</p>
+                    </td>
+                    <td colspan="20" style="padding: 15px 0 15px 0;">
+                        <p style="color: black; font-size: 13px; font-weight: 500;">Comments</p>
+                    </td>
+                </tr>
+                <tr style="border: 1px solid white;background-color: #b4c2f512;">
+                    <td colspan="50" style="width:269px;padding: 15px 0 0px 0;">
+                        <p style="color:black;font-size:13px;font-weight:500;">
+                            When doing the job do they display characteristics that show they GET what's neccessary
+                            in order to do their job? Do they understand the role and what's truly required of them?
+                        </p>
+                    </td>
+                    <td colspan="30">
+                        <div>
+                            <input type="Radio" name="Q1" value="Yes" style="margin-left:5px;" />
+                            <span style="color:black;font-size:13px;font-weight:500;margin-left:5px;">Yes|</span>
+                            <input type="Radio" name="Q1" value="No" style="margin-left:5px;" />
+                            <span style="color:black;font-size:13px;font-weight:500;">No</span>
+                        </div>
+
+                    </td>
+                    <td colspan="20">
+                        <input type="text" name="comment" value="comment" style="width: 177px;height: 35px;margin-left: 22px;margin-right: -88px;border-radius: 5px;border: 1px solid #b1ada7" />
+                    </td>
+
+                </tr>
+
+            </table>
+        </div>
+
+        <div style="margin-top:2px;display: flex;justify-content: flex-end">
+            <table style="border: 1px solid white; width: 85%;">
+                <tr style="border:1px solid white;background-color: #8299ee99;">
+
+                    <td colspan="100">
+                        <p style="color:black;font-size:13px;font-weight:500;">Core Values</p>
+                    </td>
+
+                </tr>
+                <tr style="border: 1px solid white;background-color: #b4c2f512;">
+                    <td colspan="50" style="width:200px;padding: 15px 0 0px 0;">
+                        <p style="color:black;font-size:13px;font-weight:500;">
+                            Preserve
+                        </p>
+                    </td>
+                    <td colspan="50">
+                        <div>
+                            <input type="Radio" name="Q1" value="A" style="margin-left:5px;" />
+                            <span style="color:black;font-size:13px;font-weight:500;margin-left:5px;">Always |</span>
+                            <input type="Radio" name="Q1" value="S" style="margin-left:5px;" />
+                            <span style="color: black; font-size: 13px; font-weight: 500;">Sometimes |</span>
+                            <input type="Radio" name="Q1" value="N" style="margin-left:5px;" />
+                            <span style="color:black;font-size:13px;font-weight:500;">Never</span>
+                        </div>
+
+                    </td>
+
+
+                </tr>
+
+            </table>
+        </div>
+        <div style="margin-top:2px;display: flex;justify-content: flex-end">
+            <input type="text" name="test" value="test" style="width:85%;height:85px;border-radius: 25px;border: 1px solid grey;background-color: #77889938;"/>
+        </div>
+
+        </div>

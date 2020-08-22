@@ -3374,9 +3374,13 @@ getOrgChart.prototype._aY = function (d, b) {
                 url: origin_Url+'/EPeople/OpenJobPostingForm?CSVChartId=' + c, //'@Url.Action("SaveVCS", "AdminDashboard", new { area = "AdminSection" })',
                 success: function (Data) {
                     debugger
+                    
                     $("#divOpenJobPostForm").html("");
-                    $("#divOpenJobPostForm").html(Data)
+                   
+                        $("#divOpenJobPostForm").html(Data)
+                   
                     $("#myModalToAddJobPost").modal('show');
+
                 },
                 error: function (err) {
                 }

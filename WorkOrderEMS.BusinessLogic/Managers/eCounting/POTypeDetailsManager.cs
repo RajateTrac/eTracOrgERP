@@ -386,7 +386,7 @@ namespace WorkOrderEMS.BusinessLogic.Managers
 
                                 var objNotify = new NotificationDetailModel();
                                 var _ICommonMethod = new CommonMethodManager();
-                                objNotify.CreatedBy = objPOTypeDataModel.UserId;
+                                objNotify.CreatedBy = objPOTypeDataModel.UserId.ToString();
                                 objNotify.CreatedDate = DateTime.UtcNow;
                                 objNotify.AssignTo = getRuleData.UserId;
                                 objNotify.POID = PONumber;

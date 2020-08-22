@@ -10,7 +10,7 @@
     }
 </style>
 <link href="~/Content/NewAdminContent/CSS/FilesUICss.css" rel="stylesheet" />
-<div>
+
     <input type="hidden" value="@ViewBag.EmployeeID" id="EmployeeIdFile" />
     <div class="col-md-12">
         <div class="devider top">
@@ -45,7 +45,8 @@
                                         <i class="fa fa-print printFile" fileId="@item.FileId" fileName="@item.FileName" link="@item.AttachedFileLink" @*onclick="printFile(this)"*@ title="Print" style="color:darkslateblue" aria-hidden="true"></i>
                                     </div>
                                     <div class="lock">
-                                        <a href=""><i class="fa fa-eye viewFile" fileId="@item.FileId" fileName="@item.FileName" link="@item.AttachedFileLink" @*onclick="ViewFileDetails(this)"*@ style="color:brown" title="View" aria-hidden="true"></i></a>
+                                        @*<a href=""><i class="fa fa-eye viewFile" fileId="@item.FileId" fileName="@item.FileName" link="@item.AttachedFileLink" @*onclick="ViewFileDetails(this)" style="color:brown" title="View" aria-hidden="true"></i></a>*@
+                                        <a href=""><i class="fa fa-eye viewFile" emp-id="@item.EmployeeId" fileId="@item.FileId" fileName="@item.FileName" filenameView="@item.AttachedFileName" link="@item.AttachedFileLink" @*onclick="ViewFileDetails(this)"*@ style="color:brown" title="View" aria-hidden="true"></i></a>
                                     </div>
                                 </div>
                             </div>
@@ -100,7 +101,9 @@
                                         <a href="@item.AttachedFileLink" class="downloadfilesyellowred"><i class="fa fa-cloud-download" title="Download" style="color:orangered" aria-hidden="true"></i></a>
                                     </div>
                                     <div class="lock">
-                                        <i class="fa fa-eye viewFile" style="color:brown" fileId="@item.FileId" link="@item.AttachedFileLink" fileName="@item.FileName" title="View" aria-hidden="true"></i>
+                                        
+                                        @*<i class="fa fa-eye viewFile" style="color:brown" fileId="@item.FileId" link="@item.AttachedFileLink" fileName="@item.FileName" title="View" aria-hidden="true"></i>*@
+                                        <i class="fa fa-eye viewFile" style="color:brown" emp-id="@item.EmployeeId" fileId="@item.FileId" fileName="@item.FileName" filenameView="@item.AttachedFileName" link="@item.AttachedFileLink" title="View" aria-hidden="true" ></i>
                                     </div>
                                     <div class="faemail">
                                         <a href="https://outlook.office365.com/mail/inbox"><i class="fa fa-envelope" title="E-mail" style="color:yellowgreen;margin-top: -26px;" link="@item.AttachedFileLink" aria-hidden="true"></i></a>
@@ -157,7 +160,9 @@
                                         <a href="@item.AttachedFileLink" class="downloadfilesyellowred"><i class="fa fa-cloud-download " title="Download" style="color:orangered" aria-hidden="true"></i></a>
                                     </div>
                                     <div class="lock">
-                                        <i class="fa fa-eye viewFile" style="color:brown" fileId="@item.FileId" link="@item.AttachedFileLink" fileName="@item.FileName" title="View" aria-hidden="true"></i>
+                                        
+                                        @*<i class="fa fa-eye viewFile" style="color:brown" fileId="@item.FileId" link="@item.AttachedFileLink" fileName="@item.FileName" title="View" aria-hidden="true"></i>*@
+                                        <i class="fa fa-eye viewFile" style="color:brown" emp-id="@item.EmployeeId" fileId="@item.FileId" fileName="@item.FileName" filenameView="@item.AttachedFileName" link="@item.AttachedFileLink" title="View" aria-hidden="true" ></i>
                                     </div>
                                     <div class="faemail">
                                         <a href="https://outlook.office365.com/mail/inbox"><i class="fa fa-envelope" title="E-mail" style="color:yellowgreen;margin-top: -26px;" link="@item.AttachedFileLink" aria-hidden="true"></i></a>
@@ -286,17 +291,45 @@
             }
         })
 
+        //$(".viewFile").click(function (e) {
+        //    debugger
+        //    $_this = this;
+        //    $(".viewAndPrintFile").hide();
+        //    $("#ViewPDFInIframe").html("");
+        //    var fileLink = $($_this).attr('link');
+        //    var fileName = $($_this).attr('fileName');
+        //    var fileId = $($_this).attr("fileId");
+        //    $("#openFileToView_" + fileId).show();
+        //    e.stopPropagation();
+        //    e.preventDefault();          
+        //});
         $(".viewFile").click(function (e) {
             debugger
             $_this = this;
-            $(".viewAndPrintFile").hide();
-            $("#ViewPDFInIframe").html("");
-            var fileLink = $($_this).attr('link');
-            var fileName = $($_this).attr('fileName');
-            var fileId = $($_this).attr("fileId");
-            $("#openFileToView_" + fileId).show();
+            var emp_Id = $($_this).attr("emp-id");
+            var fileid = $($_this).attr("fileId");
+            var filename = $($_this).attr("filenameView");
+            var attacmentLink = $($_this).attr("link");
+            e.preventDefault(); 
             e.stopPropagation();
-            e.preventDefault();          
+            $.ajax({
+                type: "POST",
+                // data: { 'Id': item.id},
+                url: base_url + '/EPeople/GetFileForView?EmployeeId=' + emp_Id + "&FileId=" + fileid + "&FileName=" + filename + "&AttachmentLink=" + attacmentLink,
+                beforeSend: function () {
+                    new fn_showMaskloader('Please wait...');
+                },
+                success: function (result) {
+                    debugger
+                    $("#ContaierDisplayFiles").html(result);
+                    $("#myModalForDisplayPDFFIles").modal('show');
+                    e.preventDefault();
+                    e.stopPropagation();
+                },
+                complete: function () {
+                    fn_hideMaskloader();
+                }
+            });
         });
         $(".printFile").click(function (e) {
             $("#ViewPDFInIframe").html("");
@@ -328,20 +361,6 @@
    }
     }
     function myFunctionYellowFiles() {
-        @*debugger
-        var model = '@Model';
-        if (model != null && model.length > 0) {
-            for(var i=1;i<= model.length;i++){
-                var yellow = model[i].FileTypeName;
-                if (yellow != "Yellow") {
-                    $("#YellowFileOpenClose").show();
-                }
-                else {
-                    $("#YellowFileOpenClose").hide();
-                }
-            }
-        }*@
-        
         $(".viewAndPrintFile").hide();
         var x = document.getElementById("openYellowFile");
         if (x.style.display === "none") {

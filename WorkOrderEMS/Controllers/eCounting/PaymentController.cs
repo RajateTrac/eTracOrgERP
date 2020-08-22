@@ -404,7 +404,7 @@ namespace WorkOrderEMS.Controllers.eCounting
                                 name = "Accounts Payable (A/P)",
                                 Value = "33"
                             };
-                            QueryService<Department> querySvcDept = new QueryService<Department>(serviceContext);
+                            QueryService<Intuit.Ipp.Data.Department> querySvcDept = new QueryService<Intuit.Ipp.Data.Department>(serviceContext);
                             var LocationName = _IBillDataManager.GetLocationDataByLocId(Convert.ToInt64(ObjData.LocationId));
                             payment.DepartmentRef = new ReferenceType()
                             {

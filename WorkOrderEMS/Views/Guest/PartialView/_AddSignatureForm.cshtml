@@ -1,0 +1,56 @@
+﻿@model WorkOrderEMS.Models.NewAdminModel.SignatureFormModel
+
+
+<div class="modal fade" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static" id="myModelForSignature">
+    <div class="modal-dialog" style="width:882px;">
+        <div class="modal-content">
+            <div class="modal-header" style="display: inherit;color:white">
+                <h5>Add Signature</h5>
+                @*<button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>*@
+            </div>
+            <div class="modal-body" id="SignatureAdd" style="margin-left: 2px;margin-left: 2px;overflow-y: scroll;height: 300px;">
+                <div class="form-group row">
+
+                    <div class="col-sm-3" style="padding:7px;">
+                        <input type="checkbox" name="W4" value="W4Form" />&nbsp;&nbsp;&nbsp;&nbsp;W-4 Form
+                    </div>
+                    <div class="col-sm-3" style="padding:7px;">
+                        <input type="checkbox" name="I9" value="I9Form" />&nbsp;&nbsp;&nbsp;&nbsp;I-9 Form
+                    </div>
+                    <div class="col-sm-3" style="padding:7px;">
+                        <input type="checkbox" name="RateOfPay" value="RateOfPay" />&nbsp;&nbsp;&nbsp;&nbsp;Rate Of Pay
+                    </div>
+                    <div class="col-sm-3" style="padding:7px;">
+                        <input type="checkbox" name="PhotoReleaseForm" value="PhotoReleaseForm" />&nbsp;&nbsp;&nbsp;&nbsp;Photo Release Form
+                    </div>
+                    <div class="col-sm-3" style="padding:7px;">
+                        <input type="checkbox" name="EducationVerification" value="EducationVerification" />&nbsp;&nbsp;&nbsp;&nbsp;Education Verification Form
+                    </div>
+                    <div class="col-sm-3" style="padding:7px;">
+                        <input type="checkbox" name="ConfidentialityAgreementForm" value="ConfidentialityAgreementForm" />&nbsp;&nbsp;&nbsp;&nbsp;Confidentiality Agreement Form
+                    </div>
+                    <div class="col-sm-3" style="padding:7px;">
+                        <input type="checkbox" name="EducationVerification" value="EducationVerification" />&nbsp;&nbsp;&nbsp;&nbsp;Education Verification Form
+                    </div>
+                    <div class="col-sm-3" style="padding:7px;">
+                        <input type="checkbox" name="EmergencyContactForm" value="EmergencyContactForm" />&nbsp;&nbsp;&nbsp;&nbsp;Emergency Contact Form
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="background: white;">
+                <button type="button" id="SaveSignature" class="btn btn-success" style="border-radius:100px;width:23%;background: green;display:none;" onclick="GoToNextAfterSignature(this)">Save</button>
+                <button type="button" id="Close" class="btn btn-primary" style="border-radius:100px;width:23%;display:none;" onclick="GoToNextAfterSignature(this)">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        debugger
+        $("#myModelForSignature").modal("show");
+    });
+</script>
+

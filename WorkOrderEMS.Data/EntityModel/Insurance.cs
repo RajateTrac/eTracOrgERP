@@ -14,11 +14,6 @@ namespace WorkOrderEMS.Data.EntityModel
     
     public partial class Insurance
     {
-        public Insurance()
-        {
-            this.LogInsurances = new HashSet<LogInsurance>();
-        }
-    
         public long INS_Id { get; set; }
         public long INS_CMP_Id { get; set; }
         public string INS_IncuranceCarrier { get; set; }
@@ -26,8 +21,5 @@ namespace WorkOrderEMS.Data.EntityModel
         public System.DateTime INS_ExpirationDate { get; set; }
         public string INS_InsuranceDocument { get; set; }
         public string INS_IsActive { get; set; }
-    
-        public virtual Company Company { get; set; }
-        public virtual ICollection<LogInsurance> LogInsurances { get; set; }
     }
 }

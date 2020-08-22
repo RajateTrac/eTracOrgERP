@@ -23,11 +23,18 @@ namespace WorkOrderEMS.Data.DataRepository.NewAdminRepository
         {
             try
             {
-
-                DateTime dt = Convert.ToDateTime(objSetupMeeting.StartDate + " " + objSetupMeeting.StartTime);
-
-                objworkorderEMSEntities.spSetReviewMeetingDateTime("I", null, null, objSetupMeeting.ReceipientEmailId, objSetupMeeting.FinYear, objSetupMeeting.FinQrtr, objSetupMeeting.StartDate + " " + objSetupMeeting.StartTime);
-
+                if (objSetupMeeting.StartDate != null && objSetupMeeting.StartTime != null)
+                {
+                    DateTime dt = Convert.ToDateTime(objSetupMeeting.StartDate + " " + objSetupMeeting.StartTime);
+                }
+                if (objSetupMeeting.Action == "U")
+                {
+                    objworkorderEMSEntities.spSetReviewMeetingDateTime("U", objSetupMeeting.RMS_Id, null, objSetupMeeting.ReceipientEmailId, objSetupMeeting.FinYear, objSetupMeeting.FinQrtr, objSetupMeeting.StartDate != null ? objSetupMeeting.StartDate : null + " " + objSetupMeeting.StartTime != null ? objSetupMeeting.StartTime : null);
+                }
+                else
+                {
+                    objworkorderEMSEntities.spSetReviewMeetingDateTime("I", null, null, objSetupMeeting.ReceipientEmailId, objSetupMeeting.FinYear, objSetupMeeting.FinQrtr, objSetupMeeting.StartDate != null ? objSetupMeeting.StartDate : null + " " + objSetupMeeting.StartTime != null ? objSetupMeeting.StartTime : null);
+                }
 
             }
             catch (Exception)
@@ -198,8 +205,8 @@ namespace WorkOrderEMS.Data.DataRepository.NewAdminRepository
                     foreach (var item in mgrlist)
                     {
                         mgr1 = ManagerId;
-                        mgr2 = mgrlist.Count() == 1 ? item : string.Empty;
-                        mgr3 = mgrlist.Count() == 2 ? item : string.Empty;
+                        mgr2 = mgrlist.Count() == 1 ? item : null;
+                        mgr3 = mgrlist.Count() == 2 ? item : null;
                         var message = DarMessage.SelectedAsInterviewer(jobTitle);
                         var saveNotification = objworkorderEMSEntities.spSetNotification("I", null, message,
                                                         "ePeople", ModuleSubModule.Interviewer, _JobId.ToString(), ManagerId, item, true, false, Priority.Medium, null, false, "Y");
@@ -230,6 +237,63 @@ namespace WorkOrderEMS.Data.DataRepository.NewAdminRepository
             }
             return result;
         }
+        /// <summary>
+        /// Created By : Ashwajit Bansod
+        /// Created Date : 16-06-2020
+        /// Created For : To update interview panel for my opening grid for applicant 
+        /// </summary>
+        /// <param name="selectedManagers"></param>
+        /// <param name="JobId"></param>
+        /// <param name="JobTitle"></param>
+        /// <param name="ApplicantId"></param>
+        /// <returns></returns>
+        public bool UpdateInterviewPanelForMyOpening(string selectedManagers, string ManagerId, string JobId, string jobTitle, long ApplicantId)
+        {
+            bool result = false;
+            var IsExist = false;
+            var _JobId = Convert.ToInt64(JobId);
+            long IPT_Id = 0;
+            try
+            {
+                if (selectedManagers != "")
+                {
+                    var mgrlist = selectedManagers.Split(',').Distinct().ToList();
+                    foreach (var item in mgrlist)
+                    {
+                        if (ApplicantId > 0)
+                        {
+                            if (item != null)
+                            {
+                                var update = objworkorderEMSEntities.spSetUrgentInterviewer(ApplicantId, item);
+                                if (update > 0)
+                                {
+                                    var message = DarMessage.SelectedAsInterviewer(jobTitle);
+                                    var saveNotification = objworkorderEMSEntities.spSetNotification("I", null, message,
+                                                                    "ePeople", ModuleSubModule.Interviewer, _JobId.ToString(), ManagerId, item, true, false, Priority.Medium, null, false, "Y");
+                                    result = true;
+                                }
+                                else
+                                {
+                                    result = false;
+                                }
+                            }
+                        }
+                                         
+                    }
+                   
+                }
+                else
+                {
+                    result = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
         public bool UpdateEvent(int id, string NewEventStart, string NewEventEnd)
         {
             bool result = false;

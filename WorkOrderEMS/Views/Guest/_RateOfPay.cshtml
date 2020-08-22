@@ -1,5 +1,9 @@
 ﻿@model WorkOrderEMS.Models.RateOfPayModel
-<style media="screen">
+@{
+    string currentDate = DateTime.Now.Date.ToString();
+    long ApplicantId = Convert.ToInt64(Session["ApplicantId"]);
+}
+<style>
     .headerText {
         margin-bottom: 7%;
     }
@@ -53,7 +57,15 @@
         border-right: hidden;
         border-left: hidden;
         border-bottom: 1px solid #27232396;
-        width: 98%;
+        width: 62%;
+    }
+
+    .formBorder2 {
+        border-top: hidden;
+        border-right: hidden;
+        border-left: hidden;
+        border-bottom: 1px solid #27232396;
+        width: 62%;
     }
 
     .topMar {
@@ -88,15 +100,33 @@
         width: 12px;
         height: 12px;
     }
+
+    @@media only screen and (max-width: 768px) {
+        .PADlerigrop {
+            padding: 0 25px 0 25px;
+        }
+    }
 </style>
+<link href="~/Content/toastr.min.css" rel="stylesheet" />
 <div class="container PADlerigrop">
-    <div class="text-center">
+    <div class="text-center" style="margin-top:10%;">
         <img id="imgWidth" src="~/Images/FormImages/image-form.jpg" alt="Elite Parking">
     </div>
     <div class="text-center headerText">
         <h3><u>Rate of Pay</u></h3>
     </div>
     <form id="RateOfPay">
+        <input type="hidden" value="@Model.FormStatusw4" name="FormStatusw4" id="FormStatusw4">
+        <input type="hidden" value="@Model.FormStatusI9" name="FormStatusI9" id="FormStatusI9">
+        <input type="hidden" value="@Model.FormStatusdd" name="FormStatusdd" id="FormStatusdd">
+        <input type="hidden" value="@Model.FormStatusEvf" name="FormStatusEvf" id="FormStatusEvf">
+        <input type="hidden" value="@Model.FormStatussif" name="FormStatussif" id="FormStatussif">
+        <input type="hidden" value="@Model.FormStatusbcf" name="FormStatusbcf" id="FormStatusbcf">
+        <input type="hidden" value="@Model.FormStatusrop" name="FormStatusrop" id="FormStatusrop">
+        <input type="hidden" value="@Model.FormStatusprfecf" name="FormStatusprfecf" id="FormStatusprfecf">
+        <input type="hidden" value="@Model.FormStatusprfcaf" name="FormStatusprfcaf" id="FormStatusprfcaf">
+        <input type="hidden" value="@Model.FormStatusprf" name="FormStatusprf" id="FormStatusprf">
+        <input type="hidden" value="@Model.FormStatusff" name="FormStatusff" id="FormStatusff">
         @Html.HiddenFor(x => x.EmployeeSignatureName, new { @id = "getSignName" })
         <div>
             <label for="Employee Name">Employee Name:</label>
@@ -133,62 +163,94 @@
         <div class="topMar">
             <div class="row">
                 <div class="col">
-                    @Html.RadioButtonFor(x => x.JobStatus, "Male", new { @checked = "checked", @class = "radioButtonCss" })
-                    @*<input type="radio" name="exempt" value="">*@
-                    <label for="Exempt">Exempt(Salary)</label>
-                </div>
-                <div class="col">
-                    @Html.RadioButtonFor(x => x.JobStatus, "Male", new { @class = "radioButtonCss" })
-                    <label for="ft">FT (32+ Hrs)</label>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    @Html.RadioButtonFor(x => x.JobStatus, "Male", new { @class = "radioButtonCss" })
-                    <label for="NExempt">Non-Exempt(Hourly)</label>
-                </div>
-                <div class="col">
-                    @Html.RadioButtonFor(x => x.JobStatus, "Male", new { @class = "radioButtonCss" })
-                    <label for="ft">PT (<32 Hrs)</label>
+                    @if (Model.JobStatus == "Y")
+                    {
+                        <label for="Exempt">Status : Exempt(Salary)</label>
+                    }
+                    else
+                    {
+                        <label for="Exempt">Status : Non Exempt(Salary)</label>
+                    }
                 </div>
             </div>
         </div>
-        <div class="row topMar1">
+        @*<div class="topMar">
+                <div class="row">
+                    <div class="col">
+                        @Html.RadioButtonFor(x => x.JobStatus, "Male", new { @checked = "checked", @class = "radioButtonCss" })
+
+                        <label for="Exempt">Exempt(Salary)</label>
+                    </div>
+                    <div class="col">
+                        @Html.RadioButtonFor(x => x.JobStatus, "Male", new { @class = "radioButtonCss" })
+                        <label for="ft">FT (32+ Hrs)</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        @Html.RadioButtonFor(x => x.JobStatus, "Male", new { @class = "radioButtonCss" })
+                        <label for="NExempt">Non-Exempt(Hourly)</label>
+                    </div>
+                    <div class="col">
+                        @Html.RadioButtonFor(x => x.JobStatus, "Male", new { @class = "radioButtonCss" })
+                        <label for="ft">PT (<32 Hrs)</label>
+                    </div>
+                </div>
+            </div>*@
+    <div class="row topMar1">
+        @Html.HiddenFor(model => model.SignatureBase, new { @id = "EmployeeRateOfPaySignature" })
+        @if (Model.FormStatusrop == "true")
+        {
             <div class="col">
-                <img id="openItForSignature" style="display:none;width:163px;height:47px;" />
-                <span id="ShowHideSignatureSpan">
+                <img id="OpenRateOfPaySign" style="width:163px;height:47px;" />
+
+                <br />
+
+                <label for="esSignature">Employee Signature</label>
+            </div>
+        }
+        else
+        {
+            <div class="col">
+                <img id="OpenRateOfPaySign" style="display:none;width:163px;height:47px;" />
+                <span id="ShowHideSignatureSpanEmp" class="hideTextBoxAndButton">
                     @Html.TextBoxFor(model => model.Emp_Signature, new { @class = "formBorder1" })
                 </span>
                 <span>
-                    <span class="btn btn-success" style="border-radius:100px;width:35%;" id="AddSignature">
+                    <span class="btn btn-success hideTextBoxAndButton" style="border-radius: 100px;width: 37%;background-image: linear-gradient(to left, #3cffdb, #425fe0);" onclick="OpenSignature('RateOfPay','EmployeeRateOfPaySignature','OpenRateOfPaySign','hideTextBoxAndButton','myModalForSignatureRateOfPay','colors_sketchRateOfPay')" id="AddSignatureEmployee">
                         Add Signature
                     </span>
                 </span>
                 <br />
-                <label for="employeesignature">Employee Signature</label>
+
+                <label for="esSignature">Employee Signature</label>
             </div>
-            <div class="col">
-                @Html.TextBoxFor(model => model.Emp_Date, new { @class = "formBorder1" })
-                <label for="Date">Date</label>
-            </div>
+        }
+
+        <div class="col">
+            <input type="text" class="formBorder1" style="margin-left:95px;" value="@currentDate" name="Emp_Date" />
+            @*@Html.TextBoxFor(model => model.Emp_Date, new { @class = "formBorder1", @style = "margin-left:95px;", value = "@currentDate" })*@
+            <label for="Date">Date</label>
         </div>
+    </div>
         <div class="row topMar1">
+            
             <div class="col">
                 <img id="openItForSignatureManager" style="display:none;width:163px;height:47px;" />
                 <span id="ShowHideSignatureSpanMan">
-                    @Html.TextBoxFor(model => model.Man_Signature, new { @class = "formBorder1" })
+                    @Html.TextBoxFor(model => model.Man_Signature, new { @class = "formBorder2" })
                 </span>
                 <span>
-                    <span class="btn btn-success" style="border-radius:100px;width:35%;" id="AddSignatureManager">
+                    <span class="btn btn-success" style="border-radius: 100px;width: 37%;background-image: linear-gradient(to left, #3cffdb, #425fe0);" id="AddSignatureManager">
                         Add Signature
                     </span>
                 </span>
                 <br />
-                @Html.HiddenFor(model => model.SignatureBase, new { @id = "SignatureImageBase" })
+                @Html.HiddenFor(model => model.Man_Signature, new { @id = "SignatureImageBase" })
                 <label for="msSignature">Manager/Superviser Signature</label>
             </div>
             <div class="col">
-                @Html.TextBoxFor(model => model.Man_Date, new { @class = "formBorder1" })
+                @Html.TextBoxFor(model => model.Man_Date, new { @class = "formBorder1", @style = "margin-left:95px;", value = "@currentDate" })
                 <label for="Date">Date</label>
             </div>
         </div>
@@ -202,19 +264,78 @@
                 <label for="directorOfculture">Director of Culture</label>
             </div>
             <div class="col">
-                @Html.TextBoxFor(model => model.ApprovedDate, new { @class = "formBorder1" })
+                @*<input type="text" class = "formBorder1" style = "margin-left:95px;" >*@
+                @Html.TextBoxFor(model => model.ApprovedDate, new { @class = "formBorder1", @style = "margin-left:95px;", value = "@currentDate" })
                 <label for="Date">Date</label>
             </div>
         </div>
         <div class="text-center botMar">
             <p class="textSize">*Do not present to Employee for signature without approval by Director of Culture</p>
         </div>
+        <br><br><br><br>
     </form>
 </div>
-<span> @Html.CheckBoxFor(x => x.IsSave, new { @style = "height: 18px;width: 31px;" })    i hereby declare that the above information is true to the best of my knowledge <span style="cursor:pointer;" onclick="SubmitForm(this, RateOfPay)" title="Go to next I-9"><a><i class="fa fa-long-arrow-right" style="font-size: 40px;color: steelblue;margin-left: 967px;"></i></a></span> </span>
-<script src="~/Scripts/Guest/ApplicantFormSave.js"></script>
-<script src="~/Scripts/Guest/SketchSignature.js"></script>
+@*<span>
+        @Html.CheckBoxFor(x => x.IsSave, new { @style = "height: 18px;width: 31px;" })
+        i hereby declare that the above information is true to the best of my knowledge
+        <span style="cursor:pointer;" onclick="SubmitForm(this, RateOfPay)" title="Go to next I-9">
+        <a><i class="fa fa-long-arrow-right" style="font-size: 40px;color: steelblue;margin-left: 967px;"></i></a>
+            </span>
+    </span>*@
+<div class="row" style="height: 50px;background-color: #292b48;bottom: 0;overflow: hidden;position: fixed;width: 100%;margin-left: 0;">
+    <div class="col-md-4 text-right">
 
+    </div>
+    <div class="col-md-4 text-center">
+        <span>
+            <i class="fa fa-check-square" aria-hidden="true" title="Go To CheckList" onclick="GuestCheckList(this,RateOfPay)" style="font-size: 20px;margin-top: 15px;color: #6cc387f2;padding-right:30px;"></i>
+        </span>
+
+        <span>
+            <a><i class="fa fa-question-circle" aria-hidden="true" title="Help" style="font-size: 20px;color: #f73c3c;margin-top: 6px;padding-right:30px;" onclick="SendFormIssueNotification('Rate of Pay', '@ApplicantId');"></i></a>
+        </span>
+
+        <span>
+            <a><i class="fa fa-floppy-o" aria-hidden="true" onclick="SaveBeforeNext(this,RateOfPay)" title="Save" style="font-size: 20px;color: #6cc387f2;margin-top: 6px;padding-right:30px;"></i></a>
+        </span>
+
+    </div>
+    <div class="col-md-4 text-right">
+        <span style="cursor:pointer;" onclick="SubmitForm(this, RateOfPay)" title="Go to next I-9">
+            <a><i class="fa fa-long-arrow-right" title="Next" style="font-size: 45px;color: #6cc387f2;margin-top: 2px;"></i></a>
+        </span>
+    </div>
+</div>
+<div class="modal fade preview" id="myModalForSignatureRateOfPay" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" style="width:40%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Add Signature</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">X</span></button>
+            </div>
+            <div class="modal-body" style="margin-left:0px;">
+                <div id="divDetailPreview" class="">
+                    <div>
+                        <div class="" id="DivSignatureI9">
+                            <div class="form-group">
+                                <div class="col-lg-7 col-md-8 col-sm-8 col-xs-12">
+                                    <div class="tools">
+                                        <a href="#colors_sketch" data-tool="marker">Marker</a> <a href="#colors_sketch" data-tool="eraser">Eraser</a>
+                                    </div>
+                                    <br />
+                                    <canvas id="colors_sketchRateOfPay" width="450" height="200"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="background: white;">
+                <input type="button" class="btn btn-primary" id="btnSaveSign" style="border-radius: 100px; width: 25%; background-image: linear-gradient(to left, #3cffdb, #425fe0);" data-dismiss="modal" value="Save as Image" />
+            </div>
+        </div>
+    </div>
+</div>
 <div class="modal fade preview" id="myModalForSignatureManager" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog" style="width:40%">
         <div class="modal-content">
@@ -247,3 +368,36 @@
         </div>
     </div>
 </div>
+<script src="~/Scripts/toastr.min.js"></script>
+<script src="~/Scripts/Guest/ApplicantFormSave.js"></script>
+<script src="~/Scripts/Guest/SketchSignature.js"></script>
+<script>
+    $(".DisabledAll").attr({ style: "cursor:not-allowed;" })//css("cursor","not-allowed")
+    $(".DisabledAll").prop("readonly", true);
+    $(function () {
+
+         var formrop = $("#FormStatusrop").val();
+        if (formrop == "true") {
+            debugger
+            var ropSign = $("#EmployeeRateOfPaySignature").val();
+            //var neww4Sign = w4Sign.replace("-", "/");
+            $("#OpenRateOfPaySign").attr("src", ropSign);
+        }
+        else {
+            $('#colors_sketchRateOfPay').sketch();
+        $(".tools a").eq(0).attr("style", "color:#000");
+        $(".tools a").click(function () {
+            $(".tools a").removeAttr("style");
+            $(this).attr("style", "color:#000");
+        });
+        $("#btnSaveSign").bind("click", function () {
+            var base64 = $('#colors_sketchRateOfPay')[0].toDataURL();
+            $("#OpenRateOfPaySign").attr("src", base64);
+            $("#OpenRateOfPaySign").show();
+            $(".hideTextBoxAndButton").hide();
+            $("#EmployeeRateOfPaySignature").val(base64);
+        });
+        }
+        
+    });
+</script>

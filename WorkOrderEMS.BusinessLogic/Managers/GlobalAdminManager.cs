@@ -23,6 +23,7 @@ using WorkOrderEMS.Models.SuperAdminModels;
 using WorkOrderEMS.Models.UserModels;
 using System.Reflection;
 using Microsoft.Office.Interop;
+using WorkOrderEMS.Models.NewAdminModel.OnBoarding;
 
 namespace WorkOrderEMS.BusinessLogic.Managers
 {
@@ -52,11 +53,15 @@ namespace WorkOrderEMS.BusinessLogic.Managers
         EmailLogRepository objEmailLogRepository = null;
         PerformanceRepository ObjPerformanceRepository = null;
         NewAdminDataRepository ObjnewAdminRepository;
+        workorderEMSEntities _db = new workorderEMSEntities();
         private string ProfileImagePath = ConfigurationManager.AppSettings["ProfilePicPath"];
         private string HostingPrefix = Convert.ToString(System.Configuration.ConfigurationManager.AppSettings["hostingPrefix"], CultureInfo.InvariantCulture);
         private readonly string ConstantImages = ConfigurationManager.AppSettings["ConstantImages"] + "Images/constant/no-profile-pic.jpg";
         private readonly string ConstantImagesForClient = ConfigurationManager.AppSettings["ConstantImages"] + "no-profile-pic.jpg";
         private readonly string workorderimage = ConfigurationManager.AppSettings["WorkRequestImage"];
+        private readonly string ApplicantProfilePath = ConfigurationManager.AppSettings["ApplicantSignature"];
+        private readonly string PDFFileRedGreenBlue = ConfigurationManager.AppSettings["FilesUploadRedYellowGreen"];
+
 
 
         //workorderEMSEntities _workorderEMSEntities = new workorderEMSEntities();
@@ -3713,6 +3718,12 @@ namespace WorkOrderEMS.BusinessLogic.Managers
             if (status == false)
             {
                 //2 Operating , 3 Subsidery
+                //lstCompanyHolder = _workorderems.Companies.Where(x => x.CMP_COT_Id == 2 || x.CMP_COT_Id == 3 && x.CMP_IsActive == "Y").Select(x => new ContractDropdownDetailsModel()
+                //{
+                //    CompanyId = x.CMP_Id,
+                //    CompanyName = x.CMP_NameLegal,
+                //    ContractTypeId = x.CMP_COT_Id
+                //}).ToList();
                 lstCompanyHolder = _workorderems.Companies.Where(x => x.CMP_COT_Id == 2 || x.CMP_COT_Id == 3 && x.CMP_IsActive == "Y").Select(x => new ContractDropdownDetailsModel()
                 {
                     CompanyId = x.CMP_Id,
@@ -3722,6 +3733,12 @@ namespace WorkOrderEMS.BusinessLogic.Managers
             }
             else
             {
+                //lstCompanyHolder = _workorderems.Companies.Where(x => x.CMP_COT_Id == 2 && x.CMP_IsActive == "Y").Select(x => new ContractDropdownDetailsModel()
+                //{
+                //    CompanyId = x.CMP_Id,
+                //    CompanyName = x.CMP_NameLegal,
+                //    ContractTypeId = x.CMP_COT_Id
+                //}).ToList();
                 lstCompanyHolder = _workorderems.Companies.Where(x => x.CMP_COT_Id == 2 && x.CMP_IsActive == "Y").Select(x => new ContractDropdownDetailsModel()
                 {
                     CompanyId = x.CMP_Id,
@@ -3841,7 +3858,7 @@ namespace WorkOrderEMS.BusinessLogic.Managers
                                       FirstName = x.ApplicantName,
                                       //LastName = x.API_LastName,
                                       PhoneNumber = x.ACI_PhoneNo,
-                                      //MiddleName = x.API_MiddleName,
+                                      Score = x.APS_Score == null ? 0 : x.APS_Score,
                                       Status = x.APT_Status,
                                       Image = x.ALA_Photo,
                                       JobTitle = x.JBT_JobTitle,
@@ -3864,7 +3881,7 @@ namespace WorkOrderEMS.BusinessLogic.Managers
                 using (workorderEMSEntities Context = new workorderEMSEntities())
                 {
                     var empid = Context.UserRegistrations.Where(x => x.UserId == userId)?.FirstOrDefault().EmployeeID;
-                    var myOpenings = (from x in Context.spGetApplicantInfoForMyInterview(empid)
+                    var myOpenings = (from x in Context.spGetApplicantInfoForMyInterview(empid)//Where(x => x.APT_Status == "InterviewSchedule")
                                       select new MyOpeningModel
                                       {
                                           Email = x.ALA_eMailId,
@@ -3887,13 +3904,50 @@ namespace WorkOrderEMS.BusinessLogic.Managers
                 return null;
             }
         }
+        /// <summary>
+        /// Created by  :Ashwajit Bansod
+        /// Created Date : 24-07-2020
+        /// Created For : To get onboarding list
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public List<MyOpeningModel> GetOnbaordingList(long userId)
+        {
+            try
+            {
+                using (workorderEMSEntities Context = new workorderEMSEntities())
+                {
+                   // var empid = Context.UserRegistrations.Where(x => x.UserId == userId)?.FirstOrDefault().EmployeeID;
+                    var myOpenings = (from x in Context.spGetOnBoardingList()//Where(x => x.APT_Status == "InterviewSchedule")
+                                      select new MyOpeningModel
+                                      {
+                                          Email = x.ALA_eMailId,
+                                          FirstName = x.ApplicantName,
+                                          PhoneNumber = x.ACI_PhoneNo,
+                                          Status = x.APT_Status,
+                                          Image = x.ALA_Photo,
+                                          JobTitle = x.JBT_JobTitle,
+                                          ApplicantId = x.APT_ApplicantId,
+                                          Photo = (x.ALA_Photo == null) ? HostingPrefix + ProfileImagePath.Replace("~", "") + "no-profile-pic.jpg" : HostingPrefix + ApplicantProfilePath.Replace("~/", "") + x.ALA_Photo,
+                                          DownloadFile = x.FLU_FileName,
+                                          DownloadFilePath = (x.FLU_FileName == null) ? null : HostingPrefix + PDFFileRedGreenBlue.Replace("~/", "") + x.FLU_FileName
+                                      }  
+                                    ).ToList();
+                    return myOpenings;
+                }
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
         public List<WorkOrderEMS.Models.NewAdminModel.JobPosting> GetJobPostong(long userId)
         {
             var lst = new List<WorkOrderEMS.Models.NewAdminModel.JobPosting>();
             using (workorderEMSEntities context = new workorderEMSEntities())
             {
                 var hiringManagerId = context.UserRegistrations.Where(x => x.UserId == userId)?.FirstOrDefault().EmployeeID;
-                return context.spGetJobPosting(hiringManagerId).Select(x => new WorkOrderEMS.Models.NewAdminModel.JobPosting
+                return context.spGetJobPosting(hiringManagerId).Where(x => x.Status != "C").Select(x => new WorkOrderEMS.Models.NewAdminModel.JobPosting
                 {
                     Applicant = x.ApplicantCount,
                     DatePosted = x.JobPostingDate,
@@ -3901,12 +3955,14 @@ namespace WorkOrderEMS.BusinessLogic.Managers
                     Employee = x.PositionCount,
                     JobTitle = x.JobTitle,
                     Status = x.Status,
+                    PositionCount = x.PositionCount,
                     JobPostingId = x.JPS_JobPostingId,
+                    IsExempt = x.VST_IsExempt
                 }).ToList();
             }
             //return lst;
         }
-        public List<spGetApplicantInfo_Result2> GetApplicantInfo(long userId)
+        public List<spGetApplicantInfo_Result> GetApplicantInfo(long userId)
         {
             ObjnewAdminRepository = new NewAdminDataRepository();
             try
@@ -4056,8 +4112,8 @@ namespace WorkOrderEMS.BusinessLogic.Managers
             {
                 using (workorderEMSEntities context = new workorderEMSEntities())
                 {
-                    ObjectParameter IsStart = new ObjectParameter("IsStart", "");
-                    var canInterviewStart = context.spGetInterviewCanStart(applicantId, IsStart);
+                    //ObjectParameter IsStart = new ObjectParameter("IsStart", "");
+                    var canInterviewStart = context.spGetInterviewCanStart(applicantId).FirstOrDefault();
                     var hiringManagerId = context.UserRegistrations.Where(x => x.UserId == userId)?.FirstOrDefault().EmployeeID;
                     var interviewers = context.spGetInterviewerList(applicantId).Select(x => new Interviewers
                     {
@@ -4072,7 +4128,7 @@ namespace WorkOrderEMS.BusinessLogic.Managers
                     }).ToList();
                     interviewersList.Interviewers = interviewers;
                     interviewersList.currentEmployeeId = hiringManagerId;
-                    interviewersList.CanInterviewStart = Convert.ToString(IsStart?.Value) == "N" ? false : true;
+                    interviewersList.CanInterviewStart = canInterviewStart == "N" ? false : true;
                     interviewersList.InterviewStartDateTime = DateTime.Now.AddMinutes(10);
                     return interviewersList;
                 }
@@ -4189,8 +4245,8 @@ namespace WorkOrderEMS.BusinessLogic.Managers
                             isSaved = false;
                     }
                     ObjectParameter isStart = new ObjectParameter("IsNext", "");
-                    var getNExtRes = context.spGetNextQuestion(MasterId, model.ApplicantId, isStart);
-                    if (isStart.Value.ToString().Equals("y", StringComparison.OrdinalIgnoreCase))
+                    var getNExtRes = context.spGetNextQuestion(MasterId, model.ApplicantId).FirstOrDefault();
+                    if (getNExtRes.ToString().Equals("y", StringComparison.OrdinalIgnoreCase))
                     {isSaved = true;}else{isSaved = false;}
                 }
             }
@@ -4226,55 +4282,95 @@ namespace WorkOrderEMS.BusinessLogic.Managers
         /// </summary>
         /// <param name="Applicant"></param>
         /// <returns></returns>
-        public AnswerModel GetInterviewAnswerByApplicantId(int Applicant)
+        public AnswerModel GetInterviewAnswerByApplicantId(int Applicant, string EmployeeId)
         {
             var common_b = new Common_B();
+            var childeQuestioncontext = new AnswerModel();
             try
-            {
-                var childeQuestioncontext = new AnswerModel();
+            {                
                 var Child = new ListAnswerModel();
                 var Child1 = new List<ListAnswerModel>();
+                var childQue = new ChildQuestionAnswerModel();
                 using (workorderEMSEntities context = new workorderEMSEntities())
                 {
+                    //var getApplicantDetails = context.ApplicantLoginAccesses.Join(context.Applicants, q => q.ALA_UserId, u => u.APT_ALA_UserId, (q, u) => new { q, u }).
+                    //       Where(x => x.u.APT_ApplicantId == Applicant).FirstOrDefault();
+                    //childeQuestioncontext.ApplicantId = Applicant;
+                    //childeQuestioncontext.ApplicantImage = getApplicantDetails.q.ALA_Photo == null ? HostingPrefix + ProfileImagePath.Replace("~", "") + "no-profile-pic.jpg" : HostingPrefix + ProfileImagePath.Replace("~", "") + getApplicantDetails.q.ALA_Photo;
+                    //childeQuestioncontext.ApplicantName = getApplicantDetails.q.ALA_FirstName + " " + getApplicantDetails.q.ALA_LastName;
+
+                    //var data = context.spGetInterviewSummary(Applicant, EmployeeId).ToList();
+                    //var MasterQue  = context.spGetInterviewSummary(Applicant, EmployeeId).
+                    //    Select(x => new ListAnswerModel()
+                    //    {
+                    //        //IQM_Comment = x.
+                    //        IQM_Id = x.IQM_Id,
+                    //        IQM_Question = x.IQM_Question,
+                    //    }).Distinct().ToList();
+
+                    //foreach (var item in MasterQue)
+                    //{
+                    //    var getChildAnswer = data.Where(x => x.IQM_Id == item.IQM_Id).
+                    //   Select(x => new ChildQuestionAnswerModel()
+                    //   {
+                    //       IQM_Answer = x.INA_Answer,
+                    //        //IQM_Comment= 
+                    //        IQM_Id = x.IQM_Id,
+                    //       IQM_Question = x.IQM_Question
+                    //   }).ToList();
+                    //    Child.IQM_Question = item.IQM_Question;
+                    //    Child.IQM_Id = item.IQM_Id;
+                    //    Child.ListAnswerMainModel.AddRange(getChildAnswer);
+                    //}
+                    //Child1.Add(Child);
+                    //childeQuestioncontext.ListAnswerModel = Child1;
                     //var getApplicantDetails = context.ApplicantInfoes.Where(x => x.API_ApplicantId == Applicant).FirstOrDefault();
                     var getApplicantDetails = context.ApplicantLoginAccesses.Join(context.Applicants, q => q.ALA_UserId, u => u.APT_ALA_UserId, (q, u) => new { q, u }).
                         Where(x => x.u.APT_ApplicantId == Applicant).FirstOrDefault();
                     if (getApplicantDetails != null)
                     {
-                        childeQuestioncontext.ApplicantImage = getApplicantDetails.q.ALA_Photo;
+                        childeQuestioncontext.ApplicantImage = getApplicantDetails.q.ALA_Photo == null ? HostingPrefix + ProfileImagePath.Replace("~", "") + "no-profile-pic.jpg" : HostingPrefix + ProfileImagePath.Replace("~", "") + getApplicantDetails.q.ALA_Photo;
+                        //childeQuestioncontext.ApplicantImage = getApplicantDetails.q.ALA_Photo;
                         childeQuestioncontext.ApplicantName = getApplicantDetails.q.ALA_FirstName + " " + getApplicantDetails.q.ALA_LastName;
                         //will add Exempt non exempt dynamically
-                        var masterQuestion = context.InterviewQuestionMasters.Where(x => x.IQM_Exempt == "Y").ToList();
+                        var masterQuestion = context.spGetInterviewSummary(Applicant, EmployeeId).GroupBy(x => x.IQM_Id).ToList();
 
                         foreach (var item in masterQuestion)
                         {
                             Child = new ListAnswerModel();
-                            var data = context.InterviewQuestionChilds.Join(context.InterviewAnswers, q => q.IQC_Id, u => u.INA_IQC_Id, (q, u) => new { q, u }).
-                            Where(x => x.q.IQC_IQM_Id == item.IQM_Id).Select(a => new ChildQuestionAnswerModel()
+                            var data = context.spGetInterviewSummary(Applicant, EmployeeId).
+                            Where(x => x.IQM_Id == item.Key).Select(a => new ChildQuestionAnswerModel()
                             {
-                                IQM_Answer = a.u.INA_Answer == "Y" ? "Yes" : "No",
-                                IQM_Comment = a.u.INA_Comments,
-                                IQM_Question = a.q.IQC_Question,
-                                IQM_Id = a.u.INA_IQC_Id
+                                IQM_Answer = a.INA_Answer == "Y" ? "Yes" : "No",
+                                IQM_Comment = a.INA_Comments,
+                                IQM_Question =a.IQC_Question,
+                                IQM_Id = a.IQC_Id
                             }).ToList();
-                            Child.IQM_Id = item.IQM_Id;
+                            Child.IQM_Id = item.Key;
 
-                            Child.IQM_Question = item.IQM_Question;
+                            Child.IQM_Question = data[0].IQM_Question;
                             Child.ListAnswerMainModel = data;
                             Child1.Add(Child);
                         }
                         childeQuestioncontext.ListAnswerModel = Child1;
                         childeQuestioncontext.ApplicantId = Applicant;
                         //common_b.SaveApplicantStatus(Applicant,ApplicantStatus)
+                        //var getScrore = context.spGetInterviewScore(Applicant).FirstOrDefault();
+                        //if(getScrore != null)
+                        //{
+                        //    childeQuestioncontext.ApplicantScore = getScrore.FinalScore;
+                        //    childeQuestioncontext.NoOfAns = getScrore.NoOfAns;
+                        //}
                     }
 
                     return childeQuestioncontext;
                 }
-            }
+                }
             catch (Exception ex)
             {
                 throw ex;
             }
+            return childeQuestioncontext;
         }
         public bool IsInterviewerOnline(long ApplicantId, long UserId, string IsAvailable, string Comment)
         {
@@ -4302,8 +4398,8 @@ namespace WorkOrderEMS.BusinessLogic.Managers
                 using (workorderEMSEntities context = new workorderEMSEntities())
                 {
                     var res = context.spGetInterviewScore(ApplicantId).FirstOrDefault();
-                    if (res.HasValue)
-                        return res.Value;
+                    if (res.FinalScore > 0)
+                        return Convert.ToInt32(res.FinalScore);
                     else
                         return 0;
                 }
@@ -4322,8 +4418,8 @@ namespace WorkOrderEMS.BusinessLogic.Managers
                 using (workorderEMSEntities context = new workorderEMSEntities())
                 {
                     ObjectParameter isStart = new ObjectParameter("IsNext", "");
-                    var res = context.spGetNextQuestion(QusId, ApplicantId, isStart);
-                    if (isStart.Value.ToString().Equals("y", StringComparison.OrdinalIgnoreCase))
+                    var res = context.spGetNextQuestion(QusId, ApplicantId).FirstOrDefault();
+                    if (res.ToString().Equals("y", StringComparison.OrdinalIgnoreCase))
                         return true;
                     else
                         return false;
@@ -4351,6 +4447,34 @@ namespace WorkOrderEMS.BusinessLogic.Managers
                 isAccept = false;
             }
             return isAccept;
+        }
+
+        /// <summary>
+        /// Created By : Ashwajit Bansod
+        /// Created Date : 11-06-2020
+        /// Created For : TO make interview absent
+        /// </summary>
+        /// <param name="InterviewrID"></param>
+        /// <param name="ApplicantId"></param>
+        /// <param name="Comment"></param>
+        /// <returns></returns>
+        public bool MakeAbsent(string InterviewrID, long ApplicantId, string Comment)
+        {
+            try
+            {
+                using (workorderEMSEntities context = new workorderEMSEntities())
+                {
+                    var res = context.spSetInterviewerIsOnline(ApplicantId, InterviewrID, "A", Comment);
+                    if (res > 0)
+                        return true;
+                    else
+                        return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         /// <summary>GetListOf306090ForJSGrid
@@ -4398,22 +4522,24 @@ namespace WorkOrderEMS.BusinessLogic.Managers
         {
             var EmployeeId = string.Empty;
             var ManagerId = string.Empty;
+            var _db = new workorderEMSEntities();
             ObjUserRepository = new UserRepository();
             try
             {
                 if(action == "S")
                 {
-                    //EmployeeId = data.Count() > 0 ? data[0].EmployeeId : null;
+                    EmployeeId = data.Count() > 0 ? data[0].EmployeeId : null;
+                    var getEmpDetails = _db.spGetEmployeePersonalInfo(EmployeeId).FirstOrDefault();
                     ManagerId = data.Count() > 0 ? data[0].EEL_EMP_EmployeeIdManager :null;
                     var _notification = new NotificationManager();
                     var detailsNotification = new NotificationDetailModel();
                     detailsNotification.Message = DarMessage.EvaluationStartManager(data.Count() > 0 ? data[0].EmployeeName : null, data.Count() > 0 ? data[0].AssessmentType : null);
                     detailsNotification.Module = ModuleSubModule.Performance;
                     detailsNotification.SubModule = ModuleSubModule.EvaluationStart;
-                    detailsNotification.SubModuleId1 = ManagerId;
+                    detailsNotification.SubModuleId1 = getEmpDetails.EMP_ManagerId;
                     detailsNotification.Priority = Priority.Medium;
                     detailsNotification.CreatedByUser = UserName;
-                    detailsNotification.AssignToUser = ManagerId;
+                    detailsNotification.AssignToUser = getEmpDetails.EMP_ManagerId;
                     detailsNotification.AssignToIsWorkable = true;
                     detailsNotification.CreatedByIsWorkable = false;
                     var saveEMP = _notification.SaveNotification(detailsNotification);
@@ -4429,28 +4555,48 @@ namespace WorkOrderEMS.BusinessLogic.Managers
         {
             ObjUserRepository = new UserRepository();
             var _db = new workorderEMSEntities();
+            var dept_Man = new DepartmentManager();
             var EmployeeId = string.Empty;
             var ManagerId = string.Empty;
             try
             {
                 if (action == "S")
                 {
-                    EmployeeId = data.Count() > 0 ? data[0].EmployeeId : null;
+                    var getEMPList = dept_Man.GetDepartmentEmployeeList(WorkOrderEMS.Helper.Department.HR);
+                    EmployeeId = data.Count() > 0 ? data[0].SAR_EMP_EmployeeId : null;
+                    var getEmpDetails = _db.spGetEmployeePersonalInfo(EmployeeId).FirstOrDefault();
                     ManagerId = data.Count() > 0 ? data[0].EEL_EMP_EmployeeIdManager : null;
                     var getEmployeeDetails = _db.spGetOrgnizationCommonview(EmployeeId).FirstOrDefault();
                     var _notification = new NotificationManager();
                     var detailsNotification = new NotificationDetailModel();
-                    detailsNotification.Message = DarMessage.EvaluationCompleteByManager(data.Count() > 0 ? data[0].EmployeeName : null,
-                                                              getEmployeeDetails.EmployeeName, data.Count() > 0 ? data[0].AssessmentType : null);
+                    detailsNotification.Message = DarMessage.EvaluationCompleteByManager(getEmployeeDetails.EmployeeName, getEmployeeDetails.ManagerName, data.Count() > 0 ? data[0].AssessmentType : null);
                     detailsNotification.Module = ModuleSubModule.Performance;
                     detailsNotification.SubModule = ModuleSubModule.EvaluationComplete;
-                    detailsNotification.SubModuleId1 = ManagerId;
+                    detailsNotification.SubModuleId1 = EmployeeId;
                     detailsNotification.Priority = Priority.Medium;
                     detailsNotification.CreatedByUser = UserName;
                     detailsNotification.AssignToUser = EmployeeId;
                     detailsNotification.AssignToIsWorkable = true;
                     detailsNotification.CreatedByIsWorkable = false;
                     var saveEMP = _notification.SaveNotification(detailsNotification);
+                    if(getEMPList.Count() > 0)
+                    {
+                        foreach (var item in getEMPList)
+                        {
+                            var _notificationHR = new NotificationManager();
+                            var detailsNotificationHR = new NotificationDetailModel();
+                            detailsNotificationHR.Message = DarMessage.EvaluationCompleteByManagerHR(getEmployeeDetails.EmployeeName, getEmployeeDetails.ManagerName, data.Count() > 0 ? data[0].AssessmentType : null);
+                            detailsNotificationHR.Module = ModuleSubModule.Performance;
+                            detailsNotificationHR.SubModule = ModuleSubModule.HRAknowledgeEvaluation;
+                            detailsNotificationHR.SubModuleId1 = item.EmployeeId;
+                            detailsNotificationHR.Priority = Priority.Medium;
+                            detailsNotificationHR.CreatedByUser = UserName;
+                            detailsNotificationHR.AssignToUser = item.EmployeeId;
+                            detailsNotificationHR.AssignToIsWorkable = true;
+                            detailsNotificationHR.CreatedByIsWorkable = false;
+                            var saveHR = _notification.SaveNotification(detailsNotificationHR);
+                        }
+                    }
                 }
                 return ObjUserRepository.saveEvaluation(data, action);
             }
@@ -4616,7 +4762,7 @@ namespace WorkOrderEMS.BusinessLogic.Managers
         //        throw ex;
         //    }
         //}
-        public List<spGetJobPosting_ForCompanyOpening_Result1> GetJobPostingForCompanyOpening(string HiringManagerId)
+        public List<spGetJobPosting_ForCompanyOpening_Result> GetJobPostingForCompanyOpening(string HiringManagerId)
         {
             try
             {
@@ -4669,6 +4815,69 @@ namespace WorkOrderEMS.BusinessLogic.Managers
             return list;
 
         }
+
+        #region GRAPH COUNT
+        public List<JobSummaryModel> GetEMP_ApplicantCount(long JobPostingId)
+        {
+            var repository = new ePeopleRepository();
+            var lst = new List<JobSummaryModel>();
+            try
+            {
+                var getEmpCount = repository.GetApplicantListData(JobPostingId)
+                    .Select(x => new JobSummaryModel()
+                    {
+
+                        StatusApplied = x.Applied,
+                        StatusInterviewSchedule = x.IntervieweSchedule,
+                        StatusInterviewCanceled = x.InterviewCanceled,
+                        StatusShortListed = x.Shortlisted,
+                        StatusAssessmentSend = x.AssessmentSend,
+                        StatusAssessmentPass = x.AssessmentPass,
+                        StatusAssessmentFailed = x.AssessmentFail,
+                        StatusOnhold = x.OnHold,
+                        StatusHired = x.Hired,
+                        StatusOfferSent = x.OfferSent,
+                        StatusOfferAccepted = x.OfferAccepted,
+                        StatusOfferCanceled = x.OfferCancled,
+                        StatusOfferCountered = x.OfferCountered,
+                        StatusOfferDeclined = x.OfferDeclined,
+                        StatusOnboarded = x.Onboarded,
+                        StatusOnboardingDrop = x.OnboardingDrop,
+                        StatusOnboarding = x.Onboarding,
+                        StatusBackgroundCheckFail = x.BackgroundCheckFail,
+                        StatusBackgroundCheckPass = x.BackgroundCheckPass,
+                        StatusBackgroundCheckSend = x.BackgroundCheckSend,
+                        StatusOrientationDone = x.OrientationDone,
+                        StatusOrientationNotDone = x.OrientationNotDone,
+                        StatusOrientationSchedule = x.OrientationSchedule,
+                        StatusScreened = x.Screened,
+                        StatusReject = x.Reject
+
+
+
+
+                    });
+
+                //var getEmpCount = repository.GetEmployeeManagementListData(0, null).GroupBy(x => x.JBT_JobTitle)
+                //    .Select(x => new GraphCountModel()
+                //    {
+                //        Employee = x.Count(),
+                //        JobTitle = x.Key
+
+                //    });
+
+                lst.AddRange(getEmpCount);
+
+                return lst;
+            }
+            catch (Exception ex)
+            {
+                Exception_B.Exception_B.exceptionHandel_Runtime(ex, "public List<GraphCountModel> GetEMP_ReqCount()", "Exception While getting count list.", null);
+                throw;
+            }
+        }
+        #endregion GRAPH COUNT
+
         public string CreateNewEvent(string Title, string NewEventDate, string NewEventTime, string NewEventDuration, string JobId, string ApplicantName, string ApplicantEmail, string ManagerId, string selectedManagers)
         {
             PerformanceRepository repo = new PerformanceRepository();
@@ -4709,6 +4918,28 @@ namespace WorkOrderEMS.BusinessLogic.Managers
             try
             {
                 return repo.UpdateInterviewPanel(selectedManagers, Manager, JobId,JobTitle);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        /// <summary>
+        /// Created By : Ashwajit Bansod
+        /// Created Date : 16-06-2020
+        /// Created For : To update interview panel for my opening grid for applicant 
+        /// </summary>
+        /// <param name="selectedManagers"></param>
+        /// <param name="JobId"></param>
+        /// <param name="JobTitle"></param>
+        /// <param name="ApplicantId"></param>
+        /// <returns></returns>
+        public bool UpdateInterviewPanelForMyOpening(string selectedManagers, string Manager, string JobId, string JobTitle, long ApplicantId)
+        {
+            PerformanceRepository repo = new PerformanceRepository();
+            try
+            {
+                return repo.UpdateInterviewPanelForMyOpening(selectedManagers, Manager, JobId, JobTitle, ApplicantId);
             }
             catch (Exception ex)
             {
@@ -4900,11 +5131,21 @@ namespace WorkOrderEMS.BusinessLogic.Managers
                 throw;
             }
         }
+        public spGetEmployeePersonalInfo_Result GetEmployeeDetails(string EmployeeId)
+        {
+            ObjUserRepository = new UserRepository();
+            try
+            {
+                return _db.spGetEmployeePersonalInfo(EmployeeId).FirstOrDefault(); ;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
     public class loc
     {
         public string LocationId { get; set; }
     }
-
-
 }

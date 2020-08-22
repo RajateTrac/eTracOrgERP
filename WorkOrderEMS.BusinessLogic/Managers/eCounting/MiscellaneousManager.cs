@@ -280,7 +280,7 @@ namespace WorkOrderEMS.BusinessLogic.Managers
                     var getRuleData = objModel.GetApprovalRuleData(approvalInput);
                     if (getRuleData != null)
                     {
-                        objNotify.CreatedBy = UserId;
+                        objNotify.CreatedBy = UserId.ToString();
                         objNotify.CreatedDate = DateTime.UtcNow;
                         objNotify.AssignTo = getRuleData.UserId;
                         if (MISID != null)

@@ -11,7 +11,8 @@ namespace WorkOrderEMS.BusinessLogic
 	public interface IGuestUser
 	{
 		EmployeeVIewModel GetEmployee(long UserId);
-		bool UpdateApplicantInfo(EmployeeVIewModel onboardingDetailRequestModel);
+        EmployeeVIewModel GetEmployeeDetails(long userId);
+        bool UpdateApplicantInfo(EmployeeVIewModel onboardingDetailRequestModel);
 		DirectDepositeFormModel GetDirectDepositeDataByUserId(long UserId);
 		DirectDepositeFormModel GetDirectDepositeDataByEmployeeId(string EmployeeId);
 		bool SetDirectDepositeFormData(DirectDepositeFormModel model, long UserId);
@@ -24,8 +25,8 @@ namespace WorkOrderEMS.BusinessLogic
 		EmergencyContectForm GetEmergencyForm(long userId);
 		ConfidenialityAgreementModel GetConfidenialityAgreementForm(long userId);
 		void SetConfidenialityAgreementForm(long userId, ConfidenialityAgreementModel model);
-		void SetEducationVerificationForm(long userId, EducationVarificationModel model);
-		EducationVarificationModel GetEducationVerificationForm(long userId);
+		void SetEducationVerificationForm(long userId, List<EducationVarificationModel> model);
+		List<EducationVarificationModel> GetEducationVerificationForm(long userId, long ApplicantId);
 		void SetW4Form(long userId, W4FormModel model);
 		W4FormModel GetW4Form(long userId);
 		PersonalFileModel GetFormsStatus(long userId);

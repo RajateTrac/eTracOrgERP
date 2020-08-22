@@ -1,0 +1,18 @@
+﻿@media only screen and (max-width: 768px) {
+
+    #RenderPageId {
+        width: 151%;
+    }
+
+    .ECimage-width {
+        margin-left: -32%;
+        margin-top: 10%;
+    }
+    #h3-margin {
+        margin: 179px 0px 0px 83px;
+    }
+    .form-margin {
+        margin-left: -22%;
+    }
+
+}

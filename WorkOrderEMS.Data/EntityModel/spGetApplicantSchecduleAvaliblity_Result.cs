@@ -14,11 +14,13 @@ namespace WorkOrderEMS.Data.EntityModel
     public partial class spGetApplicantSchecduleAvaliblity_Result
     {
         public long ASA_Id { get; set; }
-        public Nullable<long> ASA_APT_ApplicantId { get; set; }
+        public long ASA_APT_ApplicantId { get; set; }
+        public string ASA_EMP_EmployeeId { get; set; }
+        public string ASA_WeekDay { get; set; }
         public Nullable<System.TimeSpan> ASA_AvaliableStartTime { get; set; }
         public Nullable<System.TimeSpan> ASA_AvaliableEndTime { get; set; }
         public Nullable<System.DateTime> ASA_Date { get; set; }
         public string ASA_IsActive { get; set; }
-        public string ASA_WeekDay { get; set; }
+        public Nullable<long> ASA_AvaliableUserLocation { get; set; }
     }
 }

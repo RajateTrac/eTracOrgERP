@@ -26,8 +26,6 @@ namespace WorkOrderEMS.Data.EntityModel
         public string LLCM_IsApprove { get; set; }
         public string LLCM_IsActive { get; set; }
     
-        public virtual Company Company { get; set; }
-        public virtual LocationCompanyMapping LocationCompanyMapping { get; set; }
         public virtual LocationMaster LocationMaster { get; set; }
     }
 }

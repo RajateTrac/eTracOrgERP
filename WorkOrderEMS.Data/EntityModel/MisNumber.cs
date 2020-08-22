@@ -14,16 +14,7 @@ namespace WorkOrderEMS.Data.EntityModel
     
     public partial class MisNumber
     {
-        public MisNumber()
-        {
-            this.LogMiscellaneous = new HashSet<LogMiscellaneou>();
-            this.Miscellaneous = new HashSet<Miscellaneou>();
-        }
-    
         public long MIN_Id { get; set; }
         public string MIN_IsActive { get; set; }
-    
-        public virtual ICollection<LogMiscellaneou> LogMiscellaneous { get; set; }
-        public virtual ICollection<Miscellaneou> Miscellaneous { get; set; }
     }
 }

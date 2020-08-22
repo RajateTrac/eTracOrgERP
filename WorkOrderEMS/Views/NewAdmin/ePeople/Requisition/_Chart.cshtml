@@ -7,7 +7,7 @@
 
 @*<link href="~/Areas/AdminSection/Content/CSS/GetOrg.css" rel="stylesheet" />*@
 
-@*<link href="~/Content/NewAdminContent/CSS/GetOrgForRequision.css" rel="stylesheet" />*@
+<link href="~/Content/NewAdminContent/CSS/GetOrgForRequision.css" rel="stylesheet" />
 <br />
 <input type="hidden" id="VSCIdPointingEMP" />
 <div class="content-body">
@@ -38,7 +38,7 @@
                     <span>&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="margin-left:7px;">
                 <div id="divOpenJobPostForm" class=""></div>
             </div>
             <div style="margin-bottom:20px;">
@@ -172,7 +172,7 @@
                     //OrgChart.templates.ana.img_3 = '<image preserveAspectRatio="xMidYMid slice" xlink:href="{val}" x="490" y="-30" width="50" height="50"></image>';
                     var chart = new OrgChart(peopleElement, {
 
-                        scaleInitial: BALKANGraph.match.boundary,
+                        //scaleInitial: BALKANGraph.match.boundary,
                         //enableDragDrop: true,
                         //tags: {
                         //    "assistant": {
@@ -208,10 +208,11 @@
 
                     });
                     debugger
-                    $(".field_0").attr({ "style": "font-size:16px;" });
-                    $("tspan").attr("x", "140");
-                    $(".field_0").attr("x", "100"); $(".field_0").attr("x", "65");
-                    $(".field_0").attr("y", "25");
+                    //$(".field_0").attr({ "style": "font-size:16px;" });
+                    //$("tspan").attr("x", "140");
+                    //$(".field_0").attr("x", "100"); $(".field_0").attr("x", "65");
+                    //$(".field_0").attr("y", "25");
+                    $('node').children().second().attr("y", "25");
                     $('[node-id="' + VSCId + '"]').children().first().css("fill", "green");
                 }
             },  //$('[data-node-id="' + VSCId + '"]').children().first().css("fill", "green");
@@ -221,7 +222,8 @@
         //$("field_2").attr("y", "120"); $(".field_2").attr("y", "150");
         //$("field_3").attr("y", "180"); $(".field_3").attr("y", "210");
         //$("tspan").attr("x", "90"); $("tspan").attr("y", "50");
-        
+        debugger
+        $('[node-id="' + VSCId + '"]').children().first().css("fill", "green");
     });
 </script>
 @*<script>

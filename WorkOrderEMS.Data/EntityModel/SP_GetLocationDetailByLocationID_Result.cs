@@ -51,7 +51,23 @@ namespace WorkOrderEMS.Data.EntityModel
         public Nullable<bool> AdditionalYears { get; set; }
         public string Years { get; set; }
         public Nullable<long> QuickBookLocId { get; set; }
+        public Nullable<int> PaymenttermsId { get; set; }
+        public Nullable<System.DateTime> ClientInvoicingDate { get; set; }
+        public Nullable<System.DateTime> Automaticbillingdate { get; set; }
+        public Nullable<System.DateTime> Cutoffcarddate { get; set; }
+        public Nullable<decimal> FrequencyOfInvoicing { get; set; }
+        public Nullable<decimal> ChargeDepositeMonthlyParkerCard { get; set; }
+        public Nullable<bool> IsChargeDepositeMonthlyParkerCard { get; set; }
+        public Nullable<decimal> AviailableSpaces { get; set; }
+        public Nullable<bool> IsSpecialRulesHourlyMan { get; set; }
         public string LocationCountry { get; set; }
         public string LocationState { get; set; }
+        public string ClientName { get; set; }
+        public string ClientImage { get; set; }
+        public Nullable<System.DateTime> ClientDOB { get; set; }
+        public string ClientEmail { get; set; }
+        public string ClientCountry { get; set; }
+        public string ClientState { get; set; }
+        public bool IsEmailVerify { get; set; }
     }
 }

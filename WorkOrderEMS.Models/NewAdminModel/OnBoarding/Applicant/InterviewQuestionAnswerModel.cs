@@ -35,12 +35,21 @@ namespace WorkOrderEMS.Models.NewAdminModel
         public List<ListAnswerModel> ListAnswerModel { get; set; }
         public bool IsShortlisted { get; set; }
         public long ApplicantId { get; set; }
+        public int? ApplicantScore { get; set; }
+        public int? NoOfAns { get; set; }
+        public long? IQM_Id { get; set; }
+        public string IQM_Question { get; set; }
+        public string IQM_Answer { get; set; }
+        public string IQM_Comment { get; set; }
+        public string IQC_Question { get; set; }
+        public long IQC_Id { get; set; }
     }
     public class ListAnswerModel
     {
         public List<ChildQuestionAnswerModel> ListAnswerMainModel { get; set; }
         public string IQM_Question { get; set; }
         public long IQM_Id { get; set; }
+
        
     }
     public class ChildQuestionAnswerModel

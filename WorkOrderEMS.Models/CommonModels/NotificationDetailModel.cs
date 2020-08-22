@@ -18,7 +18,7 @@ namespace WorkOrderEMS.Models
         public bool? IsRead { get; set; }
         public long ReadBy { get; set; }
         public DateTime ReadDate { get; set; }
-        public long CreatedBy { get; set; }
+        public string CreatedBy { get; set; }
         public Nullable<DateTime> CreatedDate { get; set; }
         public bool IsDeleted { get; set; }
         public long DeletedBy { get; set; }
@@ -46,5 +46,9 @@ namespace WorkOrderEMS.Models
         public long ApplicantId { get; set; }
         public string Module { get; set; }
         public string EmployeeStatus { get; set; }
+        public Nullable<DateTime> MeetingDateTime { get; set; } //Added by Rajat Toppo
+        public string IsExempt { get; set; } // Added by Rajat Toppo
+        public string emp_id { get; set; }
+        public int? Days { get; set; }
     }
 }

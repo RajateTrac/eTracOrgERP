@@ -5,13 +5,14 @@
 
     string hostingPrefix = System.Configuration.ConfigurationManager.AppSettings["hostingPrefix"];
     WorkOrderEMS.Models.eTracLoginModel ObjLogin = (WorkOrderEMS.Models.eTracLoginModel)Session["eTrac"];
-    string loginUserName = "", loginUserEmail = "", loginUserContactNo = "", loginUserProfile = "", CurrentUser = "";
+    string loginUserName = "", loginUserEmail = "", emlpoyeeId = "", loginUserContactNo = "", loginUserProfile = "", CurrentUser = "", JobTitle = "";
     bool isScheduled = Convert.ToBoolean(Session["IsInterviewDone"]);
     long loginUserType = 0;
     long locationId = 0;
     long UserId = 0;
     if (ObjLogin != null)
     {
+        emlpoyeeId = ObjLogin.UserName;
         loginUserName = ObjLogin.FName + "'s";
         loginUserEmail = ObjLogin.Email;
         loginUserProfile = ObjLogin.UserProfile;
@@ -20,9 +21,18 @@
         locationId = ObjLogin.LocationID;
         UserId = ObjLogin.UserId;
         CurrentUser = WorkOrderEMS.Helper.Cryptography.GetEncryptedData(ObjLogin.UserName, true);
+        JobTitle = ObjLogin.JobTitleName;
     }
 }
 <style>
+    .CloseJob {
+        background-color: red;
+    }
+
+    .HoldJob {
+        background-color: cadetblue;
+    }
+
     .client-photo {
         border-radius: 50%;
         height: auto;
@@ -255,6 +265,8 @@
 <link href="~/Content/NewAdminContent/VENDOR/jsgrid/css/jsgrid-theme.min.css" rel="stylesheet" />
 <link href="~/Content/NewAdminContent/CSS/Common.css" rel="stylesheet" />
 <link href="~/Content/Dashboard/plugins/fullcalendar/fullcalendar.css" rel="stylesheet" />
+<link href="~/Content/NewAdminContent/CSS/clockPicker.css" rel="stylesheet" />
+<link href="@Url.Content("~/Content/datepicker.css")" rel="stylesheet" />
 <style>
     .addWhite {
         color: white;
@@ -323,6 +335,7 @@
         <div class="row page-titles mx-0 mb-0 mb-md-3 mb-sm-3" data-aos="fade-up">
             <div class="col-sm-12 col-xxl-4 col-lg-4 col-md-12 col-12" id="showHideHiringOnBoardingDashboard">
                 <div class="welcome-text">
+                    <input type="hidden" id="LoginManagerId" value="@emlpoyeeId" />
                     <h4>Hi, welcome back! @loginUserName</h4>
                 </div>
             </div>
@@ -333,10 +346,10 @@
                 <div class="col-lg-6">
                     <div class="card" data-aos="fade-up">
                         <div class="card-header widthHeader ">
-                            <h4 class="card-title addWhite" style="color: white;">Employee</h4>
+                            <h4 class="card-title addWhite" style="color: white;">Total Applicant</h4>
                         </div>
                         <div class="card-body">
-                            <div id="QRCCount"></div>
+                            <div id="TotalCountApplicant"></div>
                             @*<div id="EmployeeCount"></div>*@
                         </div>
                     </div>
@@ -344,10 +357,10 @@
                 <div class="col-lg-6">
                     <div class="card" data-aos="fade-up">
                         <div class="card-header widthHeader ">
-                            <h4 class="card-title addWhite" style="color: white;">Hiring</h4>
+                            <h4 class="card-title addWhite" style="color: white;">Hired Applicant</h4>
                         </div>
                         <div class="card-body">
-                            <div id="eTimediv"></div>
+                            <div id="HiredApplicant"></div>
                             @*<div id="c3-combination"></div>*@
                         </div>
                     </div>
@@ -359,16 +372,31 @@
                     <div class="card" data-aos="fade-up">
                         <div class="card-header" style="height: 45px;">
                             <h4 class="card-title addWhite"><b>Hiring & On-Boarding</b></h4>
+                            <span>
+                                <i class="fa fa-refresh fa-2x" style="cursor:pointer;" aria-hidden="true" id="RefreshGrid" title="Refresh"></i>
+                            </span>
+                            @*<button id="CancelGridList">
+                                    <i class="fa fa-ban fa-2x" style="cursor:pointer;" aria-hidden="true" id="getCancelData" onclick="getCancelData()" title="CancelData"></i>
+                                Cancel List</button>*@
                         </div>
                         <div class="card-body">
                             <div class="custom-tab-1">
                                 <ul class="nav nav-tabs">
-                                    <li class="nav-item WidthForTab">
-                                        <a class="nav-link active CenterText" data-toggle="tab" href="#home1">On-Boarding</a>
-                                    </li>
-                                    <li class="nav-item WidthForTab">
-                                        <a class="nav-link CenterText" data-toggle="tab" onclick="MyOpeningSummery();" href="#profile1">My Opening</a>
-                                    </li>
+                                    @if (JobTitle != "" && JobTitle != null && JobTitle == WorkOrderEMS.Helper.JobTItle.HR)
+                                    {
+                                        <li class="nav-item WidthForTab">
+                                            <a class="nav-link active CenterText" data-toggle="tab" href="#home1" onclick="OnBoardingSummery();">On-Boarding</a>
+                                        </li>
+                                        <li class="nav-item WidthForTab">
+                                            <a class="nav-link CenterText" data-toggle="tab" onclick="MyOpeningSummery();" href="#profile1">My Opening</a>
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                        <li class="nav-item WidthForTab">
+                                            <a class="nav-link active CenterText" data-toggle="tab" onclick="MyOpeningSummery();" href="#profile1">My Opening</a>
+                                        </li>
+                                    }
                                     <li class="nav-item WidthForTab">
                                         <a class="nav-link CenterText" data-toggle="tab" href="#contact1" onclick="GetCompanyOpening()">Company Opening</a>
                                     </li>
@@ -383,102 +411,141 @@
                                     </a>
                                 </div>
                                 <div class="tab-content">
-                                    <div class="tab-pane fade show active" id="home1" role="tabpanel">
-                                        <div class="pt-4">
-                                        
-                                            <input type="hidden" value="false" id="isScheduled" />
-                                            <div id="ListOnBoarding"></div>
+                                    @if (JobTitle != "" && JobTitle != null && JobTitle == WorkOrderEMS.Helper.JobTItle.HR)
+                                    {
+                                        <div class="tab-pane fade show active" id="home1" role="tabpanel">
+                                            <div class="pt-4">
+
+                                                <input type="hidden" value="false" id="isScheduled" />
+                                                <div id="ListOnBoarding"></div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="tab-pane fade" id="profile1">
-                                        <div class="pt-4">
-                                            <div id="ListMyOpening"></div>
-                                            <div id="MyOpeningSummery"></div>
-                                            <div class="row mx-md-n5">
-                                            </div>
-                                            <div id="Scheduler" style="display:none" class="row">
-                                                <div class="nav-item" style="float:right;display:inline-block;position: absolute;right: 0;top: 5%;">
-                                                    <a onclick="ShowMyOpeningGrid();">
-                                                        <i class="fa fa-chevron-circle-left" aria-hidden="true" style="font-size: 32px;color: black;padding: 11px 5px 6px 5px;"></i>
-                                                    </a>
+                                        <div class="tab-pane fade" id="profile1">
+                                            <div class="pt-4">
+                                                <div id="ListMyOpening"></div>
+                                                <div id="MyOpeningSummery"></div>
+                                                <div class="row mx-md-n5">
                                                 </div>
-                                                <div class="col-sm-8 col-lg-8">
-                                                    <div id="calendar"></div>
-                                                </div>
-                                                <div id="SchedulerList" class="col-sm-4 col-lg-4">
-                                                    @*<ul class="list-group">
-                                                            <li class="list-group-item list-group-item-success">
-                                                                <label>Applicant Id:</label>
-                                                                <label id="lblApplicantId"></label>
-                                                            </li>
-                                                            <li class="list-group-item list-group-item-info">
-                                                                <label>Applicant Name:</label>
-                                                                <label id="lblApplicantName"></label>
-                                                            </li>
-                                                            <li class="list-group-item list-group-item-warning">
-                                                                <label>Applicant Email:</label>
-                                                                <label id="lblApplicantEmail"></label>
-                                                            </li>
-                                                        </ul>*@
-                                                    <hr />
-                                                    @*<label>Select additional interviewers</label>
-                                                        <div id="inpManageName">
-                                                            <span class="autocomplete-select"></span>
+                                                <div id="Scheduler" style="display:none" class="row showHideSchedular">
+                                                    <div class="nav-item" style="float:right;display:inline-block;position: absolute;right: 0;top: 5%;">
+                                                        <a onclick="ShowMyOpeningGrid();">
+                                                            <i class="fa fa-chevron-circle-left" aria-hidden="true" style="font-size: 32px;color: black;padding: 11px 5px 6px 5px;"></i>
+                                                        </a>
+                                                    </div>
+                                                    <div class="col-sm-8 col-lg-8">
+                                                        <div id="calendar"></div>
+                                                    </div>
+                                                    <div id="SchedulerList" class="col-sm-4 col-lg-4 showHideSchedular">
+                                                        <h2>Booked Slots</h2>
+                                                        <div id="BookedSlots">
                                                         </div>
-                                                        <hr />*@
-                                                    <h2>Booked Slots</h2>
-                                                    <div id="BookedSlots">
+                                                    </div>
+                                                </div>
+                                                <div id="Scheduler" style="display:none" class="row showHideSchedular">
+                                                    <div class="nav-item" style="float:right;display:inline-block;position: absolute;right: 0;top: 1%;">
+                                                        <a onclick="ShowMyOpeningGrid();">
+                                                            <i class="fa fa-chevron-circle-left" aria-hidden="true" style="font-size: 32px;color: black;padding: 11px 5px 6px 5px;"></i>
+                                                        </a>
+                                                    </div>
+                                                    <div class="col-sm-8 col-lg-8">
+                                                        <div id="calendar"></div>
+                                                    </div>
+                                                    <div id="SchedulerList" class="col-sm-4 col-lg-4">
+                                                        <hr />
+                                                        <h2>Booked Slots</h2>
+                                                        <div id="BookedSlots">
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div id="Scheduler" style="display:none" class="row">
-                                                <div class="nav-item" style="float:right;display:inline-block;position: absolute;right: 0;top: 1%;">
-                                                    <a onclick="ShowMyOpeningGrid();">
-                                                        <i class="fa fa-chevron-circle-left" aria-hidden="true" style="font-size: 32px;color: black;padding: 11px 5px 6px 5px;"></i>
-                                                    </a>
-                                                </div>
-                                                <div class="col-sm-8 col-lg-8">
-                                                    <div id="calendar"></div>
-                                                </div>
-                                                <div id="SchedulerList" class="col-sm-4 col-lg-4">
-                                                    @*<ul class="list-group">
-                                                            <li class="list-group-item list-group-item-success">
-                                                                <label>Applicant Id:</label>
-                                                                <label id="lblApplicantId"></label>
-                                                            </li>
-                                                            <li class="list-group-item list-group-item-info">
-                                                                <label>Applicant Name:</label>
-                                                                <label id="lblApplicantName"></label>
-                                                            </li>
-                                                            <li class="list-group-item list-group-item-warning">
-                                                                <label>Applicant Email:</label>
-                                                                <label id="lblApplicantEmail"></label>
-                                                            </li>
-                                                        </ul>*@
-                                                    <hr />
-                                                    @*<label>Select additional interviewers</label>
-                                                        <div id="inpManageName">
-                                                            <span class="autocomplete-select"></span>
-                                                        </div>
-                                                        <hr />*@
-                                                    <h2>Booked Slots</h2>
-                                                    <div id="BookedSlots">
-                                                    </div>
-                                                </div>
-                                            </div>
+
+
                                         </div>
                                         <div class="tab-pane fade" id="contact1">
                                             <div class="pt-4">
                                                 <div id="companyOpening"></div>
                                             </div>
                                         </div>
-
-                                    </div>
-                                    <div class="tab-pane fade" id="myinterview">
-                                        <div class="pt-4">
-                                            <div id="myinterviews"></div>
+                                        <div class="tab-pane fade" id="myinterview">
+                                            <div class="pt-4">
+                                                <div id="myinterviews"></div>
+                                            </div>
                                         </div>
-                                    </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="tab-pane fade show active" id="profile1">
+                                            <div class="pt-4">
+                                                <div id="ListMyOpening"></div>
+                                                <div id="MyOpeningSummery"></div>
+                                                <div class="row mx-md-n5">
+                                                </div>
+                                                <div id="Scheduler" style="display:none" class="row">
+                                                    <div class="nav-item" style="float:right;display:inline-block;position: absolute;right: 0;top: 5%;">
+                                                        <a onclick="ShowMyOpeningGrid();">
+                                                            <i class="fa fa-chevron-circle-left" aria-hidden="true" style="font-size: 32px;color: black;padding: 11px 5px 6px 5px;"></i>
+                                                        </a>
+                                                    </div>
+                                                    <div class="col-sm-8 col-lg-8">
+                                                        <div id="calendar"></div>
+                                                    </div>
+                                                    <div id="SchedulerList" class="col-sm-4 col-lg-4">
+                                                        <hr />
+                                                        <h2>Booked Slots</h2>
+                                                        <div id="BookedSlots">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div id="Scheduler" style="display:none" class="row">
+                                                    <div class="nav-item" style="float:right;display:inline-block;position: absolute;right: 0;top: 1%;">
+                                                        <a onclick="ShowMyOpeningGrid();">
+                                                            <i class="fa fa-chevron-circle-left" aria-hidden="true" style="font-size: 32px;color: black;padding: 11px 5px 6px 5px;"></i>
+                                                        </a>
+                                                    </div>
+                                                    <div class="col-sm-8 col-lg-8">
+                                                        <div id="calendar"></div>
+                                                    </div>
+                                                    <div id="SchedulerList" class="col-sm-4 col-lg-4">
+                                                        <hr />
+                                                        <h2>Booked Slots</h2>
+                                                        <div id="BookedSlots">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                        <div class="tab-pane fade" id="contact1">
+                                            <div class="pt-4">
+                                                <div id="companyOpening"></div>
+                                                <div class="row mx-md-n5">
+                                                </div>
+                                                <div id="SchedulerCompany" style="display:none" class="row">
+                                                    <div class="nav-item" style="float:right;display:inline-block;position: absolute;right: 0;top: 5%;">
+                                                        <a onclick="ShowMyOpeningGridCompany();">
+                                                            <i class="fa fa-chevron-circle-left" aria-hidden="true" style="font-size: 32px;color: black;padding: 11px 5px 6px 5px;"></i>
+                                                        </a>
+                                                    </div>
+                                                    <div class="col-sm-8 col-lg-8">
+                                                        <div id="calendarCompany"></div>
+                                                    </div>
+                                                    <div id="SchedulerListCompany" class="col-sm-4 col-lg-4">
+
+                                                        <h2>Booked Slots</h2>
+                                                        <div id="BookedSlotsCompany">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="myinterview">
+                                            <div class="pt-4">
+                                                <div id="myinterviews"></div>
+                                            </div>
+                                        </div>
+
+                                    }
                                 </div>
 
                             </div>
@@ -509,7 +576,7 @@
             </div>
             <div class="modal-footer" style="background: white;">
 
-                <button type="button" class="btn btn-secondary" id="close" style="border-radius:100px;" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" id="close" style="border-radius: 100px;width: 150px;background-image: linear-gradient(to left, #3cffdb, #425fe0);" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -535,8 +602,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" id="btnPopupCancel" data-dismiss="modal" class="btn btn-danger">Cancel</button>
-                <button type="button" id="btnPopupSave" data-dismiss="modal" class="btn btn-primary">Save event</button>
+                <button type="button" id="btnPopupCancel" data-dismiss="modal" class="btn btn-danger" style="border-radius: 100px;width: 150px;background-image: linear-gradient(to left, #3cffdb, #425fe0);">Cancel</button>
+                <button type="button" id="btnPopupSave" data-dismiss="modal" class="btn btn-primary" style="border-radius: 100px;width: 150px;background-image: linear-gradient(to left, #3cffdb, #425fe0);">Save event</button>
             </div>
         </div>
     </div>
@@ -558,15 +625,54 @@
         </form>
     </div>
 </div>
-<div class="modal fade  bd-example-modal-lg" id="ModalForOfferLetter" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade bd-example-modal-lg" id="ModalForOfferLetter" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog  modal-lg">
         <div class="modal-content" style="width:1582px;margin: -30px 0px -47px -382px;">
             <div class="modal-body" style="margin-left: -157px;">
                 <div id="viewOffer"></div>
             </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary bluebutton" style="border-radius:25px;width:125px;" onclick="return OfferSend(true);" id="SendOffer">Offer Send</button>
+                <button class="btn btn-danger" onclick="return OfferSend(false);" style="border-radius:25px;width:125px;" id="CancelOffer">Cancel Offer</button>
+                <button class="btn btn-primary" data-dismiss="modal" style="border-radius:25px;width:125px;" id="CloseOffer">Close</button>
+            </div>
         </div>
     </div>
 </div>
+
+@*modal for job summary donut chart*@
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true" id="ModalForApplicantStatusPieChart">
+    <div class="modal-dialog modal-lg" style="width:600px;">
+        <div class="modal-content">
+            <div class="modal-header" style="display: inherit;">
+                <h5 class="modal-title">Job Summary</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="col-lg-12" style="margin-left: -3%;">
+                    <div class="card" data-aos="fade-up">
+                        @*<div class="card-header widthHeader ">
+                                <h4 class="card-title addWhite" style="color: white;">Job Summary</h4>
+                            </div>*@
+                        <div class="card-body">
+                            <div id="AppJobSummary" style="height:185px;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer" style="background: white;">
+                    @*<button type="button" class="btn btn-success pull-left" id="ViewVSC" style="border-radius:100px;">View Chart</button>*@
+                    @*<input type="button" class="btn btn-primary" id="SaveSure" style="border-radius:100px;width: 150px;background-image: linear-gradient(to left, #9fe6d9, #0a8a0d);" data-dismiss="modal" value="Yes" />
+                        <button type="button" class="btn btn-secondary" id="closeVSC" style="border-radius:100px;width: 150px;background-image: linear-gradient(to left, #e8d3d3, #dc2020);" data-dismiss="modal">No</button>*@
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal fade  bd-example-modal-lg" @*data-backdrop="false"*@ id="ModalForAssetsAdd" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog  modal-lg">
         <div class="modal-content" style="width:1000px;">
@@ -581,8 +687,8 @@
                 </div>
             </div>
             <div class="modal-footer" style="background: white;">
-                <button type="button" class="btn btn-success" id="SaveAssetsApplicant" style="border-radius:100px;">Add Assets</button>
-                <button type="button" class="btn btn-primary" id="CloseAssest" style="border-radius:100px;width:98px;" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success" id="SaveAssetsApplicant" style="border-radius: 100px;width: 150px;background-image: linear-gradient(to left, #3cffdb, #425fe0);">Add Assets</button>
+                <button type="button" class="btn btn-primary" id="CloseAssest" style="border-radius: 100px;width: 150px;background-image: linear-gradient(to left, #3cffdb, #425fe0);" data-dismiss="modal">Cancel</button>
             </div>
         </div>
     </div>
@@ -601,34 +707,211 @@
                 <div id="ApplicantDetailsDiv"></div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary bluebutton text-right" style="border-radius:25px;width:90px;" onclick="return AppproveRejectApplicant(true);" id="btnApproveData">Approve</button>
-                <button class="btn btn-danger" onclick="return AppproveRejectApplicant(false);" style="border-radius:25px;width:90px;" id="btnRejectPO">Reject</button>
+                <button type="button" class="btn btn-primary bluebutton hideShowApplicant" style="border-radius: 100px;width: 150px;background-image: linear-gradient(to left, #9fe6d9, #0a8a0d);" onclick="return AppproveRejectApplicant(true);" id="btnApproveApplicant">Shortlisted</button>
+                <button class="btn btn-danger hideShowApplicant" onclick="return AppproveRejectApplicant(false);" style="border-radius: 100px;width: 150px;background-image: linear-gradient(to left, #e8d3d3, #dc2020);" id="btnRejectApplicant">Reject</button>
+                <button class="btn btn-primary" data-dismiss="modal" style="border-radius: 100px;width: 150px;background-image: linear-gradient(to left, #e8d3d3, #dc2020);" id="CloseApplicant">Close</button>
             </div>
-
         </div>
     </div>
 </div>
 <div class="modal bs-example-modal-lg fade preview" id="myModalUpdatePanel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg ">
-        <div class="modal-content" style="width: 120%;">
+    <div class="modal-dialog">
+        <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="myModalLabel">Update Interview Panel</h5>
                 <button type="button" class="close" data-dismiss="modal">
                     <span>×</span>
                 </button>
             </div>
-            <div class="modal-body">
-                <hr />
+            <div class="modal-body" style="margin-left:1px;">
                 <label>Select additional interviewers</label>
                 <div id="inpManageName">
                     <span class="autocomplete-select"></span>
                 </div>
-                <hr />
                 <span id="DisplayMessage" style="color:red; display:none">Interview panel has been saved successfully </span>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary bluebutton text-right" style="border-radius:25px;width:90px;" onclick="return UpdateInterviewPanel();" id="btnApproveData">Update</button>
-                <button class="btn btn-danger" onclick="" style="border-radius:25px;width:90px;" id="btnRejectPO">Cancel</button>
+                <button type="button" class="btn btn-primary bluebutton" style="border-radius: 100px;width: 150px;background-image: linear-gradient(to left, #3cffdb, #425fe0);" onclick="return UpdateInterviewPanel();" id="btnUpdateInterviewPanel">Update</button>
+                <button type="button" class="btn btn-primary bluebutton" style="border-radius: 100px;width: 150px;background-image: linear-gradient(to left, #3cffdb, #425fe0);display:none;" onclick="return UpdateInterviewPanelForMyOpening();" id="btnUpdateInterviewPanelForMyOpening">Update</button>
+                <button class="btn btn-danger" onclick="" style="border-radius: 100px;width: 150px;background-image: linear-gradient(to left, #3cffdb, #425fe0);" id="btnRejectPO">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal bs-example-modal-lg fade preview" id="myModalGetCertificateApplicant" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg ">
+        <div class="modal-content" style="width: 110%;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel">View Document</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="ViewDocument"></div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary bluebutton" style="border-radius: 100px;width: 150px;background-image: linear-gradient(to left, #3cffdb, #425fe0);" onclick="return UpdateInterviewPanel();" id="btnUpdateInterviewPanel">Update</button>
+
+                <button class="btn btn-danger" onclick="" style="border-radius: 100px;width: 150px;background-image: linear-gradient(to left, #3cffdb, #425fe0);" id="btnRejectPO">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade  bd-example-modal-lg" id="ModalForJobStatusChange" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog  modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel">Job Status Change</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="HoldOpenCloseJobDiv">
+                    <label id="HoldOpenCloseJobId"></label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary bluebutton" style="border-radius: 100px;width: 150px;background-image: linear-gradient(to left, #9fe6d9, #0a8a0d);" id="HoldOpenCloseYes" onclick="CloseHoldJob();">Yes</button>
+                <button class="btn btn-danger" onclick="" style="border-radius: 100px;width: 150px;background-image: linear-gradient(to left, #e8d3d3, #dc2020);" id="HoldOpenCloseNo">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade  bd-example-modal-lg" id="ModalForCancelInterview" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel">Cancel Interview</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>×</span>
+                </button>
+            </div>
+            <div class="modal-body" style="margin-left: 1px;">
+                <div>
+                    <label style="color:red;">Do you realy want to cancel this interview ?</label>
+                    <br />
+                    <br />
+                    <div class="form-group row">
+                        <div class="col-sm-3">
+                            <label>Comment :</label>
+                        </div>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control input-rounded" id="CommentCancelInterview" placeholder="Comment" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary bluebutton" style="border-radius: 100px;width: 150px;background-image: linear-gradient(to left, #9fe6d9, #0a8a0d);" onclick="CancelInterviewByInterviewer();">Yes</button>
+                <button class="btn btn-danger" onclick="" style="border-radius: 100px;width: 150px;background-image: linear-gradient(to left, #e8d3d3, #dc2020);">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade  bd-example-modal-lg" id="ModalForPassFailBackground" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog  modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Background Pass Fail</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <h4>Please click yes to pass background check and no to fail...!</h4>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnBackgroundPass" class="btn btn-primary" style="border-radius: 100px;width: 150px;background-image: linear-gradient(to left, #3cffdb, #425fe0);" onclick="BackgroundPassFail('Y')">Yes</button>
+                <button type="button" id="btnBackgroundFail" class="btn btn-danger" style="border-radius: 100px;width: 150px;background-image: linear-gradient(to left, #3cffdb, #425fe0);" onclick="BackgroundPassFail('N')">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade " tabindex="-1" role="dialog" aria-hidden="true" id="myModalToAddEmployeeOrietation">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header" style="display: inherit;">
+                <h5 class="modal-title">Employee Orientation</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="margin-left: 2px;">
+                <form id="SaveOrientationForm">
+                    @Html.Hidden("OTN_EMP_EmployeeID", new { @id = "OTN_EMP_EmployeeID" })
+                    @Html.Hidden("OTN_ApplicantId", new { @id = "OTN_ApplicantId" })
+                    <div id="divOriantation">
+                        <div class="form-group row">
+                            <div class="col-sm-4">
+                                <label>Employee Id : </label>
+                            </div>
+                            <div class="col-sm-8">
+                                <label id="GetEmployeeIdForOrientation"></label>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-4">
+                                <label>Location: </label>
+                            </div>
+                            <div class="col-sm-8">
+                                @Html.DropDownList("OTN_LocationId", new SelectList((List<WorkOrderEMS.Models.UserLocations>)Session["eTrac_UserLocations"], "LocationId", "LocationName"), null, new { @class = "form-control input-rounded", @id = "drp_MasterLocationForOrientation" })
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-4">
+                                <label>Orientation Date: </label>
+                            </div>
+                            <div class="col-sm-8">
+                                @Html.TextBox("ONT_OrientationDate", null, new { @id = "ONT_OrientationDate", @class = "form-control input-rounded required" })
+                                @Html.ValidationMessage("ONT_OrientationDate")
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-4">
+                                <label>Orientation Time: </label>
+                            </div>
+                            <div class="col-sm-8">
+                                <input type="text" id="ONT_Orientationtime" class="form-control input-rounded required clockpicker">
+                                <span class="pull-left text-info" style="color:gray;"><i>(HH:MM i.e 00:30)</i></span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer" style="background: white;">
+                <button type="button" class="btn btn-success" id="SaveOrientation" empId="@emlpoyeeId" style="border-radius: 100px;width: 150px;background-image: linear-gradient(to left, #3cffdb, #425fe0);" onclick="SaveOriantation(this);">Save</button>
+                <button type="button" class="btn btn-primary" style="border-radius: 100px;width: 150px;background-image: linear-gradient(to left, #3cffdb, #425fe0);" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade  bd-example-modal-lg" id="ModalForOriantationDone" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog  modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Oriantation Done</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <h4>Please click Yes for oriantation done and no for Not done..!</h4>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnOriantationDone" class="btn btn-primary" style="border-radius: 100px;width: 150px;background-image: linear-gradient(to left, #3cffdb, #425fe0);" onclick="OriantationDone('Y')">Yes</button>
+                <button type="button" id="btnOriantationFail" class="btn btn-danger" style="border-radius: 100px;width: 150px;background-image: linear-gradient(to left, #3cffdb, #425fe0);" onclick="OriantationDone('N')">No</button>
             </div>
         </div>
     </div>
@@ -643,8 +926,16 @@
 <script src="~/Scripts/NewAdminJS/AssetsAndOffer.js"></script>
 <link href="~/Content/NewAdminContent/CSS/Common.css" rel="stylesheet" />
 <script src="~/Content/Dashboard/plugins/fullcalendar/mySchedule.js"></script>
+<script src="@Url.Content("~/Scripts/bootstrap-datepicker.js")"></script>
+<script src="~/Content/NewAdminContent/JQUERY/clockPicker.js"></script>
+<script src="~/Scripts/BootStrap-Multiselect/JS/bootbox.js"></script>
 <script>
+    MyOpeningSummery();
 
+    $("#RefreshGrid").click(function () {
+
+        $("#" + refreshGridId).jsGrid("loadData");
+    });
     $("#HiringOnBoard").click(function () {
         $("#hiringOnBordingDiv").show();
         $("#EmployeeManagementDiv").hide();
@@ -660,4 +951,79 @@
             scrollTop: $("#EmployeeManagementDiv").offset().top
         }, 'slow');
     });
+</script>
+<script>
+    $('#ONT_OrientationDate').datepicker({
+        format: "yyyy/mm/dd",
+    });
+    $('.clockpicker').clockpicker();
+    $(".clockpicker-button").click(function () {
+        debugger
+        var time = $(".popover-title").children().text();
+       var time1 = time.substr(0, 2) + ":" + time.substr(2);
+        $("#ONT_Orientationtime").val(time1)
+    })
+    $.ajax({
+        url: base_url + '/NewAdmin/GetCountOfHiredAndTotalApplicant',
+        type: 'POST',
+        success: function (countData) {
+            var arrData = [];
+            if (countData != null) {
+                if (countData.HiredApplicant > 0) {
+                    arrData.push({
+                        "Applicant Status": "Hired",
+                        "Count": parseInt(countData.HiredApplicant)
+                    });
+                }
+                if (countData.TotalApplicant > 0) {
+                    arrData.push({
+                        "Applicant Status": "All",
+                        "Count": parseInt(countData.TotalApplicant)
+                    });
+                }
+            }
+            am4core.ready(function () {
+                am4core.useTheme(am4themes_material);
+                am4core.useTheme(am4themes_animated);
+                var chart = am4core.create("TotalCountApplicant", am4charts.PieChart);
+                chart.data = arrData;
+                var pieSeries = chart.series.push(new am4charts.PieSeries());
+                pieSeries.dataFields.value = "Count";
+                pieSeries.dataFields.category = "Applicant Status";
+                pieSeries.innerRadius = am4core.percent(50);
+                pieSeries.ticks.template.disabled = true;
+                pieSeries.labels.template.disabled = true;
+                var rgm = new am4core.RadialGradientModifier();
+                rgm.brightnesses.push(-0.8, -0.8, -0.5, 0, -0.5);
+                pieSeries.slices.template.fillModifier = rgm;
+                pieSeries.slices.template.strokeModifier = rgm;
+                pieSeries.slices.template.strokeOpacity = 0.4;
+                pieSeries.slices.template.strokeWidth = 0;
+                chart.legend = new am4charts.Legend();
+                chart.legend.position = "right";
+            });
+            am4core.ready(function () {
+                am4core.useTheme(am4themes_material);
+                am4core.useTheme(am4themes_animated);
+                var chart = am4core.create("HiredApplicant", am4charts.PieChart);
+                chart.data = arrData;
+                var pieSeries = chart.series.push(new am4charts.PieSeries());
+                pieSeries.dataFields.value = "Count";
+                pieSeries.dataFields.category = "Applicant Status";
+                pieSeries.innerRadius = am4core.percent(50);
+                pieSeries.ticks.template.disabled = true;
+                pieSeries.labels.template.disabled = true;
+                var rgm = new am4core.RadialGradientModifier();
+                rgm.brightnesses.push(-0.8, -0.8, -0.5, 0, -0.5);
+                pieSeries.slices.template.fillModifier = rgm;
+                pieSeries.slices.template.strokeModifier = rgm;
+                pieSeries.slices.template.strokeOpacity = 0.4;
+                pieSeries.slices.template.strokeWidth = 0;
+                chart.legend = new am4charts.Legend();
+                chart.legend.position = "right";
+
+            });
+        }
+    });
+
 </script>

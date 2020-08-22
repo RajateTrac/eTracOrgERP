@@ -4,6 +4,11 @@
     Layout = null;
 }
 
+<style>
+    .dropdown-menu {
+        font-size: small;
+    }
+</style>
     <div class="main_row">
         <div class="row mb-20">
             <div class="colmn col-md-12 text-center">
@@ -13,19 +18,21 @@
             </div>
         </div>
         @Html.HiddenFor(x => x.ApplicantPositionTitle[0].APT_ApplicantId)
-        @for (var i = 0; i < Model.ApplicantPositionTitle.Count(); i++)
+        @*@for (var i = 0; i < Model.ApplicantPositionTitle.Count(); i++)
+        {*@
+        @foreach (var item in Model.ApplicantPositionTitle)
         {
             <div class="row">
                 <div class="colmn col-md-3">
                     <div class="form-group">
-                        @Html.TextBoxFor(model => model.ApplicantPositionTitle[i].APT_PositionTitle, new { @class = "form-control", @placeholder = "Position Title" })
-                        @Html.ValidationMessageFor(model => model.ApplicantPositionTitle[i].APT_PositionTitle)
+                        @Html.TextBoxFor(model => item.APT_PositionTitle, new { @class = "form-control", @placeholder = "Position Title" })
+                        @Html.ValidationMessageFor(model => item.APT_PositionTitle)
                     </div>
                 </div>
                 <div class="colmn col-md-3">
                     <div class="form-group">
-                        @Html.TextBoxFor(model => model.ApplicantPositionTitle[i].APT_Salary, new { @class = "form-control", @placeholder = "Salary" })
-                        @Html.ValidationMessageFor(model => model.ApplicantPositionTitle[i].APT_Salary)
+                        @Html.TextBoxFor(model => item.APT_Salary, new { @class = "form-control", @placeholder = "Salary" })
+                        @Html.ValidationMessageFor(model => item.APT_Salary)
                     </div>
                 </div>
                 <div class="colmn col-md-1">
@@ -35,8 +42,8 @@
                 </div>
                 <div class="colmn col-md-2">
                     <div class="form-group">
-                        @Html.TextBoxFor(model => model.ApplicantPositionTitle[i].APT_FromMoYr, new { @class = "form-control", @placeholder = "DD MM YYYY" })
-                        @Html.ValidationMessageFor(model => model.ApplicantPositionTitle[i].APT_FromMoYr)
+                        @Html.TextBoxFor(model => item.APT_FromMoYr, new { @class = "form-control datepicker", @placeholder = "DD MM YYYY" })
+                        @Html.ValidationMessageFor(model => item.APT_FromMoYr)
                     </div>
                 </div>
                 <div class="colmn col-md-1">
@@ -46,10 +53,18 @@
                 </div>
                 <div class="colmn col-md-2">
                     <div class="form-group">
-                        @Html.TextBoxFor(model => model.ApplicantPositionTitle[i].APT_ToMoYr, new { @class = "form-control", @placeholder = "DD MM YYYY" })
-                        @Html.ValidationMessageFor(model => model.ApplicantPositionTitle[i].APT_ToMoYr)
+                        @Html.TextBoxFor(model => item.APT_ToMoYr, new { @class = "form-control datepicker", @placeholder = "DD MM YYYY" })
+                        @Html.ValidationMessageFor(model => item.APT_ToMoYr)
                     </div>
                 </div>
             </div>
         }
     </div>
+    <script>
+      $(document).ready(function () {
+        debugger
+          $(".datepicker").datepicker();
+         
+    })
+
+    </script>

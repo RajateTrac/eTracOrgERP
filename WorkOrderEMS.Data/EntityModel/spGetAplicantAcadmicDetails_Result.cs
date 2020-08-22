@@ -19,6 +19,7 @@ namespace WorkOrderEMS.Data.EntityModel
         public string AAD_InstituteName { get; set; }
         public Nullable<System.DateTime> AAD_AttendedFrom { get; set; }
         public Nullable<System.DateTime> AAD_AttendedTo { get; set; }
+        public string AAD_Address { get; set; }
         public string AAD_City { get; set; }
         public string AAD_State { get; set; }
         public Nullable<int> AAD_Zip { get; set; }

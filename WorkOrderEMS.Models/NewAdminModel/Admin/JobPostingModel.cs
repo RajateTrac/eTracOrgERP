@@ -28,6 +28,6 @@ namespace WorkOrderEMS.Models
         public string HiringManagerName { get; set; }
         public string HiringManager { get; set; }
         public string DOT_Status { get; set; }
-
+        public string MinimumQualification { get; set; }
     }
 }

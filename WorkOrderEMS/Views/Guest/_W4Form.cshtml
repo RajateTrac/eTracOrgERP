@@ -10,120 +10,30 @@
         color: #000;
     }
 
-    .column {
-        float: left;
-        width: 33.33%;
-        padding: 10px;
-        text-align: justify;
-        color: #000;
-    }
-
-    .left3 {
-        float: left;
-        border-bottom: 2px solid black;
-        border-right: 2px solid black;
-        width: 265px;
-    }
-
-    .right3 {
-        float: right;
-        border-bottom: 2px solid black;
-        border-left: 2px solid black;
-    }
-
-    .center3 {
-        border-bottom: 2px solid black;
-    }
-
-    .row:after {
-        content: "";
-        display: table;
-        clear: both;
-    }
-
-    hr.new1 {
-        border: 2px solid black;
-    }
-
-    hr.new2 {
-        border: 3px solid black;
-    }
-
-    hr.new3 {
-        border-top: 1px dashed black;
-        margin-top: 12px;
-    }
-
-    hr.new4 {
-        border-top: 2px solid black;
-    }
-
-    .column-left {
-        float: left;
-        width: 15.333%;
-        margin-top: 0px;
-    }
-
-    .column-right {
-        float: right;
-        width: 15.333%;
-        margin-top: 0px;
-    }
-
-    .column-center {
-        display: inline-block;
-        width: 60.333%;
-        margin-left: 63px;
-    }
-
-    .vertical {
-        border-left: 2px solid black;
-        height: 127px;
-        position: absolute;
-        left: 16%;
-        margin: -35px 0px 0px 172px;
-    }
-
-    .vertical1 {
-        border-left: 2px solid black;
-        height: 126px;
-        position: absolute;
-        left: 15%;
-        margin: -108px 0px 0px 919px;
-    }
-
-    table {
-        border-collapse: collapse;
-        width: 100%;
-    }
-
-    table, td, th {
-        border: 1px solid black;
-    }
-
-    input[type="checkbox"]:after {
-        line-height: 1.5em !important;
-        content: '' !important;
-        display: block !important;
-        margin-top: -3px !important;
-        margin-left: -3px !important;
-        border: 1px solid transparent !important;
-        border-radius: 0px !important;
-        line-height: 1.3 !important;
-        background: none !important;
-    }
-
-    .text-line {
-        padding: 3px 5px 5px 5px;
-        margin: 2px;
-        border: 1px solid;
-    }
+ 
 </style>
+<link href="~/Content/toastr.min.css" rel="stylesheet" />
+<link href="~/Content/NewAdminContent/CSS/MyGuest.css" rel="stylesheet" />
 @using (Html.BeginForm("_W4Form", "Guest", FormMethod.Post, new { id = "w4form" }))
 {
+
+    <input type="hidden" value="@Model.FormStatusw4" name="FormStatusw4" id="FormStatusw4">
+    <input type="hidden" value="@Model.FormStatusI9" name="FormStatusI9" id="FormStatusI9">
+    <input type="hidden" value="@Model.FormStatusdd" name="FormStatusdd" id="FormStatusdd">
+    <input type="hidden" value="@Model.FormStatusEvf" name="FormStatusEvf" id="FormStatusEvf">
+    <input type="hidden" value="@Model.FormStatussif" name="FormStatussif" id="FormStatussif">
+    <input type="hidden" value="@Model.FormStatusbcf" name="FormStatusbcf" id="FormStatusbcf">
+    <input type="hidden" value="@Model.FormStatusrop" name="FormStatusrop" id="FormStatusrop">
+    <input type="hidden" value="@Model.FormStatusprfecf" name="FormStatusprfecf" id="FormStatusprfecf">
+    <input type="hidden" value="@Model.FormStatusprfcaf" name="FormStatusprfcaf" id="FormStatusprfcaf">
+    <input type="hidden" value="@Model.FormStatusprf" name="FormStatusprf" id="FormStatusprf">
+    <input type="hidden" value="@Model.FormStatusff" name="FormStatusff" id="FormStatusff">
+
+
+
     @Html.HiddenFor(x => x.ApplicantId)
-    @Html.HiddenFor(x => x.EmployeeSignatureName, new { @id="getSignName"})
-    @Html.HiddenFor(x => x.EmployeeSignaature, new { @class= "Emp_Sign" })
+    @Html.HiddenFor(x => x.EmployeeSignatureName, new { @id = "getSignName" })
+    @Html.HiddenFor(x => x.EmployeeSignature, new { @class = "Emp_Sign" })
     <div style="margin:83px 30px 0px 30px;">
         <hr class="new1" />
         <div>
@@ -197,78 +107,213 @@
             </div>
         </div>  <hr class="new4">
         <div class="top" style="color:#000">
-            <table>
+            <table class="W4-tablewidth">
                 <tr>
-                    <td colspan="40" style="padding-bottom: 48px;">1. Your first name and middle initial @Html.TextBoxFor(x => x.FirstName, new { @class = "text-line", @style = "width:590px;" }) @Html.ValidationMessageFor(x => x.FirstName, "", new { @style = "color:red;" })</td>
-                    <td colspan="40" style="padding-bottom: 48px;">Last name @Html.TextBoxFor(x => x.LastName, new { @class = "text-line", @style = "width:100px;" }) @Html.ValidationMessageFor(x => x.LastName, "", new { @style = "color:red;" })</td>
-                    <td colspan="20" style="padding-bottom: 48px;">2. Your social security number @Html.TextBoxFor(x => x.SSN, new { @class = "text-line", @style = "width:590px;" }) @Html.ValidationMessageFor(x => x.SSN, "", new { @style = "color:red;" })</td>
-                </tr>
-                <tr>
-                    <td colspan="50" style="padding-bottom: 48px;">Home address (number and street or rural route) </td>
-                    <td colspan="50">
-                        3. @Html.CheckBoxFor(x => x.MeritalStatus.Single, new { @style = "height: 18px;width: 31px;" }) Single @Html.CheckBoxFor(x => x.MeritalStatus.Married, new { @style = "height: 18px;width: 31px;" })  Married @Html.CheckBoxFor(x => x.MeritalStatus.PartiallyMarried, new { @style = "height: 18px;width: 31px;" }) Married, but withhold at higher Single rate<br />
-                        <b>Note:</b> If married filing separately, check “Married, but withhold at higher Single rate.”
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="50" style="padding-bottom: 48px;">City or town, state, and ZIP code </td>
-                    <td colspan="50">
-                        4. lf your last name differs from that shown on your social security card, check here.<br /> You must call 800-772-1213 for a replacement card.
-                        ►@Html.CheckBoxFor(x => x.NameDiffer, new { @style = "height: 18px;width: 31px;" })
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="90">
-                        5. Total number of allowances you're claiming (from the applicable worksheet on the following pages). <br />
-                        6. Additional amount, if any, you want withheld from each paycheck..... <br />
-                        7. claim exemption from withholding for 2019, and I certify that I meet both of the folowing conditions for exemption....  <br />
-                        <ul>
-                            <li>Last year I had a right to a refund of all federal income tax withheld because I had no tax liability, and</li>
-                            <li>This year I expect a refund of all federal income tax withheld because I expect to have no tax liability.</li>
-                        </ul><br />
-                        If you meet both conditions, write “Exempt” here ...►
-                    </td>
-                    <td colspan="10">
-                        @Html.TextBoxFor(x => x.TotalAllowence, new { @class = "text-line", @style = "width:100px;" })<br />
-                        @Html.TextBoxFor(x => x.AdditionalAmount, new { @class = "text-line", @style = "width:100px;" })<br />
-                        @Html.TextBoxFor(x => x.ClaimExemption, new { @class = "text-line", @style = "width:100px;" })<br />
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="100">
-                        Under penalties of perjury, I declare that I have examined this certificate and, to the best of my knowledge and belief, it is true, correct, and complete.<br />
-                        <b>Employee’s signature</b>
-                        @Html.HiddenFor(x => x.IsSignature)
-                        @if (Model.IsSignature == true)
-                        {
-                            <img id="openItForSignature" style="display:none;width:163px;height:47px;" />
-                            <span id="ShowHideSignatureSpan">
-                                <input type="text" class="BoxLayout" id="BGBoxL11" name="middlename" />
-                            </span>
-                            <span>
-                                <span class="btn btn-success" style="border-radius:100px;width:8%;" id="AddSignature">
-                                    Add Signature
-                                </span>
-                            </span>
-                        }
-                        else {  <span id="ShowHideSignatureSpan">
-                                <input type="text" class="BoxLayout" id="BGBoxL11" name="middlename" />
-                            </span>}
-                        (This form is not valid unless you sign it.) ►
-                        <span style="font-weight:bold;margin-left:800px;">Date ►</span>
+                    <td colspan="40" style="padding-bottom: 48px;">
+                        1. Your first name and middle initial @Html.TextBoxFor(x => x.FirstName, new
+{
+@class = "text-line firstname-width"@*, @style = "width:590px;"*@}) @Html.ValidationMessageFor(x => x.FirstName, "", new { @style = "color:red;" })
+</td>
+<td colspan="40" style="padding-bottom: 48px;">Last name @Html.TextBoxFor(x => x.LastName, new { @class = "text-line", @style = "width:100px;" }) @Html.ValidationMessageFor(x => x.LastName, "", new { @style = "color:red;" })</td>
+<td colspan="20" style="padding-bottom: 48px;">2. Your social security number @Html.TextBoxFor(x => x.SSN, new { @class = "text-line", @style = "width:590px;" }) @Html.ValidationMessageFor(x => x.SSN, "", new { @style = "color:red;" })</td>
+</tr>
+<tr>
+    <td colspan="50" style="padding-bottom: 48px;">Home address (number and street or rural route) </td>
+    <td colspan="50">
+        3. @Html.CheckBoxFor(x => x.MeritalStatus.Single, new { @style = "height: 18px;width: 31px;" }) Single @Html.CheckBoxFor(x => x.MeritalStatus.Married, new { @style = "height: 18px;width: 31px;" })  Married @Html.CheckBoxFor(x => x.MeritalStatus.PartiallyMarried, new { @style = "height: 18px;width: 31px;" }) Married, but withhold at higher Single rate<br />
+        <b>Note:</b> If married filing separately, check “Married, but withhold at higher Single rate.”
+    </td>
+</tr>
+<tr>
+    <td colspan="50" style="padding-bottom: 48px;">City or town, state, and ZIP code </td>
+    <td colspan="50">
+        4. lf your last name differs from that shown on your social security card, check here.<br /> You must call 800-772-1213 for a replacement card.
+        ►@Html.CheckBoxFor(x => x.NameDiffer, new { @style = "height: 18px;width: 31px;" })
+    </td>
+</tr>
+<tr>
+    <td colspan="90">
+        5. Total number of allowances you're claiming (from the applicable worksheet on the following pages). <br />
+        6. Additional amount, if any, you want withheld from each paycheck..... <br />
+        7. claim exemption from withholding for 2019, and I certify that I meet both of the folowing conditions for exemption....  <br />
+        <ul>
+            <li>Last year I had a right to a refund of all federal income tax withheld because I had no tax liability, and</li>
+            <li>This year I expect a refund of all federal income tax withheld because I expect to have no tax liability.</li>
+        </ul><br />
+        If you meet both conditions, write “Exempt” here ...►
+    </td>
+    <td colspan="10">
+        @Html.TextBoxFor(x => x.TotalAllowence, new { @class = "text-line", @style = "width:100px;" })<br />
+        @Html.TextBoxFor(x => x.AdditionalAmount, new { @class = "text-line", @style = "width:100px;" })<br />
+        @Html.TextBoxFor(x => x.ClaimExemption, new { @class = "text-line", @style = "width:100px;" })<br />
+    </td>
+</tr>
+<tr>
+    @Html.HiddenFor(model => model.EmployeeSignature, new { @id = "EmployeeW4Signature" })
+    @if (Model.FormStatusw4 == "true")
+    {
+        <td colspan="100">
+            Under penalties of perjury, I declare that I have examined this certificate and, to the best of my knowledge and belief, it is true, correct, and complete.<br />
+            <b>Employee’s signature</b>
+            <img id="OpenW4Signtrue" style="width:163px;height:47px;" />
+            (This form is not valid unless you sign it.) ►
+            <span style="font-weight:bold;margin-left:800px;">Date ►</span>
 
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="70" style="padding-bottom: 48px;">8. Employer’s name and address (<b>Employer</b>: Complete boxes 8 and 10 if sending to IRS and complete boxes 8, 9, and 10 if sending to State Directory of New Hires.)  @Html.TextBoxFor(x => x.EmployeerNameAndAddress, new { @class = "text-line", @style = "width:100px;" })</td>
-                    <td colspan="15" style="padding-bottom: 48px;">9. First date of employment  @Html.TextBoxFor(x => x.FirstEmployeementDate, new { @class = "text-line", @style = "width:100px;" })</td>
-                    <td colspan="15" style="padding-bottom: 48px;">10. Employer identification number (EIN)  @Html.TextBoxFor(x => x.EIN, new { @class = "text-line", @style = "width:100px;" })</td>
-                </tr>
-            </table>
+        </td>
+    }
+    else
+    {
+        <td colspan="100">
+            Under penalties of perjury, I declare that I have examined this certificate and, to the best of my knowledge and belief, it is true, correct, and complete.<br />
+            <b>Employee’s signature</b>
+            <img id="OpenW4Sign" style="display:none;width:163px;height:47px;" />
+            <span id="ShowHideSignatureW4Span" class="hideTextBoxAndButton">
+                <input type="text" class="BoxLayout" id="BGBoxL11" name="middlename" />
+            </span>
+            <span class="btn btn-success hideTextBoxAndButton" style="border-radius: 100px;width: 10%;background-image: linear-gradient(to left, #3cffdb, #425fe0);" id="AddSignatureW4" onclick="OpenSignature('W4Form','EmployeeW4Signature','OpenW4Sign','hideTextBoxAndButton','myModalForSignatureW4','colors_sketchW4')">
+                Add Signature
+            </span>
+
+            (This form is not valid unless you sign it.) ►
+            <span style="font-weight:bold;margin-left:800px;">Date ►</span>
+
+        </td>
+    }
+
+</tr>
+@*<tr>
+        <td colspan="100">
+            Under penalties of perjury, I declare that I have examined this certificate and, to the best of my knowledge and belief, it is true, correct, and complete.<br />
+            <b>Employee’s signature</b>
+            @Html.HiddenFor(x => x.IsSignature)
+            @if (Model.IsSignature == true)
+            {
+                <img id="openItForSignature" style="display:none;width:163px;height:47px;" />
+                <span id="ShowHideSignatureSpan">
+                    <input type="text" class="BoxLayout" id="BGBoxL11" name="middlename" />
+                </span>
+                <span>
+                    <span class="btn btn-success" style="border-radius:100px;width:10%;" id="AddSignature">
+                        Add Signature
+                    </span>
+                </span>
+            }
+            else
+            { <span id="ShowHideSignatureSpan">
+                    <input type="text" class="BoxLayout" id="BGBoxL11" name="middlename" />
+                </span>}
+            (This form is not valid unless you sign it.) ►
+            <span style="font-weight:bold;margin-left:800px;">Date ►</span>
+
+        </td>
+    </tr>*@
+<tr>
+    <td colspan="70" style="padding-bottom: 48px;">8. Employer’s name and address (<b>Employer</b>: Complete boxes 8 and 10 if sending to IRS and complete boxes 8, 9, and 10 if sending to State Directory of New Hires.)  @Html.TextBoxFor(x => x.EmployeerNameAndAddress, new { @class = "text-line", @style = "width:100px;" })</td>
+    <td colspan="15" style="padding-bottom: 48px;">9. First date of employment  @Html.TextBoxFor(x => x.FirstEmployeementDate, new { @class = "text-line", @style = "width:100px;" })</td>
+    <td colspan="15" style="padding-bottom: 48px;">10. Employer identification number (EIN)  @Html.TextBoxFor(x => x.EIN, new { @class = "text-line", @style = "width:100px;" })</td>
+</tr>
+</table>
+</div>
+</div>
+<br>
+<br>
+<br>
+<br>
+<br>
+<span>
+    @*@Html.CheckBoxFor(x => x.IsSave, new { @style = "height: 18px;width: 31px;" })    i hereby declare that the above information is true to the best of my knowledge*@
+    @*<span style="cursor:pointer;" onclick="SubmitForm(this, w4form)" title="Go to next I-9"><a><i class="fa fa-long-arrow-right" style="font-size: 40px;color: steelblue;margin-left: 967px;"></i></a>
+        </span>*@
+</span>
+<div class="row" style="height: 50px;background-color: #292b48;bottom: 0;overflow: hidden;position: fixed;width: 100%;margin-left: 0;">
+    <div class="col-md-4 text-right">
+
+    </div>
+    <div class="col-md-4 text-center">
+        <span>
+            <i class="fa fa-check-square" aria-hidden="true" title="Go To CheckList" onclick="GuestCheckList(this,w4form)" style="font-size: 20px;margin-top: 15px;color: #6cc387f2;padding-right:30px;cursor:pointer;"></i>
+        </span>
+
+        <span>
+            <a><i class="fa fa-question-circle" aria-hidden="true" title="Help" style="font-size: 20px;color: #f73c3c;margin-top: 6px;padding-right:30px;cursor:pointer;" onclick="SendFormIssueNotification('W4', '@Model.ApplicantId');"></i></a>
+        </span>
+
+        <span>
+            <a><i class="fa fa-floppy-o" aria-hidden="true" title="Save" onclick="SaveBeforeNext(this,w4form)" style="font-size: 20px;color: #6cc387f2;margin-top: 6px;padding-right:30px;cursor:pointer;"></i></a>
+        </span>
+
+    </div>
+    <div class="col-md-4 text-right">
+        <span style="cursor:pointer;" id="SaveAndNextw4form" @*onclick="SaveFormAndNext('w4form')"*@ onclick="SubmitForm(this, w4form)" title="Go to next I-9">
+            <a><i class="fa fa-long-arrow-right" title="Next" style="font-size: 45px;color: #6cc387f2;margin-top: 2px;"></i></a>
+        </span>
+    </div>
+</div>
+}
+<div class="modal fade preview" id="myModalForSignatureW4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" style="width:40%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Add Signature</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">X</span></button>
+            </div>
+            <div class="modal-body" style="margin-left:0px;">
+                <div id="divDetailPreview" class="">
+                    <div>
+                        <div class="" id="DivSignatureApplicant">
+                            <div class="form-group">
+                                <div class="col-lg-7 col-md-8 col-sm-8 col-xs-12">
+                                    <div class="tools">
+                                        <a href="#colors_sketch" data-tool="marker">Marker</a> <a href="#colors_sketch" data-tool="eraser">Eraser</a>
+                                    </div>
+                                    <br />
+                                    <div id="addCanvas">
+                                        <canvas id="colors_sketchW4" width="450" height="200"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="background: white;">
+                <input type="button" class="btn btn-primary" id="btnSaveSign" data-dismiss="modal" style="border-radius: 100px; width: 25%; background-image: linear-gradient(to left, #3cffdb, #425fe0);" value="Save as Image" />
+            </div>
         </div>
     </div>
-    @*<p> @Html.CheckBoxFor(x => x.IsSave, new { @style = "height: 18px;width: 31px;" })    i hereby declare that the above information is true to the best of my knowledge <span style="cursor:pointer;" onclick="SubmitForm(this, w4form)" title="Go to next I-9"><a><i class="fa fa-long-arrow-right" style="font-size: 40px;color: steelblue;margin-left: 967px;"></i></a></span> </p>*@
-    <span> @Html.CheckBoxFor(x => x.IsSave, new { @style = "height: 18px;width: 31px;" })    i hereby declare that the above information is true to the best of my knowledge <span style="cursor:pointer;" onclick="SubmitForm(this, w4form)" title="Go to next I-9"><a><i class="fa fa-long-arrow-right" style="font-size: 40px;color: steelblue;margin-left: 967px;"></i></a></span> </span>
-    @*<p> @Html.CheckBoxFor(x => x.IsSave, new { @style = "height: 18px;width: 31px;", onchange = "SubmitForm(this,w4form)" })    i hereby declare that the above information is true to the best of my knowledge <span style="cursor:pointer;" title="Go to next I-9"><a><i class="fa fa-long-arrow-right" style="font-size: 40px;color: steelblue;margin-left: 967px;"></i></a></span> </p>*@
-}
+</div>
+<script src="~/Scripts/toastr.min.js"></script>
+<script src="~/Scripts/Guest/SketchSignature.js"></script>
 <script src="~/Scripts/Guest/ApplicantFormSave.js"></script>
+<script>
+    $(function ()
+    {
+        var formw4 = $("#FormStatusw4").val();
+        if (formw4 == "true") {
+            debugger
+            var w4Sign = $("#EmployeeW4Signature").val();
+            //var neww4Sign = w4Sign.replace("-", "/");
+            $("#OpenW4Signtrue").attr("src", w4Sign);
+        }
+        else {
+            $('#colors_sketchW4').sketch();
+            $(".tools a").eq(0).attr("style", "color:#000");
+            $(".tools a").click(function () {
+                $(".tools a").removeAttr("style");
+                $(this).attr("style", "color:#000");
+            });
+            $("#btnSaveSign").bind("click", function () {
+                debugger
+                //onclick
+                var base64 = $('#colors_sketchW4')[0].toDataURL();
+                $("#OpenW4Sign").attr("src", base64);
+                $("#OpenW4Sign").show();
+                $(".hideTextBoxAndButton").hide();
+                $("#EmployeeW4Signature").val(base64);
+            });
+        }
+       
+       
+    });
+</script>
+

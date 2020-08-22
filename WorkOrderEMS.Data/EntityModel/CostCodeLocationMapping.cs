@@ -14,22 +14,12 @@ namespace WorkOrderEMS.Data.EntityModel
     
     public partial class CostCodeLocationMapping
     {
-        public CostCodeLocationMapping()
-        {
-            this.BudgetCostCodeMappings = new HashSet<BudgetCostCodeMapping>();
-            this.BudgetCostCodeMappings1 = new HashSet<BudgetCostCodeMapping>();
-            this.CompanyLocationCostCodeMappings = new HashSet<CompanyLocationCostCodeMapping>();
-        }
-    
         public long CLM_Id { get; set; }
         public long CLM_LocationId { get; set; }
         public long CLM_CCM_CostCode { get; set; }
         public long CLM_CCD_CostCode { get; set; }
         public string CLM_IsActive { get; set; }
     
-        public virtual ICollection<BudgetCostCodeMapping> BudgetCostCodeMappings { get; set; }
-        public virtual ICollection<BudgetCostCodeMapping> BudgetCostCodeMappings1 { get; set; }
-        public virtual ICollection<CompanyLocationCostCodeMapping> CompanyLocationCostCodeMappings { get; set; }
         public virtual LocationMaster LocationMaster { get; set; }
     }
 }

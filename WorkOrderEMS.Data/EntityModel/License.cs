@@ -14,11 +14,6 @@ namespace WorkOrderEMS.Data.EntityModel
     
     public partial class License
     {
-        public License()
-        {
-            this.LogLicenses = new HashSet<LogLicense>();
-        }
-    
         public long LNC_Id { get; set; }
         public long LNC_CMP_Id { get; set; }
         public string LNC_LicenseName { get; set; }
@@ -26,8 +21,5 @@ namespace WorkOrderEMS.Data.EntityModel
         public System.DateTime LNC_ExpirationDate { get; set; }
         public string LNC_LicenseDocument { get; set; }
         public string LNC_IsActive { get; set; }
-    
-        public virtual Company Company { get; set; }
-        public virtual ICollection<LogLicense> LogLicenses { get; set; }
     }
 }

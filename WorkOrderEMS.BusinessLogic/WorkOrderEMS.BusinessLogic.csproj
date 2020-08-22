@@ -112,6 +112,14 @@
     <Reference Include="Microsoft.Exchange.WebServices.Auth, Version=15.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Exchange.WebServices.2.2\lib\40\Microsoft.Exchange.WebServices.Auth.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Office.Interop.Excel.15.0.4795.1000\lib\net20\Microsoft.Office.Interop.Excel.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.Office.Interop.Outlook, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Office.Interop.Outlook.15.0.4797.1003\lib\net20\Microsoft.Office.Interop.Outlook.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
@@ -184,6 +192,8 @@
     <Compile Include="Interfaces\Admin\NewAdmin\IDepartment.cs" />
     <Compile Include="Interfaces\Admin\NewAdmin\IePeopleManager.cs" />
     <Compile Include="Interfaces\Admin\Rule\IRuleManager.cs" />
+    <Compile Include="Interfaces\Admin\TCAPIPManager\ICorrectiveManager.cs" />
+    <Compile Include="Interfaces\Admin\TCAPIPManager\ITerminationManager.cs" />
     <Compile Include="Interfaces\eCounting\IBillDataManager.cs" />
     <Compile Include="Interfaces\eCounting\ICustomerManagement.cs" />
     <Compile Include="Interfaces\eCounting\IDebitMemo.cs" />
@@ -215,6 +225,7 @@
     <Compile Include="Interfaces\IEmailDetail.cs" />
     <Compile Include="Interfaces\IEmployeeManager.cs" />
     <Compile Include="Interfaces\IGuestUserRepository.cs" />
+    <Compile Include="Interfaces\IHRManager.cs" />
     <Compile Include="Interfaces\ILogin.cs" />
     <Compile Include="Interfaces\IManageManager.cs" />
     <Compile Include="Interfaces\IManagerAppeMaintenance.cs" />
@@ -273,6 +284,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Managers\GuestUserRepository.cs" />
+    <Compile Include="Managers\HR\HRManager.cs" />
     <Compile Include="Managers\HubManager.cs" />
     <Compile Include="Managers\LoginManager.cs" />
     <Compile Include="Managers\ManageManager.cs">
@@ -292,6 +304,8 @@
     <Compile Include="Managers\ReportManager.cs" />
     <Compile Include="Managers\Schedular\CommonSchedular.cs" />
     <Compile Include="Managers\SearchManager.cs" />
+    <Compile Include="Managers\TCAPIPManager\CorrectiveManager.cs" />
+    <Compile Include="Managers\TCAPIPManager\TerminationManager.cs" />
     <Compile Include="Managers\TreeViewManager.cs" />
     <Compile Include="Managers\UnclosedWO\UnclosedWOManager.cs" />
     <Compile Include="Managers\UserManager.cs" />
@@ -345,6 +359,7 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\AutoMapper.3.2.1\tools\AutoMapper.targets" Condition="Exists('..\packages\AutoMapper.3.2.1\tools\AutoMapper.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

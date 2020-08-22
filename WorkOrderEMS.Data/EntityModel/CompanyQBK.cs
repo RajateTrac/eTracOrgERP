@@ -19,7 +19,5 @@ namespace WorkOrderEMS.Data.EntityModel
         public long QBK_CMP_Id { get; set; }
         public System.DateTime QBK_Date { get; set; }
         public string QBK_IsActive { get; set; }
-    
-        public virtual Company Company { get; set; }
     }
 }

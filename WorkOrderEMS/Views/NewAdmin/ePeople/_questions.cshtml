@@ -99,7 +99,7 @@
                     @if (item.IQM_Id == Convert.ToInt64(WorkOrderEMS.Helper.InterviewQuestionsId.QuestionId_4) && Model.MasterId == Convert.ToInt64(WorkOrderEMS.Helper.InterviewQuestionsId.MasterId_2))
                     {
                         <div class="classForQuestionId_@item.IQM_Id" style="display:none;">
-                            <div class="form-group row ">
+                            <div class="form-group row " style="margin-bottom: -1.2rem;">
                                 <div class="col-sm-4 question" style="font-size:15px;">
                                     <select class="form-control input-rounded classForQuestionId_@item.IQM_Id" name="Comment1" masterId="@Model.MasterId" style="display:none;margin-top:10px;" id="comment1Select" questionId="@item.IQM_Id">
                                         <option value="HOURLY">HOURLY</option>
@@ -110,10 +110,10 @@
                                         <option value="NOT LISTED">NOT LISTED</option>
                                     </select>
                                 </div>
-                                <div class="col-sm-2 question classforSelectSecondQue" style="font-size:15px;display:none;margin-top:10px;">
+                                <div class="col-sm-2 question classforSelectSecondQue" style="font-size:15px;display:none;">
                                     <span>PLEASE ADD</span>
                                 </div>
-                                <input type="text" id="Comment12" name="Comment12" questionId="@item.IQM_Id" class="form-control input-rounded col-sm-6 classforSelectSecondQue" placeholder="Comment" masterId="@Model.MasterId" queid_id="comment_@item.IQM_Id" style="display:none;margin-top:15px;" />
+                                <input type="text" id="Comment12" name="Comment12" questionId="@item.IQM_Id" class="form-control input-rounded col-sm-6 classforSelectSecondQue" placeholder="Comment" masterId="@Model.MasterId" queid_id="comment_@item.IQM_Id" style="display:none;" />
                             </div>
                         </div>
                     }

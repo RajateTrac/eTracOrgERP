@@ -149,13 +149,14 @@
     Layout = null;
     string hostingPrefix = System.Configuration.ConfigurationManager.AppSettings["hostingPrefix"];
     WorkOrderEMS.Models.eTracLoginModel ObjLogin = (WorkOrderEMS.Models.eTracLoginModel)Session["eTrac"];
-    string loginUserName = "", loginUserEmail = "", loginUserContactNo = "", loginUserProfile = "";
-    long loginUserType = 0;
+    string loginUserName = "", loginUserEmail = "", loginUserContactNo = "", loginUserProfile = "", UserName = "";
+    long? loginUserType = 0, applicantId = 0;
     long locationId = 0;
     long UserId = 0;
     long INS_API_ApplicantId = 0;
     if (ObjLogin != null)
     {
+        UserName = ObjLogin.UserName;
         loginUserName = ObjLogin.FName + "'s";
         loginUserEmail = ObjLogin.Email;
         loginUserProfile = ObjLogin.UserProfile;
@@ -163,15 +164,30 @@
         //loginUserContactNo = ObjLogin.ContactNo;
         locationId = ObjLogin.LocationID;
         UserId = ObjLogin.UserId;
+        applicantId = Model.Interviewers[0].INS_API_ApplicantId;
     }
 }
 @foreach (var item in Model.Interviewers)
 {
     if (item.INS_EMP_InterviewerEmployeeId == Model.currentEmployeeId)
     {
+        if (item.INS_IsAvailable == "A")
+        {
+            <div class="card-header offlineCard" id="@item.INS_EMP_InterviewerEmployeeId" style="background:red;">
+                <div class="profile_image inline spccing">
+                    <img src="@item.ProfileImage" alt="Avatar" style="height:50px;">
+                </div>
+                <div class="profile_detail inline spccing">
+                    <span class="nameD">
+                        @item.InterviwerName
+                    </span>
+                </div>
+            </div>
+        }
+        else { 
         <div class="card-header offlineCard" id="@Model.currentEmployeeId" style="background:@(item.INS_IsAvailable=="Y"?"#43D84A":"#fff")">
             <div class="profile_image inline spccing">
-                <img src="@item.ProfileImage" alt="Avatar">
+                <img src="@item.ProfileImage" alt="Avatar" style="height:50px;">
             </div>
             <div class="profile_detail inline spccing">
                 <span class="nameD">
@@ -179,10 +195,11 @@
                     <input type="hidden" id="applicantInerviewId" value="@item.INS_API_ApplicantId" />
                 </span>
                 @*<span class="profile">
-                    @item.j
-                </span>*@
+                        @item.j
+                    </span>*@
             </div>
-            @if (item.INS_IsAvailable != "Y" && Model.InterviewStartDateTime >= DateTime.Now)// && Model.InterviewStartDateTime.Subtract(DateTime.Now).Minutes <= 10)
+            @*@if (item.INS_IsAvailable != "Y" && Model.InterviewStartDateTime >= DateTime.Now)// && Model.InterviewStartDateTime.Subtract(DateTime.Now).Minutes <= 10)*@
+            @if (item.INS_IsAvailable != "Y" && Model.InterviewStartDateTime.Date == DateTime.Now.Date)
             {
                 <div style="float:right" id="icnOnline">
                     <label class="toggle">
@@ -194,26 +211,41 @@
                 </div>
             }
         </div>
+        }
+    }
+    else if (item.INS_IsAvailable == "A")
+    {
+        <div class="card-header offlineCard" id="@item.INS_EMP_InterviewerEmployeeId" style="background:red;">
+            <div class="profile_image inline spccing">
+                <img src="@item.ProfileImage" alt="Avatar" style="height:50px;">
+            </div>
+            <div class="profile_detail inline spccing">
+                <span class="nameD">
+                    @item.InterviwerName
+                </span>
+            </div>
+        </div>
     }
     else
     {
         <div class="card-header offlineCard" id="@item.INS_EMP_InterviewerEmployeeId" style="background:@(item.INS_IsAvailable=="Y"?"#43D84A":"#fff")">
             <div class="profile_image inline spccing">
-                <img src="https://www.w3schools.com/howto/img_avatar.png" alt="Avatar">
+                <img src="@item.ProfileImage" alt="Avatar" style="height:50px;">
             </div>
             <div class="profile_detail inline spccing">
                 <span class="nameD">
                     @item.InterviwerName
                 </span>
                 @*<span class="profile">
-                    General Manager
-                </span>*@
+                        General Manager
+                    </span>*@
             </div>
-            @if (Model.Interviewers.Where(x => x.INS_IsAvailable == "Y" && x.INS_EMP_InterviewerEmployeeId == Model.currentEmployeeId && x.INS_IsHiringManager == "Y").Any() && Model.InterviewStartDateTime >= DateTime.Now && Model.InterviewStartDateTime.Subtract(DateTime.Now).Minutes <= 10 && (item.INS_IsAvailable == "N" || string.IsNullOrEmpty(item.INS_IsAvailable)))
+            @*@if (Model.Interviewers.Where(x => x.INS_IsAvailable == "Y" && x.INS_EMP_InterviewerEmployeeId == Model.currentEmployeeId && x.INS_IsHiringManager == "Y").Any() && Model.InterviewStartDateTime >= DateTime.Now && Model.InterviewStartDateTime.Subtract(DateTime.Now).Minutes <= 10 && (item.INS_IsAvailable == "N" || string.IsNullOrEmpty(item.INS_IsAvailable)))*@
+            @if (Model.Interviewers.Where(x => x.INS_IsAvailable == "Y" && x.INS_EMP_InterviewerEmployeeId == Model.currentEmployeeId && x.INS_IsHiringManager == "Y").Any() && Model.InterviewStartDateTime.Date >= DateTime.Now.Date && (item.INS_IsAvailable == "N" || string.IsNullOrEmpty(item.INS_IsAvailable)))
             {
                 <div style="float:right">
                     <input type="text" class="form-control inline comment btn-rounded" id="absentComment" style="float:left" />
-                    <button class="btn btn-default btnAbsent" onclick="MarkAbsent(@Html.Raw(Json.Encode(item)))">Absent</button>
+                    <button class="btn btn-default btnAbsent" onclick="MarkAbsent('@item.INS_EMP_InterviewerEmployeeId','@item.INS_API_ApplicantId',this);">Absent</button>
                 </div>
             }
         </div>
@@ -221,11 +253,20 @@
 }
 <div class="row interviewAction">
     <div class="col-md-12">
-        <button class="btn btn-default btncancel">Cancel</button>
-        @if (Model.CanInterviewStart && Model.Interviewers.Where(x => x.INS_IsAvailable == "Y" && x.INS_IsHiringManager == "Y").Any())
+        <button class="btn btn-default btncancel" onclick="InterviewCancel('@UserName','@applicantId');">Cancel</button>
+        @*@if (Model.CanInterviewStart && Model.Interviewers.Where(x => x.INS_IsAvailable == "Y" && x.INS_IsHiringManager == "Y").Any())*@
+        @if (Model.CanInterviewStart && Model.Interviewers.Where(x => x.INS_IsHiringManager == "Y").Any())
         {
             @*<button class="btn btn-default btnstart" onclick="GetInterviewQuestions();">Start</button>*@
-            <button class="btn btn-default btnstart" onclick="GetTypeInterview();">Start</button>
+            if (Model.Interviewers.Where(x => x.INS_EMP_InterviewerEmployeeId == UserName && x.INS_IsAvailable == "A").Any())
+            {
+            <button class="btn btn-default btnstart" disabled="disabled" title="You are absent">Start</button>
+                
+            }
+            else
+            {
+                <button class="btn btn-default btnstart" onclick="GetTypeInterview();">Start</button>
+            }
         }
         else
         {
@@ -250,7 +291,7 @@
                                     }
                                 })
                             }
-                        }                   
+                        }
                     catch (e) { console.log(e); }
                 }
             }

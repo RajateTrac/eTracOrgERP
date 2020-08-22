@@ -42,12 +42,5 @@ namespace WorkOrderEMS.Data.EntityModel
         public string LCNT_IsApprove { get; set; }
         public string LCNT_IsActive { get; set; }
         public string LCNT_IsReoccurring { get; set; }
-    
-        public virtual Company Company { get; set; }
-        public virtual Company Company1 { get; set; }
-        public virtual Contract Contract { get; set; }
-        public virtual ContractType ContractType { get; set; }
-        public virtual PaymentMode PaymentMode { get; set; }
-        public virtual PaymentTerm PaymentTerm { get; set; }
     }
 }

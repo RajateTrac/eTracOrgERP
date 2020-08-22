@@ -329,6 +329,12 @@ namespace WorkOrderEMS.Controllers.Login
                                 //QuickBookIndex();
                                 return RedirectToAction("Index", "Guest");
                                 break;
+                            case ((Int64)(UserType.HR)):
+                                ///will configure HR section for location
+                                Session["eTrac_UserLocations"] = _ILogin.GetUserAssignedLocations(5, result.UserId);
+                                Session["eTrac_UserRoles"] = Session["eTrac_LocationServices"];
+                                return RedirectToAction("Index", "NewAdmin");
+                                break;
                         }
 
                     }//else { ModelState.AddModelError("", "User not found. Please check UserName or Password"); }

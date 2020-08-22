@@ -1,0 +1,80 @@
+﻿@model WorkOrderEMS.Models.ApplicantFunFactModel
+<style>
+    .colorCode {
+        color: cornflowerblue;
+        font-size: 17px;
+    }
+</style>
+<div id="ApplicantFunFactDiv" >
+    <br />
+    <span style="font-size: 33px; color: darkblue;margin-left:395px;">Employee Fun Facts</span>
+    <br /><br /><br />
+                <div style="padding-left:200px;">
+                    <form id="ApplicantFunFactForm">
+
+                        <input type="hidden" name="@Model.Employee_Id" />
+
+                        <div class="row">
+                            <div class="colmn col-md-12">
+                                <label class="colorCode"> 1.	If you were a car, what make and model would you be? And why?</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="colmn col-md-9">
+                                <div class="form-group">
+                                    @Html.TextAreaFor(x => x.Answer_Que1, new { @class = "form-control", @placeholder = "Comment", @rows = "5" })
+                                    @Html.ValidationMessageFor(x => x.Answer_Que1)
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="colmn col-md-12">
+                                <label class="colorCode"> 2.	If you could visit anywhere in the world you’ve never been, where would you go?</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="colmn col-md-9">
+                                <div class="form-group">
+                                    @Html.TextAreaFor(x => x.Answer_Que2, new { @class = "form-control", @placeholder = "Comment", @rows = "5" })
+                                    @Html.ValidationMessageFor(x => x.Answer_Que2)
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="colmn col-md-12">
+                                <label class="colorCode">  3.	What was your favorite subject in school?</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="colmn col-md-9">
+                                <div class="form-group">
+                                    @Html.TextAreaFor(x => x.Answer_Que3, new { @class = "form-control", @placeholder = "Comment", @rows = "5" })
+                                    @Html.ValidationMessageFor(x => x.Answer_Que3)
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="colmn col-md-12">
+                                <label class="colorCode">  4.	What famous person had the most influence on you growing up?</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="colmn col-md-9">
+                                <div class="form-group">
+                                    @Html.TextAreaFor(x => x.Answer_Que4, new { @class = "form-control", @placeholder = "Comment", @rows = "5" })
+                                    @Html.ValidationMessageFor(x => x.Answer_Que4)
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <br />
+                    <button type="button" class="btn btn-primary pull-right" style="border-radius: 100px;width: 150px;background-image: linear-gradient(to left, #3cffdb, #425fe0);margin-left:10px;" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-success pull-right" id="UpdateFunFacts" style="border-radius: 100px;width: 150px;background-image: linear-gradient(to left, #3cffdb, #425fe0);">Update</button>
+
+                </div>
+</div>
+<script src="~/GridListing/JsGridScript/ListEmployeeManagement.js"></script>
+

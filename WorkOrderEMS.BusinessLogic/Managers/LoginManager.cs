@@ -58,6 +58,9 @@ namespace WorkOrderEMS.BusinessLogic.Managers
                     case UserType.Client:
                         ObjLogin = ClientLogin();
                         break;
+                    case UserType.HR:
+                        ObjLogin = HRLogin();
+                        break;
                     default:
                         ObjLogin = GlobalAdminLogin();
                         break;
@@ -172,7 +175,17 @@ namespace WorkOrderEMS.BusinessLogic.Managers
             catch (Exception)
             { throw; }
         }
-
+        private eTracLoginModel HRLogin()
+        {
+            try
+            {
+                eTracLoginModel ObjLogin = GetLoginDetails(Convert.ToInt64(UserType.HR, CultureInfo.InvariantCulture));
+                
+                return ObjLogin;
+            }
+            catch (Exception)
+            { throw; }
+        }
         /// <summary>GetLoginDetails
         /// <CreatedBy>Nagendra Upwanshi</CreatedBy>
         /// <CreatedOn>Nov-20-2014</CreatedOn>
@@ -182,6 +195,7 @@ namespace WorkOrderEMS.BusinessLogic.Managers
         /// <returns></returns>
         private eTracLoginModel GetLoginDetails(long myUserType)
         {
+            var _db = new workorderEMSEntities();
             try
             {
                 if (myUserType > 0)
@@ -207,6 +221,16 @@ namespace WorkOrderEMS.BusinessLogic.Managers
 
                         //ObjLogin.EmployeeUserID = loginUser.EmployeeID;
                         //ObjLogin.LocationID = loginUser.LocationID.HasValue ? loginUser.LocationID.Value : 0;
+                        //var getEmpDetails = _db.spGetEmployeeLogin(loginViewModel.UserName, mypassword).FirstOrDefault();
+                        //if (getEmpDetails != null)
+                        //{
+                        //    ObjLogin.JobTitleId = getEmpDetails.JBT_Id;
+                        //    ObjLogin.JobTitleName = getEmpDetails.JBT_JobTitle;
+                        //    ObjLogin.DepartmentID = getEmpDetails.DPT_Id;
+                        //    ObjLogin.DepartmentName = getEmpDetails.DPT_Name;
+                        //    ObjLogin.VSCId = getEmpDetails.VST_Id;
+                        //    ObjLogin.VSCName = getEmpDetails.VST_Title;
+                        //}
                         return ObjLogin;
                     }
                     else { throw new Exception(CommonMessage.InvalidUser()); }
@@ -381,7 +405,7 @@ namespace WorkOrderEMS.BusinessLogic.Managers
         public eTracLoginModel AuthenticateUser(eTracLoginModel loginViewModel)
         {
             //var clientUrl = new ApplicantAPI();
-            
+            workorderEMSEntities _db = new workorderEMSEntities();
             //var data = clientUrl.Configuration("https://api.availity.com/availity/v1/configurations");
             ObjUserRepository = new UserRepository();
             //objLocationServicesRepository = new LocationServicesRepository();
@@ -403,6 +427,16 @@ namespace WorkOrderEMS.BusinessLogic.Managers
 
                 if (authuser != null && authuser.UserId > 0)
                 {
+                    var getEmpDetails = _db.spGetEmployeeLogin(loginViewModel.UserName, mypassword).FirstOrDefault();
+                    if(getEmpDetails != null)
+                    {
+                        loginViewModel.JobTitleId = getEmpDetails.JBT_Id;
+                        loginViewModel.JobTitleName = getEmpDetails.JBT_JobTitle;
+                        loginViewModel.DepartmentID = getEmpDetails.DPT_Id;
+                        loginViewModel.DepartmentName = getEmpDetails.DPT_Name;
+                        loginViewModel.VSCId = getEmpDetails.VST_Id;
+                        loginViewModel.VSCName = getEmpDetails.VST_Title;
+                    }
                     //Added by Bhushan  on Jan-12-2015 for Validate Login through Serivce call
                     #region Validate Login through Serivce call
                     if ((loginViewModel.DeviceType > 0) || !string.IsNullOrEmpty(loginViewModel.DeviceId))
@@ -717,6 +751,19 @@ namespace WorkOrderEMS.BusinessLogic.Managers
                                 loginViewModel.LocationID = locationDetailsHR.LocationID;
                                 loginViewModel.Location = locationDetailsHR.LocationNames;
                                 loginViewModel.LocationCode = locationDetailsHR.LocationCode;
+                            }
+                            else
+                            {
+                                throw new Exception("You are not authorised to login, Please contact to your superior.");
+                            }
+                            break;
+                        case (Int64)(UserType.HR):
+                            eTracLoginModel locationHR = ObjUserRepository.GetLocationDetailsByUserIDForHR(authuser.UserId);
+                            if (obj_LocationMasterModel != null)
+                            {
+                                loginViewModel.LocationID = locationHR.LocationID;
+                                loginViewModel.Location = locationHR.LocationNames;
+                                loginViewModel.LocationCode = locationHR.LocationCode;
                             }
                             else
                             {

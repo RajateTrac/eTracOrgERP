@@ -14,18 +14,11 @@ namespace WorkOrderEMS.Data.EntityModel
     
     public partial class LocationCompanyMapping
     {
-        public LocationCompanyMapping()
-        {
-            this.LogLocationCompanyMappings = new HashSet<LogLocationCompanyMapping>();
-        }
-    
         public long LCM_Id { get; set; }
         public long LCM_CMP_Id { get; set; }
         public long LCM_LocationId { get; set; }
         public string LCM_IsActive { get; set; }
     
-        public virtual Company Company { get; set; }
         public virtual LocationMaster LocationMaster { get; set; }
-        public virtual ICollection<LogLocationCompanyMapping> LogLocationCompanyMappings { get; set; }
     }
 }

@@ -1,0 +1,375 @@
+﻿@{
+
+    string EmployeeId = (Convert.ToString(Session["EmployeeId"]));
+}
+
+
+<div class="content-body">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card" data-aos="fade-up">
+                    <div style="height: 45px;background:#0aa0cd;">
+                        <div class="form-group row" style="margin-left:10px;margin-top:6px;">
+                            <a id="BackToEmployeeGrid" title="Back to Employee List" style="cursor:pointer;"><i class="fa fa-long-arrow-left fa-2x" style="color:white;"></i></a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        @*<div id="ChartContainerEmployeeList" class="card" data-aos="fade-up"></div>*@
+
+                        <div id="diagram"></div>
+                        @*<div class="chart-container" style=" padding-top:10px;   height:1200px;" data-aos="fade-up"> </div>*@
+                    </div>
+                    @*<a href="https://github.com/bumbeishvili/d3-organization-chart">
+                            <img style="position:fixed;top:0;right:0;border:0;z-index:2;" width="149" height="149" src="https://bumbeishvili.github.io/d3-tooltip/forkme.png" alt="Fork me on GitHub">
+                        </a>*@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/NewAdminJS/OrgChartNew.js"></script>
+
+<script>
+    $(document).ready(function () {
+
+         $("#BackToEmployeeGrid").click(function () {
+            var addNewUrl = "@Url.Action("ePeopleDashboard", "NewAdmin")";
+            $('#RenderPageId').load(addNewUrl);
+        });
+        var VSCId;
+        debugger
+        var empId = '@EmployeeId';
+        $.ajax({
+            type: "POST",
+            url: '../EPeople/GetVehicleSeatingChartPositionedUser?Id=' + empId,
+            beforeSend: function () {
+                new fn_showMaskloader('Please wait...');
+            },
+            contentType: "application/json; charset=utf-8",
+            error: function (xhr, status, error) {
+            },
+            success: function (result) {
+                debugger
+                if (result != null) {
+                    VSCId = result.VSTId;
+                    $("#VSCIdPointingEMP").val(VSCId);
+                }
+            },
+            complete: function () {
+                fn_hideMaskloader();
+            }
+        });
+        debugger
+        var addNewUrl = "@Url.Action("GetChartDisplayData", "AdminDashboard", new { area = "AdminSection" })";
+        var peopleElement = document.getElementById("ChartContainerEmployeeList");
+        $.ajax({
+            type: "POST",
+            url: addNewUrl,
+            success: function (listData) {
+                debugger
+                var data = [];
+                var color, id;
+                for (var i = 0; i < listData.length; i++) {
+                    var name = listData[i].SeatingName;
+                    var role = listData[i].JobDescription;
+                    if (listData[i].Id == 1) {
+                        id = 'parent';
+                    } else if (listData[i].parentId == 1) {
+                        id = listData[i].Id;
+                        manager = 'parent';
+                    }
+                    else {
+                        id = listData[i].Id;
+                        manager = listData[i].parentId;
+                    }
+                    //var id = listData[i].Id == 1 ? 'parent' : listData[i].Id;
+                    //var id = listData[i].Id == 1 ? 'parent' : listData[i].Id;
+                    if (VSCId == listData[i].Id) {
+                         color = "#71AF17";
+                    } else { color = "#0aa0cd" }
+                    if (listData[i].Id == 1) {
+                        data.push({ "id": id, "name": name, "role": role, "color": color });
+                    }
+                    else {
+                        data.push({ "id": id, "name": name, "role": role, "color": color, "manager": manager });
+                    }
+                }
+                //var data = [
+                //    { 'id': 'parent', 'role': 'Board', 'color': '#71AF17' },
+                //    { 'id': '1', 'role': 'General Manager', 'manager': 'parent', 'color': '#71AF17' },
+                //    { 'id': '2', 'role': 'Human Resource Manager', 'manager': '1', 'color': '#1859B7' },
+                //    { 'id': '3', 'role': 'Trainers', 'manager': '2', 'color': '#2E95D8' },
+                //    { 'id': '4', 'role': 'Recruiting Team', 'manager': '2', 'color': '#2E95D8' },
+                //    { 'id': '6', 'role': 'Design Manager', 'manager': '1', 'color': '#1859B7' },
+                //    { 'id': '7', 'role': 'Design Supervisor', 'manager': '6', 'color': '#2E95D8' },
+                //    { 'id': '8', 'role': 'Development Supervisor', 'manager': '6', 'color': '#2E95D8' }
+                //];
+                var items = new ej.data.DataManager(data);
+
+                var diagram = new ej.diagrams.Diagram({
+                    width: "1250px", height: "630px",
+                    dataSourceSettings: {
+                        // set the unique field from data source
+                        id: 'id',
+                        // set the field which is used to identify the reporting person
+                        parentId: 'manager',
+                        // define the employee data
+                        dataManager: items
+
+                    },
+                    layout: {
+                        // set the layout type
+                        type: 'OrganizationalChart',
+                    },
+                    getNodeDefaults: nodeDefaults,
+                    getConnectorDefaults: connectorDefaults,
+                    setNodeTemplate: setNodeTemplate,
+                    // hide the gridlines in the diagram
+                    snapSettings: { constraints: ej.diagrams.SnapConstraints.None }
+                });
+                diagram.appendTo('#diagram');
+                function nodeDefaults(node) {
+                    //node.annotations[0].style.color = "white";
+                    node.width = 120;
+                    node.expandIcon = { shape: 'Minus' };
+                    node.collapseIcon = { shape: 'Plus' };
+                    return node;
+                }
+                //Define the common settings for connectors.
+                function connectorDefaults(connector) {
+                    connector.targetDecorator.shape = 'None';
+                    connector.type = 'Orthogonal';
+                    connector.style.strokeColor = 'gray';
+                    return connector;
+                }
+
+                //Funtion to add the Template of the Node.
+                function setNodeTemplate(obj, diagram) {
+                    // create the stack panel
+                    debugger
+                    var content = new ej.diagrams.StackPanel();
+                    content.id = obj.id + '_outerstack';
+                    content.orientation = 'Horizontal';
+                    content.style.strokeColor = 'gray';
+                    content.style.fill = obj.data.color;
+                    content.padding = { left: 5, right: 10, top: 5, bottom: 5 };
+
+                    // create the image element to map the image data from the data source
+
+
+                    // create the stack panel to append the text elements.
+                    var innerStack = new ej.diagrams.StackPanel();
+                    innerStack.style.strokeColor = 'none';
+                    innerStack.style.fill = obj.data.color;
+                    innerStack.margin = { left: 5, right: 0, top: 0, bottom: 0 };
+                    innerStack.id = obj.id + '_innerstack';
+
+                    // create the text element to map the name data from the data source
+                    var text = new ej.diagrams.TextElement();
+                    debugger
+                    text.style.color = 'white';
+                    text.style.bold = true;
+                    text.id = obj.id + '_name';
+                    text.content = obj.data.name;
+
+                    // create the text element to map the role data from the data source
+                    var desigText = new ej.diagrams.TextElement();
+                    desigText.id = obj.id + '_desig';
+                    desigText.content = obj.data.role;
+
+                    //var icon = new ej.diagrams.i;
+                    // append the text elements
+                    innerStack.children = [text, desigText];
+
+                    // append the image and inner stack elements
+                    content.children = [innerStack];
+                    return content;
+                }
+                //function setNodeTemplate(obj, diagram) {
+                //    // create the stack panel to append the text elements.
+                //    var innerStack = new ej.diagrams.StackPanel();
+                //    innerStack.style.strokeColor = 'none';
+                //    innerStack.margin = { left: 5, right: 0, top: 0, bottom: 0 };
+                //    innerStack.id = obj.id + '_innerstack';
+                //    // create the text element to map the name data from the data source
+                //    var text = new ej.diagrams.TextElement();
+                //    text.style.bold = true;
+                //    text.id = obj.id + '_name';
+                //    text.content = obj.data.name;
+
+                //    // create the text element to map the role data from the data source
+                //    var desigText = new ej.diagrams.TextElement();
+                //    desigText.id = obj.id + '_desig';
+                //    desigText.content = obj.data.role;
+
+                //    // append the text elements
+                //    innerStack.children = [text, desigText];
+
+                //    // append the image and inner stack elements
+                //    //content.children = [image, innerStack];
+                //    content.children = [image, innerStack];
+                //    return content;
+                //}
+            },
+        });
+
+    });
+</script>
+@*<script>
+        $(document).ready(function () {
+            $("#BackToEmployeeGrid").click(function () {
+                var addNewUrl = "@Url.Action("ePeopleDashboard", "NewAdmin")";
+                $('#RenderPageId').load(addNewUrl);
+            });
+            var VSCId;
+            debugger
+            var empId = '@EmployeeId';
+            $.ajax({
+                type: "POST",
+                url: '../EPeople/GetVehicleSeatingChartPositionedUser?Id=' + empId,
+                beforeSend: function () {
+                    new fn_showMaskloader('Please wait...');
+                },
+                contentType: "application/json; charset=utf-8",
+                error: function (xhr, status, error) {
+                },
+                success: function (result) {
+                    debugger
+                    if (result != null) {
+                        VSCId = result.VSTId;
+                        $("#VSCIdPointingEMP").val(VSCId);
+                    }
+                },
+                complete: function () {
+                    fn_hideMaskloader();
+                }
+            });
+            debugger
+            var addNewUrl = "@Url.Action("GetChartDisplayData", "AdminDashboard", new { area = "AdminSection" })";
+            var peopleElement = document.getElementById("ChartContainerEmployeeList");
+            $.ajax({
+                type: "POST",
+                url: addNewUrl,
+                success: function (listData) {
+                    debugger
+                    var lst = [];
+                    //for (var i = 0; i < listData.length; i++) {
+                    //    var nodeId = "0-" + listData[i].Id;
+                    //    var parentNodeId = "0-" + listData[i].Id;
+                    //    //var width = 342;
+                    //    //var height = 146;
+                    //    var borderWidth = 1;
+                    //    var borderRadius = 5;
+                    //    var template = "<div style=\"margin-left:70px;\n margin-top:10px;\n font-size:20px;\nfont-weight:bold;\n \">" + listData[0].SeatingName + "</div>\n<div style=\"margin-left:70px;\nmargin-top:3px;\nfont-size:16px;\n\">Cheaf Executive Officer <br>sdfsdfhdsjkh </div>\n\n<div style=\"margin-left:70px;\nmargin-top:3px;\nfont-size:14px;\n\">Business first</div>\n\n<div style=\"margin-left:196px;\nmargin-top:15px;\nfont-size:13px;\nposition:absolute;\nbottom:5px;\n\">\n<div>CTO office</div>\n<div style=\"margin-top:5px\">Corporate</div>\n</div>\n</div>";
+                    //    var borderColor = listData[i].borderColor;
+                    //    var backgroundColor = listData[i].backgroundColor;
+                    //    var connectorLineColor = listData[i].connectorLineColor;
+                    //    var connectorLineWidth = listData[i].connectorLineWidth;
+                    //    var dashArray = listData[i].dashArray;
+                    //    var expanded = listData[i].expanded;
+                    //    var directSubordinates = listData[i].directSubordinates;
+                    //    var totalSubordinates = listData.length - 1;
+                    //    var nodeImage = listData[i].nodeImage;
+                    //    lst.push({
+                    //        "nodeId": nodeId,
+                    //        "parentNodeId": parentNodeId,
+                    //        "borderWidth": borderWidth,
+                    //        "borderRadius": borderRadius,
+                    //        "borderColor": borderColor,
+                    //        "backgroundColor": backgroundColor,
+                    //        "nodeImage": nodeImage,
+                    //        "template": template,
+                    //        "connectorLineColor": connectorLineColor,
+                    //        "connectorLineWidth": connectorLineWidth,
+                    //        "dashArray": dashArray,
+                    //        "expanded": expanded,
+                    //        "directSubordinates": directSubordinates,
+                    //        "totalSubordinates": totalSubordinates
+                    //    })
+                    //}
+                    debugger
+                    //var obj = JSON.parse(listData);//jQuery.parseJSON();
+                    d3.json([{"nodeId": "O-1",
+                        "parentNodeId": null,
+                        "width": 342,
+                        "height": 146,
+                        "borderWidth": 1,
+                        "borderRadius": 5,
+                        "borderColor": {
+                        "red": 15,
+                        "green": 140,
+                        "blue": 121,
+                        "alpha": 1
+                    },
+                        "backgroundColor": {
+                        "red": 51,
+                        "green": 182,
+                        "blue": 208,
+                        "alpha": 1
+                    },
+                        "nodeImage": {
+                        "url": "",
+                        "width": 100,
+                        "height": 100,
+                        "centerTopDistance": 0,
+                        "centerLeftDistance": 0,
+                        "cornerShape": "CIRCLE",
+                        "shadow": false,
+                        "borderWidth": 0,
+                        "borderColor": {
+                            "red": 19,
+                            "green": 123,
+                            "blue": 128,
+                            "alpha": 1
+                        }
+                    },
+                        "nodeIcon": {
+                        "icon": "",
+                        "size": 30
+                    },
+                        "template": "<div>\n                  <div style=\"margin-left:70px;\n margin-top:10px;\n font-size:20px;\nfont-weight:bold;\n \">Ian Devling </div>\n<div style=\"margin-left:70px;\n                              margin-top:3px;\n                              font-size:16px;\n                         \">Cheaf Executive Officer <br>sdfsdfhdsjkh </div>\n\n                 <div style=\"margin-left:70px;\n                              margin-top:3px;\n                              font-size:14px;\n                         \">Business first</div>\n\n                 <div style=\"margin-left:196px;\n                             margin-top:15px;\n                             font-size:13px;\n                             position:absolute;\n                             bottom:5px;\n                            \">\n                      <div>CTO office</div>\n                      <div style=\"margin-top:5px\">Corporate</div>\n                 </div>\n              </div>",
+                        "connectorLineColor": {
+                        "red": 220,
+                        "green": 189,
+                        "blue": 207,
+                        "alpha": 1
+                    },
+                        "connectorLineWidth": 5,
+                        "dashArray": "",
+                        "expanded": false,
+                        "directSubordinates": 0,
+                        "totalSubordinates": 0
+      }])
+                    .then(data => {
+                        new Chart()
+                        .container('.chart-container')
+                        .data(data)
+                        .svgWidth(window.innerWidth)
+                        .svgHeight(window.innerWidth)
+                        .initialZoom(0.6)
+                        .onNodeClick(d => console.log(d + ' node clicked'))
+                        .render()
+                    })
+                },
+            });
+            //$('[node-id="' + VSCId + '"]').children().first().css("fill", "green");
+        });
+    </script>*@
+@*<script>
+        d3.json('https://gist.githubusercontent.com/bumbeishvili/dc0d47bc95ef359fdc75b63cd65edaf2/raw/c33a3a1ef4ba927e3e92b81600c8c6ada345c64b/orgChart.json')
+            .then(data => {
+
+                new Chart()
+                    .container('.chart-container')
+                    .data(data)
+                    .svgWidth(window.innerWidth)
+                    .svgHeight(window.innerWidth)
+                    .initialZoom(0.6)
+                    .onNodeClick(d => console.log(d + ' node clicked'))
+                    .render()
+
+
+            })
+    </script>*@

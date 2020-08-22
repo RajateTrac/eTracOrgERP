@@ -287,7 +287,7 @@ namespace WorkOrderEMS.Controllers
                             Value = "33"
                         };
 
-                        QueryService<Department> querySvcDept = new QueryService<Department>(serviceContext);
+                        QueryService<Intuit.Ipp.Data.Department> querySvcDept = new QueryService<Intuit.Ipp.Data.Department>(serviceContext);
                         var LocationName = _IBillDataManager.GetLocationDataByLocId(LocationId);
                         bill.DepartmentRef = new ReferenceType()
                         {

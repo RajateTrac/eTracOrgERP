@@ -147,6 +147,21 @@ namespace WorkOrderEMS.Models
         [DataMember]
         public long I9CompanyId { get; set; }
         #endregion Other Login Data
+
+        #region Employee Data
+        [DataMember]
+        public long DepartmentID { get; set; }
+        [DataMember]
+        public string DepartmentName { get; set; }
+        [DataMember]
+        public long JobTitleId { get; set; }
+        [DataMember]
+        public string JobTitleName { get; set; }
+        [DataMember]
+        public long VSCId { get; set; }
+        [DataMember]
+        public string VSCName { get; set; }
+        #endregion Employee Data
     }
     public class Login
     {

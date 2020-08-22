@@ -15,5 +15,6 @@ namespace WorkOrderEMS.Models
         public Nullable<TimeSpan> ONT_Orientationtime { get; set; }
         public string ONT_IsActive { get; set; }
         public string Action { get; set; }
+        public long OTN_ApplicantId { get; set; }
     }
 }

@@ -68,7 +68,7 @@ namespace WorkOrderEMS.Helper
         [StringValue("GuestUser")]
         GuestUser = 138,
         [StringValue("HR")]
-        HR = 493,
+        HR = 532,
     }
     public enum WorkRequestStatus
     {
@@ -672,6 +672,7 @@ namespace WorkOrderEMS.Helper
     {
         [StringValue("FileTypeSSNLicense")]
         FileType = 2,
+
     }
 
     public enum POReccuringStaus
@@ -697,6 +698,8 @@ namespace WorkOrderEMS.Helper
         public const string Offer = "O";
         public const string Hired = "H";
         public const string InterviewScheduled = "Hired";
+        public const string Interview = "B";
+        public const string Oriantation = "G";
     }
     public static class ApplicantIsActiveStatus
     {
@@ -708,9 +711,22 @@ namespace WorkOrderEMS.Helper
         public const string OfferCounter = "C";
         public const string Onboarding = "I";
     }
+    public static class PerformanceEmployeeStatus
+    {
+        public const string HRApprove = "Q";
+        public const string HRDeny = "P";
+        public const string EMPAccept = "A";
+        public const string EMPDispute = "D";
+        public const string MeetingSchedule = "H";
+        public const string MeetingStart = "I";
+        public const string MeetingCaceled = "J";
+        public const string MeetingDone = "K";
+        public const string FinalSubmitByManager = "F";
+        public const string DisputeDeny = "V";
+    }
     public static class VendorName
     {
-        public const string BackgroundCheck = "Accredited Employment Screenin";
+        public const string BackgroundCheck = "Employment Screening";
     }
     /// <summary>
     /// Created By : Ashwajit Bansod
@@ -754,7 +770,10 @@ namespace WorkOrderEMS.Helper
     public enum FileTypeId
     {
         I9 = 17,
-        W4 = 19
+        W4 = 19,
+       ComplaintFile = 22,
+       Dispute = 24,// wii change,
+       PerformanceAppraisal = 7
     }
     public static class ActiveStatus
     {
@@ -763,20 +782,39 @@ namespace WorkOrderEMS.Helper
     }
     public static class ModuleSubModule
     {
-        //Epeople
+        //Epeople and Interview
         public const string ePeople = "ePeople";
         public const string OnBoarded = "OnBoarded";
         public const string OnBoarding = "OnBoarding";
         public const string Interviewer = "Interviewer";
         public const string InterviewerAcceptDeny = "InterviewAcceptDeny";
-        public const string AssessmentStatus = "AssessmentStatus";
+        public const string ApplicantHired = "Hired";
         public const string OnBoardingComplete = "OnBoardingComplete";
-        public const string AssessmentStart = "AssessmentStart";
-
         //Performance
         public const string Performance = "Performance";
         public const string EvaluationStart = "EvaluationStart";
         public const string EvaluationComplete = "EvaluationComplete";
+        public const string AssessmentStart = "AssessmentStart";
+        public const string AssessmentStatus = "AssessmentStatus";
+        public const string AssessmentUnlock = "AssessmentUnlock";
+        public const string HRAknowledgeEvaluation = "HREvaluation";
+        public const string EmployeeAppraisalMeeting = "EMPApriasalMeeting";
+        public const string FinalSubmitEvaluation = "FinalSubmit";
+        public const string AppriasalMeetingEnd = "MeetingEnd";
+        public const string AppriasalAcceeptDispute48Hour = "48HEAD";// 48 hour to employee to accept or dispute
+        public const string AcknowledgeNotificationHRMAN = "24HEADHM";//Notification to HR and Manager to follow up
+        public const string ExtendTimeByHRFABMAN = "24ETBHR";//24 Hour extend time by HR
+        public const string RequestToVPDeptAT = "RVPDTET";//Request VP department to extend time
+        public const string HRDisputeAppriasal = "HRDA";//HR dispute appriasal
+        //Termination
+        public const string TerminateEmployee = "EmployeeAsset";
+        public const string TerminateApproveDeny = "EmployeeTermination";
+        public const string TerminationRequest = "TerminationRequest";
+        public const string CorrectiveAction = "CorrectiveAction";
+        public const string ScheduleMeeting = "ScheduleMeeting";
+        public const string AssessmentBlock = "AssessmentBlock";
+        public const string HRHelpOnboardingForm = "OnboardingFormHelp";
+        public const string HRDenyToManager = "HRDenyAppriasal";
     }
     public static class Priority
     {
@@ -799,5 +837,33 @@ namespace WorkOrderEMS.Helper
         public const string FloridaBlueAuthenticationLink = "https://api.availity.com/availity/v1/token";
         public const string FloridaBlueGetLink = "https://api.availity.com/availity/v1/configurations?type=270";
         public const string BackGroudScreeningPostLink = "https://uat-api.applicantinsight.net/v1/api/Screenings";
+        public const string BackGroudScreening = "BackGroudScreening";
+    }
+    public static class CommonFileType
+    {
+        public const string EmpoyeeDispute = "ED";
+    }
+    public static class FileName
+    {
+        public const string EmpoyeeDisputeAppriasal = "Dispute Appriasal";
+    }
+    public static class OnboardingForms
+    {
+        public const string W4 = "W4";
+        public const string I9 = "I9";
+        public const string BackgroudCheck = "Background Check";
+        public const string PhotoRelease = "Photo Release";
+        public const string ConfidentialityAgreement = "Confidentiality Agreement";
+        public const string RateOfPay = "Rate Of Pay";
+        public const string EducationVerifcation = "Education Varification";
+        public const string DirectDeposite = "Direct Deposite";
+    }
+    public static class JobTItle
+    {
+        public const string HR = "Head Of HR Department";
+    }
+    public static class Department
+    {
+        public const string HR = "People And Culture";
     }
 }

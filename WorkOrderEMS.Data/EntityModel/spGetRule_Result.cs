@@ -20,7 +20,8 @@ namespace WorkOrderEMS.Data.EntityModel
         public string RUL_Level { get; set; }
         public Nullable<decimal> RUL_SlabFrom { get; set; }
         public Nullable<decimal> RUL_SlabTo { get; set; }
-        public Nullable<long> RUL_ByPass_UserId { get; set; }
+        public long RUL_ByPass_UserId { get; set; }
+        public long RUL_ByPass_UserId1 { get; set; }
         public Nullable<System.DateTime> RUL_Date { get; set; }
         public string RUL_IsActive { get; set; }
     }

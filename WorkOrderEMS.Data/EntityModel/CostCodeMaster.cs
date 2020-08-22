@@ -14,16 +14,9 @@ namespace WorkOrderEMS.Data.EntityModel
     
     public partial class CostCodeMaster
     {
-        public CostCodeMaster()
-        {
-            this.CostCodes = new HashSet<CostCode>();
-        }
-    
         public long CCM_CostCode { get; set; }
         public long CCM_QBKId { get; set; }
         public string CCM_Description { get; set; }
         public string CCM_IsActive { get; set; }
-    
-        public virtual ICollection<CostCode> CostCodes { get; set; }
     }
 }

@@ -1178,8 +1178,6 @@ namespace WorkOrderEMS.Controllers.GlobalAdmin
         {
             try
             {
-
-
                 if (TempData != null && TempData["exceptionRaisedWhileUpdating"] != null && TempData["exceptionRaisedWhileUpdating"].ToString().Length > 0)
                 {
                     ViewBag.Message = TempData["exceptionRaisedWhileUpdating"].ToString();
@@ -1221,7 +1219,7 @@ namespace WorkOrderEMS.Controllers.GlobalAdmin
                         UserEmail = x.UserEmail,
                     });
 
-                }
+                }         
 
                 //ViewBag.AdministratorList = _IGlobalAdmin.GetAllITAdministratorList(objLoginSession.UserId, objLoginSession.LocationID, 1, 1000, "Name", "asc", "", (UserType.Administrator).ToString(), out Totalrecords);
 
@@ -1239,11 +1237,10 @@ namespace WorkOrderEMS.Controllers.GlobalAdmin
                 ViewBag.ContractHolderId = _LocationMasterModel.ContractDetailsModel.ContractHolder;
                 ViewBag.ReportingTypeId = _LocationMasterModel.ContractDetailsModel.ReportingType;
                 ViewBag.Years = _LocationMasterModel.ContractDetailsModel.Years;
-
                 ViewBag.PaymentTerms = _IVendorManagement.PaymentTermList();
                 _LocationMasterModel.LocationRuleMappingModel = GetNewLocationDetailsRuleMappingModel(locid).First();
                 _LocationMasterModel.ContractDetailsModel = GetNewLocationDetailsContractDetails(locid).First();
-
+                ViewBag.AdditionalYears = _LocationMasterModel.ContractDetailsModel.AdditonalYears;
                 return PartialView("~/Views/NewAdmin/_AddNewLocation.cshtml", _LocationMasterModel);
                 //return View("LocationSetup", _LocationMasterModel);
             }
@@ -1379,7 +1376,7 @@ namespace WorkOrderEMS.Controllers.GlobalAdmin
             long verificationManagerId, verificationClientId, OutLocationId = 0;
             eTracLoginModel objLoginSession = new eTracLoginModel();
             objLoginSession = (eTracLoginModel)Session["eTrac"];
-            var save = new Department();
+            var save = new Intuit.Ipp.Data.Department();
             try
             {
                 //if (ModelState.IsValid)
@@ -1482,8 +1479,7 @@ namespace WorkOrderEMS.Controllers.GlobalAdmin
                     #region QuickBook Department
                     //if (Session["realmId"] != null)
                     //{
-                    if (ObjLocationMasterModel.LocationId == 0)
-                    {
+                    if (ObjLocationMasterModel.LocationId == 0) {
                         string realmId = CallbackController.RealMId.ToString();//Session["realmId"].ToString();
                         try
                         {
@@ -1496,10 +1492,10 @@ namespace WorkOrderEMS.Controllers.GlobalAdmin
                             serviceContext.IppConfiguration.MinorVersion.Qbo = "23";
                             DataService commonServiceQBO = new DataService(serviceContext);
                             // Create a QuickBooks QueryService using ServiceContext
-                            QueryService<Department> querySvcDept = new QueryService<Department>(serviceContext);
-                            List<Department> department = querySvcDept.ExecuteIdsQuery("SELECT * FROM Department").ToList();
+                            QueryService<Intuit.Ipp.Data.Department> querySvcDept = new QueryService<Intuit.Ipp.Data.Department>(serviceContext);
+                            List<Intuit.Ipp.Data.Department> department = querySvcDept.ExecuteIdsQuery("SELECT * FROM Department").ToList();
 
-                            Department departmentData = new Department();
+                            Intuit.Ipp.Data.Department departmentData = new Intuit.Ipp.Data.Department();
                             PhysicalAddress address = new PhysicalAddress();
 
                             departmentData.Active = true;
@@ -1512,7 +1508,7 @@ namespace WorkOrderEMS.Controllers.GlobalAdmin
                             departmentData.Address = address;
                             departmentData.FullyQualifiedName = ObjLocationMasterModel.LocationName;
                             departmentData.Name = ObjLocationMasterModel.LocationName;
-                            save = commonServiceQBO.Add(departmentData) as Department;
+                            save = commonServiceQBO.Add(departmentData) as Intuit.Ipp.Data.Department;
                         }
                         catch (Exception ex)
                         {
@@ -2443,7 +2439,7 @@ namespace WorkOrderEMS.Controllers.GlobalAdmin
                     if (objWorkRequestAssignmentModel != null && _objWorkRequestAssignmentModel.Result == Result.Completed)
                     {
                         var obj = new NotificationDetailModel();
-                        obj.CreatedBy = objWorkRequestAssignmentModel.CreatedBy;
+                        obj.CreatedBy = objeTracLoginModel.UserName;
                         obj.CreatedDate = objWorkRequestAssignmentModel.CreatedDate;
                         obj.AssignTo = objWorkRequestAssignmentModel.AssignToUserId;
                         obj.WorkOrderID = _objWorkRequestAssignmentModel.WorkRequestAssignmentID;
@@ -2883,7 +2879,7 @@ namespace WorkOrderEMS.Controllers.GlobalAdmin
                 if (objWorkRequestAssignmentModel != null && result == Result.Completed)
                 {
                     var obj = new NotificationDetailModel();
-                    obj.CreatedBy = ObjLoginModel.UserId;
+                    obj.CreatedBy = ObjLoginModel.UserName;
                     obj.CreatedDate = Convert.ToDateTime(DateTime.UtcNow);
                     obj.AssignTo = objWorkRequestAssignmentModel.AssignToUserId;
                     obj.WorkOrderID = objWorkRequestAssignmentModel.WorkRequestAssignmentID;

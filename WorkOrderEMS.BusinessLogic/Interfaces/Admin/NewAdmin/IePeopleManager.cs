@@ -41,5 +41,8 @@ namespace WorkOrderEMS.BusinessLogic
         bool SendForBackgroundCheck(string Status, string IsActive, long ApplicantId, long UserId);
         void ScheduleInterviewOfApplicant(long IPT_Id, string status);
         BenefitList GetBenifitList(long ApplicantId);
+        string GetApplicantStatus(long ApplicantId);
+        bool UpdateCloseHoldOpenJob(long JobId, string JobStatus);
+        bool Status(string EmployeeId, string Status, string UserName, long? RMS_Id, string Assessment);
     }
 }

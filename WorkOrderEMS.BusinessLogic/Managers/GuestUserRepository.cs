@@ -18,29 +18,75 @@ namespace WorkOrderEMS.BusinessLogic
         {
             objworkorderEMSEntities = new workorderEMSEntities();
         }
+        
+
+        public EmployeeVIewModel GetEmployeeDetails(long userId)
+        {
+            var employeeId = objworkorderEMSEntities.UserRegistrations.Where(x => x.UserId == userId).FirstOrDefault()?.EmployeeID;
+            var tt = new EmployeeVIewModel();
+            try
+            {
+                tt = objworkorderEMSEntities.Employees.Where(x => x.EMP_EmployeeID == employeeId).
+                   Select(x => new EmployeeVIewModel
+                   {
+                       //Address = x.EMA_Address,
+                       //City = x.EMA_City,
+                       //State = x.EMA_State,
+                       //Cityzenship = x.CTZ_Citizenship,
+                       DlNumber = x.EMP_DrivingLicenseNumber,
+                       Dob = x.EMP_DateOfBirth,
+                       Email = x.EMP_Email,
+                       EmpId = x.EMP_EmployeeID,
+                       FirstName = x.EMP_FirstName,
+                       LastName = x.EMP_LastName,
+                       MiddleName = x.EMP_MiddleName,
+                       Image = x.EMP_Photo,
+                       Phone = x.EMP_Phone,
+                       SocialSecurityNumber = x.EMP_SSN,
+                       //Zip = x.EMA_Zip,
+                       //EMP_Gender = x.EMP_Gender.ToString(),
+                       ApplicantId = x.EMP_API_ApplicantId.Value
+                   }).FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return tt;
+        }
         public EmployeeVIewModel GetEmployee(long userId)
         {
             var employeeId = objworkorderEMSEntities.UserRegistrations.Where(x => x.UserId == userId).FirstOrDefault()?.EmployeeID;
-            return objworkorderEMSEntities.spGetEmployeePersonalInfo(employeeId).
-                Select(x => new EmployeeVIewModel
-                {
-                    Address = x.EMA_Address,
-                    City = x.EMA_City,
-                    State = x.EMA_State,
-                    Cityzenship = x.CTZ_Citizenship,
-                    DlNumber = x.EMP_DrivingLicenseNumber,
-                    Dob = x.EMP_DateOfBirth,
-                    Email = x.EMP_Email,
-                    EmpId = x.EMP_EmployeeID,
-                    FirstName = x.EMP_FirstName,
-                    LastName = x.EMP_LastName,
-                    MiddleName = x.EMP_MiddleName,
-                    Image = x.EMP_Photo,
-                    Phone = x.EMP_Phone,
-                    SocialSecurityNumber = x.EMP_SSN,
-                    Zip = x.EMA_Zip,
-                    ApplicantId = x.EMP_API_ApplicantId.Value
-                }).FirstOrDefault(); ;
+            var tt = new EmployeeVIewModel();
+            try
+            {
+                tt = objworkorderEMSEntities.spGetEmployeePersonalInfo(employeeId).
+                   Select(x => new EmployeeVIewModel
+                   {
+                       Address = x.EMA_Address,
+                       City = x.EMA_City,
+                       State = x.EMA_State,
+                       Cityzenship = x.CTZ_Citizenship,
+                       DlNumber = x.EMP_DrivingLicenseNumber,
+                       Dob = x.EMP_DateOfBirth,
+                       Email = x.EMP_Email,
+                       EmpId = x.EMP_EmployeeID,
+                       FirstName = x.EMP_FirstName,
+                       LastName = x.EMP_LastName,
+                       MiddleName = x.EMP_MiddleName,
+                       Image = x.EMP_Photo,
+                       Phone = x.EMP_Phone,
+                       SocialSecurityNumber = x.EMP_SSN,
+                       Zip = x.EMA_Zip,
+                       EMP_Gender = x.EMP_Gender.ToString(),
+                       ApplicantId = Convert.ToInt64(x.EMP_API_ApplicantId)
+                   }).FirstOrDefault();
+            }
+            catch(Exception ex)
+            {
+
+            }
+            return tt;
         }
 
         public CommonApplicantModel GetApplicantAllDetails(long userId)
@@ -59,14 +105,16 @@ namespace WorkOrderEMS.BusinessLogic
         public CommonApplicantModel GetApplicantAllDetailsToView(long Applicant)
         {
             CommonApplicantModel commonModel = new CommonApplicantModel();
+           
+            var getStateList = objworkorderEMSEntities.MasterStates.ToList();
             commonModel.ApplicantAddress = objworkorderEMSEntities.spGetApplicantAddress(Applicant).Select
-                (x => new ApplicantAddress() {
+                (x => new WorkOrderEMS.Models.ApplicantAddress() {
                     APA_Apartment = x.APA_Apartment,
                     APA_City  =x.APA_City,
-                    APA_State = x.APA_State,
+                    APA_State = x.APA_State,//getStateList.Where(ms => ms.StateCode == x.APA_State).FirstOrDefault().StateName,
                     APA_StreetAddress = x.APA_StreetAddress,
-                    APA_YearsAddressFrom = x.APA_YearsAddressFrom,
-                    APA_YearsAddressTo = x.APA_YearsAddressTo,
+                    APA_YearsAddressFrom = x.APA_YearsAddressFrom.Value.Date,
+                    APA_YearsAddressTo = x.APA_YearsAddressTo.Value.Date,
                     APA_Zip = x.APA_Zip
                 }).ToList();
             commonModel.ApplicantPersonalInfo = objworkorderEMSEntities.spGetApplicantPersonalInfo(Applicant).Select
@@ -79,18 +127,18 @@ namespace WorkOrderEMS.BusinessLogic
                       API_SSN = x.API_SSN,
                       API_Title = x.API_Title,                     
                   }).ToList();
-            commonModel.AplicantAcadmicDetails = objworkorderEMSEntities.spGetAplicantAcadmicDetails(Applicant).Select
+            commonModel.AplicantAcadmicDetails = objworkorderEMSEntities.spGetAplicantAcadmicDetails(Applicant).Where(x => x.AAD_InstituteName != null).Select
                   (x => new WorkOrderEMS.Models.AplicantAcadmicDetails(){
                       AAD_AttendedFrom = x.AAD_AttendedFrom,
                       AAD_AttendedTo = x.AAD_AttendedTo,
                       AAD_City = x.AAD_City,
                       AAD_EducationType = x.AAD_EducationType,
                       AAD_InstituteName = x.AAD_InstituteName,
-                      AAD_State = x.AAD_State,
+                      AAD_State = x.AAD_State,//getStateList.Where(ms => ms.StateCode == x.AAD_State).FirstOrDefault().StateName,
                       AAD_Zip = Convert.ToInt32(x.AAD_Zip),                     
                   }).ToList();
             commonModel.ApplicantAccidentRecord = objworkorderEMSEntities.spGetApplicantAccidentRecord(Applicant).Select
-                  (x => new ApplicantAccidentRecord()
+                  (x => new WorkOrderEMS.Models.ApplicantAccidentRecord()
                   {
                     AAR_AccidantDate = x.AAR_AccidantDate,
                     AAR_Discription = x.AAR_Discription,
@@ -98,7 +146,7 @@ namespace WorkOrderEMS.BusinessLogic
                     AAR_NumberOfInjuries = Convert.ToInt32(x.AAR_NumberOfInjuries)
                   }).ToList();
             commonModel.ApplicantAdditionalInfo = objworkorderEMSEntities.spGetApplicantAdditionalInfo(Applicant).Select
-                  (x => new ApplicantAdditionalInfo()
+                  (x => new WorkOrderEMS.Models.ApplicantAdditionalInfo()
                   {
                     AAI_Age21Completed = Convert.ToChar(x.AAI_Age21Completed),
                     AAI_AnyRefOrEmployeeInELITE = Convert.ToChar(x.AAI_AnyRefOrEmployeeInELITE),
@@ -111,7 +159,7 @@ namespace WorkOrderEMS.BusinessLogic
                     AAI_WorkEligibilityUS = Convert.ToChar(x.AAI_WorkEligibilityUS)
                   }).ToList();
             commonModel.ApplicantBackgroundHistory = objworkorderEMSEntities.spGetApplicantBackgroundHistory(Applicant).Select
-                  (x => new ApplicantBackgroundHistory()
+                  (x => new WorkOrderEMS.Models.ApplicantBackgroundHistory()
                   {
                       ABH_Address = x.ABH_Address,
                       ABH_City = x.ABH_City,
@@ -120,12 +168,13 @@ namespace WorkOrderEMS.BusinessLogic
                       ABH_ReasonForGAP = x.ABH_ReasonForGAP,
                       ABH_ReasonforLeaving = x.ABH_ReasonforLeaving,
                       ABH_SafetySensitiveFunction =Convert.ToChar(x.ABH_SafetySensitiveFunction),
-                      ABH_State = x.ABH_State,
+                      ABH_State = x.ABH_State,//getStateList.Where(ms => ms.StateCode == x.ABH_State).FirstOrDefault().StateName,
+                      
                       ABH_StillEmployed = Convert.ToChar(x.ABH_StillEmployed),
                       ABH_SubToFedralMotor = Convert.ToChar(x.ABH_SubToFedralMotor),
                       ABH_ZIPCode = Convert.ToInt32(x.ABH_ZIPCode)
                   }).ToList();
-            commonModel.ApplicantContactInfo = objworkorderEMSEntities.spGetApplicantContactInfo(Applicant).Select
+            commonModel.ApplicantContactInfo = objworkorderEMSEntities.spGetApplicantContactInfo(Applicant).Where(x => x.ACI_PrefredContactMethod != null).Select
                   (x => new WorkOrderEMS.Models.ApplicantContactInfo()
                   {
                       ACI_eMail = x.ACI_eMail,
@@ -133,29 +182,43 @@ namespace WorkOrderEMS.BusinessLogic
                       ACI_PrefredContactMethod = x.ACI_PrefredContactMethod
                   }).ToList();
             commonModel.ApplicantLicenseHeald  = objworkorderEMSEntities.spGetApplicantLicenseHeald(Applicant).Select
-                  (x => new ApplicantLicenseHeald()
+                  (x => new WorkOrderEMS.Models.ApplicantLicenseHeald()
                   {
                      ALH_ExpirationDate = x.ALH_ExpirationDate,
                      ALH_IssueDate = x.ALH_IssueDate,
                      ALH_LicenceNumber = x.ALH_LicenceNumber,
                      ALH_LicenseType = x.ALH_LicenseType,
-                     ALH_State = x.ALH_State
+                     ALH_State = x.ALH_State//getStateList.Where(ms => ms.StateCode == x.ALH_State).FirstOrDefault().StateName,
+                      
                   }).ToList();
             commonModel.ApplicantPositionTitle = objworkorderEMSEntities.spGetApplicantPositionTitle(Applicant).Select
-                  (x => new ApplicantPositionTitle()
+                  (x => new WorkOrderEMS.Models.ApplicantPositionTitle()
                   {
                       APT_FromMoYr  =x.APT_FromMoYr,
                       APT_PositionTitle = x.APT_PositionTitle,
                       APT_Salary = Convert.ToDecimal(x.APT_Salary),
                       APT_ToMoYr = x.APT_ToMoYr
                   }).ToList();
-            commonModel.ApplicantSchecduleAvaliblity = objworkorderEMSEntities.spGetApplicantSchecduleAvaliblity(Applicant).Select
-                 (x => new ApplicantSchecduleAvaliblity()
-                 {
-                     ASA_AvaliableEndTime = Convert.ToDateTime(x.ASA_AvaliableEndTime),
-                     ASA_AvaliableStartTime = Convert.ToDateTime(x.ASA_AvaliableStartTime),
-                     ASA_WeekDay = x.ASA_WeekDay
-                 }).ToList();
+
+            var getScheduleDetails = objworkorderEMSEntities.spGetApplicantSchecduleAvaliblity(Applicant).ToList();
+            foreach (var item in getScheduleDetails)
+            {
+                var shcedule = new WorkOrderEMS.Models.ApplicantSchecduleAvaliblity();
+                var fromtime = "01-01-2020" + " " + item.ASA_AvaliableStartTime.ToString();
+                var totime = "01-01-2020" + " " + item.ASA_AvaliableEndTime.ToString();
+                shcedule.ASA_AvaliableStartTime = Convert.ToDateTime(fromtime);
+                shcedule.ASA_AvaliableEndTime = Convert.ToDateTime(totime);
+                shcedule.ASA_WeekDay = item.ASA_WeekDay;
+                commonModel.ApplicantSchecduleAvaliblity.Add(shcedule);
+            }
+            //commonModel.ApplicantSchecduleAvaliblity = objworkorderEMSEntities.spGetApplicantSchecduleAvaliblity(Applicant)
+            //    .Select
+            //     (x => new WorkOrderEMS.Models.ApplicantSchecduleAvaliblity()
+            //     {
+            //         ASA_AvaliableEndTime = Convert.ToDateTime(x.ASA_AvaliableEndTime.ToString()),
+            //         ASA_AvaliableStartTime = Convert.ToDateTime(x.ASA_AvaliableStartTime.ToString()),
+            //         ASA_WeekDay = x.ASA_WeekDay
+            //     }).ToList();
             commonModel.ApplicantTrafficConvictions = objworkorderEMSEntities.spGetApplicantTrafficConvictions(Applicant).Select
                  (x => new ApplicantTrafficConvictions()
                  {
@@ -166,13 +229,20 @@ namespace WorkOrderEMS.BusinessLogic
                      ATC_Violation = x.ATC_Violation
                  }).ToList();
             commonModel.ApplicantVehiclesOperated = objworkorderEMSEntities.spGetApplicantVehiclesOperated(Applicant).Select
-                 (x => new ApplicantVehiclesOperated()
+                 (x => new WorkOrderEMS.Models.ApplicantVehiclesOperated()
                  {
                      AVO_DenideLicensePermit = Convert.ToChar(x.AVO_DenideLicensePermit),
                      AVO_DeniedLicensePermitExplanation = x.AVO_DeniedLicensePermitExplanation,
                      AVO_SuspendRevokeLicensePermit = Convert.ToChar(x.AVO_SuspendRevokeLicensePermit),
                      AVO_SuspendRevokeLicensePermitExplanation = x.AVO_SuspendRevokeLicensePermitExplanation
                  }).ToList();
+            commonModel.ListAcadmicCertification = objworkorderEMSEntities.spGetAplicantCertificationDetails(Applicant).Select(x => new AcadmicCertification()
+            {
+                ACD_CertificationName = x.ACD_CertificationName,
+                 ACD_CertificateFileName = x.ACD_CertificateAttached,
+                 ACD_CertificationEarnedYear = x.ACD_CertificationEarnedYear,
+                 ACD_CertifyingAgency = x.ACD_CertifyingAgency
+            }).ToList();
             return commonModel;
         }
         public bool UpdateApplicantInfo(EmployeeVIewModel onboardingDetailRequestModel)
@@ -214,30 +284,44 @@ namespace WorkOrderEMS.BusinessLogic
                     var EmployeeId = objworkorderEMSEntities.UserRegistrations.Where(x => x.UserId == UserId).FirstOrDefault()?.EmployeeID;
                     result = Context.spGetDirectDepositForm(EmployeeId).Select(x => new DirectDepositeFormModel
                     {
-                        Account1 = new AccountModel
-                        {
-                            Account = x.DDF_AccountNumber_1,
-                            AccountType = x.DDF_AccountType_1,
-                            BankRouting = x.DDF_BankRoutingNumber_1,
-                            DepositeAmount = x.DDF_PrcentageOrDollarAmount_1,
-                            EmployeeBankName = x.DDF_BankRoutingNumber_1
+                        
+                            Account1 = x.DDF_AccountNumber_1,
+                            AccountType1 = x.DDF_AccountType_1,
+                            BankRouting1 = x.DDF_BankRoutingNumber_1,
+                            DepositeAmount1 = x.DDF_PrcentageOrDollarAmount_1,
+                            EmployeeBankName1 = x.DDF_BankRoutingNumber_1,
 
-                        },
-                        Account2 = new AccountModel
-                        {
-                            Account = x.DDF_AccountNumber_2,
-                            AccountType = x.DDF_AccountType_2,
-                            BankRouting = x.DDF_BankRoutingNumber_2,
-                            DepositeAmount = x.DDF_PrcentageOrDollarAmount_1,
-                            EmployeeBankName = x.DDF_BankRoutingNumber_2
-                        },
+                       
+                            Account2 = x.DDF_AccountNumber_2,
+                            AccountType2 = x.DDF_AccountType_2,
+                            BankRouting2 = x.DDF_BankRoutingNumber_2,
+                            DepositeAmount2 = x.DDF_PrcentageOrDollarAmount_1,
+                            EmployeeBankName2 = x.DDF_BankRoutingNumber_2,
+                        
+                        //Account1 = new AccountModel
+                        //{
+                        //    Account = x.DDF_AccountNumber_1,
+                        //    AccountType = x.DDF_AccountType_1,
+                        //    BankRouting = x.DDF_BankRoutingNumber_1,
+                        //    DepositeAmount = x.DDF_PrcentageOrDollarAmount_1,
+                        //    EmployeeBankName = x.DDF_BankRoutingNumber_1
+
+                        //},
+                        //Account2 = new AccountModel
+                        //{
+                        //    Account = x.DDF_AccountNumber_2,
+                        //    AccountType = x.DDF_AccountType_2,
+                        //    BankRouting = x.DDF_BankRoutingNumber_2,
+                        //    DepositeAmount = x.DDF_PrcentageOrDollarAmount_1,
+                        //    EmployeeBankName = x.DDF_BankRoutingNumber_2
+                        //},
                         EmployeeId = EmployeeId,
                         PrintedName = x.EmployeeName,
 
 
                     }).FirstOrDefault();
-                    result = result == null ? new DirectDepositeFormModel() : result;
-                    result.EmployeeId = EmployeeId;
+                    //result = result == null ? new DirectDepositeFormModel() : result;
+                    //result.EmployeeId = EmployeeId;
                     return result;
                 }
             }
@@ -256,23 +340,37 @@ namespace WorkOrderEMS.BusinessLogic
 
                     var result = Context.spGetDirectDepositForm(EmployeeId).Select(x => new DirectDepositeFormModel
                     {
-                        Account1 = new AccountModel
-                        {
-                            Account = x.DDF_AccountNumber_1,
-                            AccountType = x.DDF_AccountType_1,
-                            BankRouting = x.DDF_BankRoutingNumber_1,
-                            DepositeAmount = x.DDF_PrcentageOrDollarAmount_1,
-                            EmployeeBankName = x.DDF_BankRoutingNumber_1
+                       
+                            Account1 = x.DDF_AccountNumber_1,
+                            AccountType1 = x.DDF_AccountType_1,
+                            BankRouting1 = x.DDF_BankRoutingNumber_1,
+                            DepositeAmount1 = x.DDF_PrcentageOrDollarAmount_1,
+                            EmployeeBankName1 = x.DDF_BankRoutingNumber_1,
 
-                        },
-                        Account2 = new AccountModel
-                        {
-                            Account = x.DDF_AccountNumber_2,
-                            AccountType = x.DDF_AccountType_2,
-                            BankRouting = x.DDF_BankRoutingNumber_2,
-                            DepositeAmount = x.DDF_PrcentageOrDollarAmount_1,
-                            EmployeeBankName = x.DDF_BankRoutingNumber_2
-                        },
+                       
+                            Account2 = x.DDF_AccountNumber_2,
+                            AccountType2 = x.DDF_AccountType_2,
+                            BankRouting2 = x.DDF_BankRoutingNumber_2,
+                            DepositeAmount2 = x.DDF_PrcentageOrDollarAmount_1,
+                            EmployeeBankName2 = x.DDF_BankRoutingNumber_2,
+                      
+                        //Account1 = new AccountModel
+                        //{
+                        //    Account = x.DDF_AccountNumber_1,
+                        //    AccountType = x.DDF_AccountType_1,
+                        //    BankRouting = x.DDF_BankRoutingNumber_1,
+                        //    DepositeAmount = x.DDF_PrcentageOrDollarAmount_1,
+                        //    EmployeeBankName = x.DDF_BankRoutingNumber_1
+
+                        //},
+                        //Account2 = new AccountModel
+                        //{
+                        //    Account = x.DDF_AccountNumber_2,
+                        //    AccountType = x.DDF_AccountType_2,
+                        //    BankRouting = x.DDF_BankRoutingNumber_2,
+                        //    DepositeAmount = x.DDF_PrcentageOrDollarAmount_1,
+                        //    EmployeeBankName = x.DDF_BankRoutingNumber_2
+                        //},
                         EmployeeId = x.DDF_EMP_EmployeeID,
                         PrintedName = x.EmployeeName,
 
@@ -297,12 +395,12 @@ namespace WorkOrderEMS.BusinessLogic
                     var EmployeeId = objworkorderEMSEntities.UserRegistrations.Where(x => x.UserId == UserId).FirstOrDefault()?.EmployeeID;
                     var data = GetDirectDepositeDataByEmployeeId(EmployeeId);
                     if (data != null)
-                        return Context.spSetDirectDepositForm("U", EmployeeId, model.Account1.EmployeeBankName, model.Account1.AccountType,
-                            model.Account1.Account, model.Account1.BankRouting, model.Account1.DepositeAmount.HasValue ? model.Account1.DepositeAmount.Value : 0, model.Account2.EmployeeBankName, model.Account2.AccountType, model.Account2.Account
-                            , model.Account2.BankRouting, model.VoidCheck, "Y") > 0 ? true : false;
-                    var add =  Context.spSetDirectDepositForm("I", EmployeeId, model.Account1.EmployeeBankName, model.Account1.AccountType,
-                            model.Account1.Account, model.Account1.BankRouting, model.Account1.DepositeAmount.HasValue ? model.Account1.DepositeAmount.Value : 0, model.Account2.EmployeeBankName, model.Account2.AccountType, model.Account2.Account
-                            , model.Account2.BankRouting, model.VoidCheck, "Y");// > 0 ? true : false;
+                        return Context.spSetDirectDepositForm("U", EmployeeId, model.EmployeeBankName1, model.AccountType1,
+                            model.Account1, model.BankRouting1, model.DepositeAmount1.HasValue ? model.DepositeAmount1.Value : 0, model.EmployeeBankName2, model.AccountType2, model.Account2
+                            , model.BankRouting2, model.VoidCheck, "Y") > 0 ? true : false;
+                    var add = Context.spSetDirectDepositForm("I", EmployeeId, model.EmployeeBankName1, model.AccountType1,
+                            model.Account1, model.BankRouting1, model.DepositeAmount1.HasValue ? model.DepositeAmount1.Value : 0, model.EmployeeBankName1, model.AccountType2, model.Account2
+                            , model.BankRouting2, model.VoidCheck, "Y");// > 0 ? true : false;
                     return true;
                 }
             }
@@ -311,6 +409,30 @@ namespace WorkOrderEMS.BusinessLogic
                 throw ex;
             }
         }
+        //public bool SetDirectDepositeFormData(DirectDepositeFormModel model, long UserId)
+        //{
+        //    try
+        //    {
+
+        //        using (workorderEMSEntities Context = new workorderEMSEntities())
+        //        {
+        //            var EmployeeId = objworkorderEMSEntities.UserRegistrations.Where(x => x.UserId == UserId).FirstOrDefault()?.EmployeeID;
+        //            var data = GetDirectDepositeDataByEmployeeId(EmployeeId);
+        //            if (data != null)
+        //                return Context.spSetDirectDepositForm("U", EmployeeId, model.Account1.EmployeeBankName, model.Account1.AccountType,
+        //                    model.Account1.Account, model.Account1.BankRouting, model.Account1.DepositeAmount.HasValue ? model.Account1.DepositeAmount.Value : 0, model.Account2.EmployeeBankName, model.Account2.AccountType, model.Account2.Account
+        //                    , model.Account2.BankRouting, model.VoidCheck, "Y") > 0 ? true : false;
+        //            var add =  Context.spSetDirectDepositForm("I", EmployeeId, model.Account1.EmployeeBankName, model.Account1.AccountType,
+        //                    model.Account1.Account, model.Account1.BankRouting, model.Account1.DepositeAmount.HasValue ? model.Account1.DepositeAmount.Value : 0, model.Account2.EmployeeBankName, model.Account2.AccountType, model.Account2.Account
+        //                    , model.Account2.BankRouting, model.VoidCheck, "Y");// > 0 ? true : false;
+        //            return true;
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //}
         public bool SetEmployeeHandbookData(EmployeeHandbookModel model, long UserId)
         {
             try
@@ -567,29 +689,49 @@ namespace WorkOrderEMS.BusinessLogic
                 throw ex;
             }
         }
-        public EducationVarificationModel GetEducationVerificationForm(long userId)
+        public List<EducationVarificationModel> GetEducationVerificationForm(long userId, long ApplicantId)
         {
             try
             {
                 using (workorderEMSEntities Context = new workorderEMSEntities())
                 {
-                    var empid = Context.UserRegistrations.Where(x => x.UserId == userId)?.FirstOrDefault().EmployeeID;
-                    var name = Context.spGetEducationVerificationForm(empid).Select(x => new EducationVarificationModel
-                    {
-                        EmpId = empid,
-                        HighSchool = new Education
-                        {
-                            AttendFrom = x.EVF_AttendedFrom,
-                            AttendTo = x.EVF_AttendedTo,
-                            City = x.EVF_City,
-                            SchoolName = x.EVF_OrgnizationName,
-                            State = x.EVF_State,
-                            Cretificate = x.EVF_SchoolDegreeDiplomaCirtificate,
-                        },
-                        Name = x.EmployeeName,
-                        EvfId = x.EVF_Id
-                    }).FirstOrDefault();
-                    return name;
+                    var empid = Context.UserRegistrations.Where(x => x.UserId == userId).FirstOrDefault(); ;
+                    //var name = Context.spGetEducationVerificationForm(empid.EmployeeID).Select(x => new EducationVarificationModel
+                    //{
+                    //    EmpId = empid.EmployeeID,
+                    //    HighSchool = new Education
+                    //    {
+                    //        AttendFrom = x.EVF_AttendedFrom,
+                    //        AttendTo = x.EVF_AttendedTo,
+                    //        City = x.EVF_City,
+                    //        SchoolName = x.EVF_OrgnizationName,
+                    //        State = x.EVF_State,
+                    //        Cretificate = x.EVF_SchoolDegreeDiplomaCirtificate,
+                    //    },
+                    //    Name = x.EmployeeName,
+                    //    EvfId = x.EVF_Id
+                    //}).ToList();
+                    //if(name == null)
+                    //{
+                        var getDetials = Context.spGetAplicantAcadmicDetails(ApplicantId).
+                            Select(x => new EducationVarificationModel
+                            {
+                                EmpId = empid.EmployeeID,
+                                HighSchool = new Education
+                                {
+                                    AttendFrom = x.AAD_AttendedFrom,
+                                    AttendTo = x.AAD_AttendedTo,
+                                    City = x.AAD_City,
+                                    SchoolName = x.AAD_InstituteName,
+                                    State = x.AAD_State,
+                                    Cretificate = x.AAD_EducationType,
+                                },
+                                Name = empid.FirstName + " " + empid.LastName,
+                                EvfId = null
+                            }).ToList();
+                        
+                    //}
+                    return getDetials;
                 }
             }
             catch (Exception ex)
@@ -597,21 +739,30 @@ namespace WorkOrderEMS.BusinessLogic
                 throw ex;
             }
         }
-        public void SetEducationVerificationForm(long userId, EducationVarificationModel model)
+        public void SetEducationVerificationForm(long userId, List<EducationVarificationModel> model)
         {
             try
             {
                 using (workorderEMSEntities Context = new workorderEMSEntities())
                 {
                     var empid = Context.UserRegistrations.Where(x => x.UserId == userId)?.FirstOrDefault().EmployeeID;
-                    var isexist = GetEducationVerificationForm(userId);
-                    if (ReferenceEquals(isexist, null))
+                    var isexist = GetEducationVerificationForm(userId,0);
+                    if (model.Count() > 0)
                     {
-                        Context.spSetEducationVerificationForm("I", model.EvfId, empid, model.Certificate, model.HighSchool.SchoolName, "", model.HighSchool.City, model.HighSchool.State, model.HighSchool.AttendFrom, model.HighSchool.AttendTo, model.IsActive);
-                    }
-                    else
-                    {
-                        Context.spSetEducationVerificationForm("U", isexist.EvfId, empid, model.Certificate, model.HighSchool.SchoolName, "", model.HighSchool.City, model.HighSchool.State, model.HighSchool.AttendFrom, model.HighSchool.AttendTo, model.IsActive);
+                        foreach (var item in model)
+                        {
+
+
+                            if (ReferenceEquals(isexist, null))
+                            {
+                                Context.spSetEducationVerificationForm("I", item.EvfId, empid, item.Certificate, item.HighSchool.SchoolName, "", item.HighSchool.City, item.HighSchool.State, item.HighSchool.AttendFrom, item.HighSchool.AttendTo, item.IsActive);
+                            }
+                            else
+                            {
+                                Context.spSetEducationVerificationForm("U", item.EvfId, empid, item.Certificate, item.HighSchool.SchoolName, "", item.HighSchool.City, item.HighSchool.State, item.HighSchool.AttendFrom, item.HighSchool.AttendTo, item.IsActive);
+                                
+                            }
+                        }
                     }
 
                 }
@@ -701,10 +852,17 @@ namespace WorkOrderEMS.BusinessLogic
 
         private string GetMaritalStatusAsString(MeritalStatus meritalStatus)
         {
-            if (meritalStatus.Married)
-                return "Married";
-            if (meritalStatus.Single)
-                return "Single";
+            if (meritalStatus != null)
+            {
+                if (meritalStatus.Married)
+                    return "Married";
+                if (meritalStatus.Single)
+                    return "Single";
+            }
+            else
+            {
+                return null;
+            }
             return "PartiallyMarried";
         }
         public PersonalFileModel GetFormsStatus(long userId)

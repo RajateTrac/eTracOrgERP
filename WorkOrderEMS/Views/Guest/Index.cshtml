@@ -82,6 +82,7 @@ input[type=checkbox]:checked + label:before { letter-spacing: 5px; } /* allow sp
 	}
 </script>
 
+
 <div class="card" style="width: 80%;margin: auto;">
 	<div class="card-header">On-Boarding/Personal Information</div>
 	<div class="card-body">
@@ -96,10 +97,10 @@ input[type=checkbox]:checked + label:before { letter-spacing: 5px; } /* allow sp
 		@Html.AntiForgeryToken()
 		@Html.ValidationSummary(true)
 		@using (Html.BeginForm())
-		{
+        {
 			<div class="middle" style="cursor:pointer">
 				<label>
-					@Html.HiddenFor(x=>x.IsEditEnable,new { @id="hdnIsEditEnable"})
+					@Html.HiddenFor(x => x.IsEditEnable, new { @id = "hdnIsEditEnable" })
 					<input id="box1" type="checkbox" onchange="EnableEdit(this);" />
 					<label for="box1">Enable To Edit</label>
 				</label>
@@ -112,7 +113,7 @@ input[type=checkbox]:checked + label:before { letter-spacing: 5px; } /* allow sp
 							<span>First Name</span>
 							@Html.HiddenFor(model => model.EmpId)
 							@Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control input-rounded", placeholder = "First Name", @disabled = "disabled" } })
-							@Html.ValidationMessageFor(x => x.FirstName,"",new {@class="text-danger" })
+							@Html.ValidationMessageFor(x => x.FirstName, "", new { @class = "text-danger" })
 
 						</div>
 						<div class="col-sm-4">
@@ -199,6 +200,6 @@ input[type=checkbox]:checked + label:before { letter-spacing: 5px; } /* allow sp
 				</div>
 
 			</div>
-		}
+        }
 	</div>
 </div>

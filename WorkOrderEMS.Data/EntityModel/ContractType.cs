@@ -14,18 +14,9 @@ namespace WorkOrderEMS.Data.EntityModel
     
     public partial class ContractType
     {
-        public ContractType()
-        {
-            this.Contracts = new HashSet<Contract>();
-            this.LogContracts = new HashSet<LogContract>();
-        }
-    
         public long CTT_Id { get; set; }
         public string CTT_ContractType { get; set; }
         public string CTT_Discription { get; set; }
         public string CTT_IsActive { get; set; }
-    
-        public virtual ICollection<Contract> Contracts { get; set; }
-        public virtual ICollection<LogContract> LogContracts { get; set; }
     }
 }

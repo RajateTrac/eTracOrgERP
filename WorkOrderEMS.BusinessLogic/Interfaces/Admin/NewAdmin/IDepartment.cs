@@ -14,5 +14,6 @@ namespace WorkOrderEMS.BusinessLogic.Interfaces
         DepartmentModel GetDepartmentData(long Id);
         List<DepartmentModel> ListAllDepartment(string txt, long? LocationId, long? UserId);
         bool DeleteDepartmentById(DepartmentModel Obj);
+        List<DepartmentEmployeeList> GetDepartmentEmployeeList(string Dept_Name);
     }
 }

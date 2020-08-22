@@ -11,6 +11,7 @@
         isSubmitted = Model.First().SAM_IsActive != null ? Model.FirstOrDefault().SAM_IsActive : "Y";
     }
     @*@Html.Hidden(isSubmitted, new { id = "isSubmitted" })*@
+bool IsMeetingSchedule = Convert.ToBoolean(Session["AppriasalMeeting"]);
     <input type="hidden" value="@isSubmitted" id="isSubmitted" />
 
 }
@@ -238,11 +239,17 @@
 
             <tr align="center">
                 <td>
-                    @if (isSubmitted == "S")
+                    @if (isSubmitted == "S" && IsMeetingSchedule == false)
                     {
                         <button id="draft" class="btn btn-secondary" disabled onclick="saveAssessment306090('Draft')">Draft</button>
 
                         <button id="submit" class="btn btn-success" disabled onclick="saveAssessment306090('Submit')">Submit</button>
+                    }
+                    else if (IsMeetingSchedule == true)
+                    {
+                        <button id="draft" class="btn btn-secondary" onclick="AcceptDisputeMeeting('Accept')">Accept</button>
+
+                        <button id="submit" class="btn btn-success" onclick="AcceptDisputeMeeting('Dispute')">Dispute</button>
                     }
                     else
                     {
@@ -272,6 +279,25 @@
             <div class="modal-footer">
                 <button type="submit" id="BackToPerformance" class="btn btn-primary" style="width: 90px" onclick="HideModal('SaveAssessmentModal')">OK</button>
 
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="AcceptDisputeMeeting" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="DivAcceptDisputeMeeting"></h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body ">
+                <div>
+                    <label>Comment :</label>
+                    <textarea id="addComment"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" id="SaveComment" class="btn btn-primary" style="width: 90px" >Add Comment</button>
             </div>
         </div>
     </div>
@@ -363,5 +389,14 @@
         $("#gridArea").show();
         $('#profileArea').hide();
         $("#List306090").jsGrid("loadData");
+    }
+
+    function AcceptDisputeMeeting($_Status) {
+        if ($_Status == "Accept")
+            $("#DivAcceptDisputeMeeting").html("Accept Meeting");
+        else
+            $("#DivAcceptDisputeMeeting").html("Dispute Meeting");
+
+        $("#AcceptDisputeMeeting").modal("show");
     }
 </script>

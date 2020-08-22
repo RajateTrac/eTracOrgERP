@@ -564,22 +564,24 @@ namespace WorkOrderEMS.Data
         /// <returns></returns>
         public List<NotAssignedUserModel> GetNotAssignedUsers(long? requestedBy, int? pageIndex, string sortColumnName, string sortOrderBy, int? numberOfRows, string textSearch, string userType, ObjectParameter totalRecords)
         {
+            var lst = new List<NotAssignedUserModel>();
             try
             {
-                return _workorderEMSEntities.SP_GetAllNotAssignedUsers(requestedBy, pageIndex, sortColumnName, sortOrderBy, numberOfRows, textSearch, userType, totalRecords).Select(x => new NotAssignedUserModel()
-                {
-                    RN = x.RN,
-                    CodeName = x.CodeName,
-                    GlobalCodeId = x.GlobalCodeId,
-                    UserId = x.UserId,
-                    UserEmail = x.UserEmail,
-                    Name = x.Name,
-                    Gender = x.Gender,
-                    DOB = x.DOB,
-                    ProfileImage = x.ProfileImage,
-                    IsLoginActive = x.IsLoginActive,
+                //return _workorderEMSEntities.SP_GetAllNotAssignedUsers(requestedBy, pageIndex, sortColumnName, sortOrderBy, numberOfRows, textSearch, userType, totalRecords).Select(x => new NotAssignedUserModel()
+                //{
+                //    RN = x.RN,
+                //    CodeName = x.CodeName,
+                //    GlobalCodeId = x.GlobalCodeId,
+                //    UserId = x.UserId,
+                //    UserEmail = x.UserEmail,
+                //    Name = x.Name,
+                //    Gender = x.Gender,
+                //    DOB = x.DOB,
+                //    ProfileImage = x.ProfileImage,
+                //    IsLoginActive = x.IsLoginActive,
 
-                }).ToList();
+                //}).ToList();
+                return lst;
 
             }
             catch (Exception)
@@ -724,6 +726,8 @@ namespace WorkOrderEMS.Data
                     EMP_DateOfJoining = t.EMP_DateOfJoining,
                     Assesment = t.Assesment,
                     Status = t.SAM_IsActive,
+                    Days = t.DayPass,
+                    RMS_Id = t.RMS_Id
                 }).ToList();
                 totalRecords = Convert.ToInt32(totalRecord.Value);
                 return ListOf306090Records;
@@ -760,16 +764,16 @@ namespace WorkOrderEMS.Data
                     if (type == "Expectation")
                     {
                         AssessmentType = AssessmentType == "QC" ? "CORP" : "MGMT";
-                        //QuestionList = _workorderEMSEntities.spGetChangeExpectationQuestionQCQM(Id, AssessmentType).Select(t =>
-                        // new GWCQUestionModel()
-                        // {
-                        //     CHE_Id = t.CHE_Id,
-                        //     EmployeeId = Id,
-                        //     QuestionType = t.ASQ_QuestionType,
-                        //     QuestionId = t.ASQ_Id ?? 0,
-                        //     Question = t.ASQ_Question,
-                        //     SAM_IsActive = t.ASQ_IsActive
-                        // }).ToList();
+                        QuestionList = _workorderEMSEntities.spGetChangeExpectationQuestionQCQM(Id, AssessmentType).Select(t =>
+                         new GWCQUestionModel()
+                         {
+                             CHE_Id = t.CHE_Id,
+                             EmployeeId = Id,
+                             QuestionType = t.ASQ_QuestionType,
+                             QuestionId = t.ASQ_Id ?? 0,
+                             Question = t.ASQ_Question,
+                             SAM_IsActive = t.ASQ_IsActive
+                         }).ToList();
                     }
                     else
                     {

@@ -32,7 +32,6 @@ namespace WorkOrderEMS.Data.EntityModel
         public string LPOE_IsActive { get; set; }
     
         public virtual LocationMaster LocationMaster { get; set; }
-        public virtual PODetailEmergency PODetailEmergency { get; set; }
         public virtual POType POType { get; set; }
     }
 }

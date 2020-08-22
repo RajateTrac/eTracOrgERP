@@ -1,0 +1,90 @@
+
+https://github.com/oflahero/QuickBooksAppMVC5
+
+http://qbapi.com/Index.aspx
+
+
+
+Q07OQogkFFdJ8DMykvCflCfQctyfsnprkqepPxtEbyII0SNOgM   client ID
+AOfqdjj93Lt3T9333ZALGUQTiTJ1BLSRspCFJy6h             client secrete.
+
+http://www.consolibyte.com/docs/index.php/QuickBooks_Web_Connector_Overview
+
+https://mukarrammukhtar.wordpress.com/quickbooks-with-net/
+
+https://mavenlink.zendesk.com/hc/en-us/articles/216813828-Using-Intuit-s-Web-Connector-to-Integrate-QuickBooks-Desktop-with-Mavenlink
+
+https://developer.intuit.com/docs/00_quickbooks_online/2_build/40_sdks/01_.net/0001_quick_start
+
+https://developer.intuit.com/hub/blog/2017/08/03/quick-start-quickbooks-online-rest-api-oauth-2-0
+
+https://github.com/IntuitDeveloper/C2QB-library-for-Windows-CUI-and-GUI
+Like upload data
+Do calculations
+Sync
+Downloads
+Multiple quickbooks can be used or not
+we need to find out is can reports from quickbooks be imported into the accounting system
+
+
+Authorization code   =  Q011522845109k4zZSPjDa8h9vwWJhtIwcyUTOMR4LrDhsCXsz
+Realm ID  = 123146017531249
+
+======token=========
+Request
+POST /oauth2/v1/tokens/bearer?grant_type=authorization_code&code=Q011522845109k4zZSPjDa8h9vwWJhtIwcyUTOMR4LrDhsCXsz&redirect_uri=https://developer.intuit.com/v2/OAuth2Playground/RedirectUrl
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+Authorization: Basic UTBuelNxN2d5d0dQN3d3OEZEdHB4cHpueW83NUF6N0FPbTlMdW5kZWR4QlVpSnI3WnQ6M2RvTEpSOVhWa0d2azI2eDRaMlRVMEFXWnRoV3ZsYk9EaGFDTk1QMw==
+
+Response
+                                
+Status: 200
+Connection: keep-alive
+Keep-Alive: timeout=5
+Strict-Transport-Security: max-age=15552000
+intuit_tid: idg-1ruacqjncp1bhbr0hjuvijpl-4640322
+Pragma: no-cache
+Content-Length: 1679
+Cache-Control: no-cache, no-store
+Content-Type: application/json;charset=UTF-8
+Date: Wed, 04 Apr 2018 12:26:58 GMT
+Server: nginx
+
+{
+  "refresh_token": "Q011531571218qicrr7acATmxXNoD13I3TVswQBPfOv28lZe4m",
+  "access_token": "eyJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwiYWxnIjoiZGlyIn0..dh3oMErkHRBAuwMzou80gg.P8Zqic34JAaA_UkhMHCuzwvr1qeoPRDRP2Twf6THxBN6tlEhamsYqc1zXxkujxgHWG4aNIEln9BmBB1El4X3N4PYE_TFZLiGuMQ_WDrsL8VjV0n7cOhbV94n-dSxsyss_NMUJmSAoIMjMNYxV6sSJ_-swfRkAPTkSXog5W4nCFN_A958Cu0bbESf3FgQmG5UCeT7udlbWdxdMw9XaB9XDk3dCP-6o_rT6B0wRmy3TnZWp3MKiCJ2hlqVwsoA9uG0qXPARJBr92oafBQTy7Xfl2_TS3f1L8hX4j_-BU8AAzNo5c-15iXvZOVGpW54AcEpwxIj329tkDJjQljMZrgnLs2hICwRneLWTbbHxax1HZua7XraJo1MgK1u77V9E8Y0BkgJ5eyYrfWhkNs40IUMhghk4sT50ISwM9-p0QvFPgMRq6YcMQ8MCglWx8JLcq53BNPO7TQRqHxlaLnzt9EU1wKr2EHzauyrRJT6oZfM-9A2ovGKeE0w9iauelH3yJ9wT4S6UaWc7mNIEByVkYKm5-_lzlid7HID7MU2xPSN5vbK0ueGlYMS2wmUhf_FqBHJbfiIPhkHz_6SZajZdxaPx3nu0FC-ed3GaPDqtRagF6M13pO3oRWwCnwbG4JayUuwH6mRinOXZ4LwrL0iquL6wNgI7zUHS5vYveULL4VfDWswgcCIiYx96YxOsfvUrrb19I9_entu9wHjXXuR32V5r0tj9gjSAl1m-ZZ0l73yOur9H082tOk7KhlYJR_86NnqIGk0HBf5B90Q7DiG60lguaLtNkWl8MPwkxug_LC6u9gIfqksDxE52Q62pjCOvEOt961zOhpRTHn69UNzqUhgug.y7rrbmjzZj9vf2HUwxI_lA",
+  "expires_in": 3600,
+  "x_refresh_token_expires_in": 8726400,
+  "id_token": "eyJraWQiOiJPUElDUFJEMDkxODIwMTQiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiI3MWZjNmEwOC1iMTEwLTRjOGUtYTI4OC0wZWRmYTcxNGE2NjciLCJhdWQiOlsiUTBuelNxN2d5d0dQN3d3OEZEdHB4cHpueW83NUF6N0FPbTlMdW5kZWR4QlVpSnI3WnQiXSwicmVhbG1pZCI6IjEyMzE0NjAxNzUzMTI0OSIsImF1dGhfdGltZSI6MTUyMjg0MjE3MiwiaXNzIjoiaHR0cHM6XC9cL29hdXRoLnBsYXRmb3JtLmludHVpdC5jb21cL29wXC92MSIsImV4cCI6MTUyMjg0ODQxOCwiaWF0IjoxNTIyODQ0ODE4fQ.aLjY35ClWWNy4Gzwu0sodkyH47wmdgOAkWnY7PYjitniJAmYTCbnV4GC9oe3kAzMPgWTAOWTJiYpWvMDkCvou6J4rwRghCEe2zd3ri_UUfib7B2BZBZ_D98uP5TqSeNjKl9at4297oeOnCCpBrsAfKifv2cbAqQV64LzROURF0Q",
+  "token_type": "bearer"
+}
+
+Decoded Token Learn More
+Header
+                                    
+{
+  "kid": "OPICPRD09182014",
+  "alg": "RS256"
+}
+
+                                
+Payload
+                                    
+{
+  "sub": "71fc6a08-b110-4c8e-a288-0edfa714a667",
+  "aud": [
+    "Q0nzSq7gywGP7ww8FDtpxpznyo75Az7AOm9LundedxBUiJr7Zt"
+  ],
+  "realmid": "123146017531249",
+  "auth_time": 1522842172,
+  "iss": "https://oauth.platform.intuit.com/op/v1",
+  "exp": 1522848418,
+  "iat": 1522844818
+}
+
+
+
+
+
+

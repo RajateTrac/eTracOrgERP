@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WorkOrderEMS.BusinessLogic.Interfaces;
 using WorkOrderEMS.Data.DataRepository;
+using WorkOrderEMS.Data.EntityModel;
 using WorkOrderEMS.Models;
 
 namespace WorkOrderEMS.BusinessLogic.Managers
@@ -179,6 +180,39 @@ namespace WorkOrderEMS.BusinessLogic.Managers
                 throw;
             }
             return isSaved;
+        }
+        /// <summary>
+        /// Created By : Ashwajit Bansod
+        /// Created Date : 01-08-2020
+        /// Created For : to get employee list of department
+        /// </summary>
+        /// <param name="Dept_Name"></param>
+        /// <returns></returns>
+        public List<DepartmentEmployeeList> GetDepartmentEmployeeList(string Dept_Name)
+        {
+            var _db = new workorderEMSEntities();
+            var lst = new List<DepartmentEmployeeList>();
+            var _DepartmentRepository = new DepartmentRepository();
+            try
+            {
+                var getDept = _DepartmentRepository.GetDepartmentList("", 0, 0).Where(x => x.DPT_Name == Dept_Name).FirstOrDefault();
+                if(getDept != null)
+                {
+                    lst = _db.spGetDepartmentEmail(getDept.DPT_Id).Select(x => new DepartmentEmployeeList()
+                    {
+                        DepartmentName = x.DepartmentName,
+                        Email= x.eMail,
+                        EmployeeId= x.EmployeeId,
+                        EmployeeName = x.EmployeeName
+                    }).ToList();
+                }
+            }
+            catch(Exception ex)
+            {
+                Exception_B.Exception_B.exceptionHandel_Runtime(ex, "public List<DepartmentEmployeeList> SaveDepartment(DepartmentModel Obj)", "Exception While deleting Department.", Dept_Name);
+                throw;
+            }
+            return lst;
         }
     }
 }

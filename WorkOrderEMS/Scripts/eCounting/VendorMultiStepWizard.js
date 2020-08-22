@@ -7,6 +7,7 @@
         $(this).next('input[type="text"]').focus();
     })
     $(".next").click(function () {
+        debugger
         var VendorTypeValue = $('#VendorType').val();
         var vendorName = $('#CompanyName').val(); $('#SecondaryCompany').val(vendorName);
         var PaymentMode = $('#PrimaryPaymentMode').val();

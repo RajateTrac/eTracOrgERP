@@ -1,36 +1,97 @@
-﻿<link href="~/Content/Report-NavBar/bootstrap-clockpicker.css" rel="stylesheet" />
+﻿@{
+    Layout = null;
+    string hostingPrefix = System.Configuration.ConfigurationManager.AppSettings["hostingPrefix"];
+    WorkOrderEMS.Models.eTracLoginModel ObjLogin = (WorkOrderEMS.Models.eTracLoginModel)Session["eTrac"];
+    string loginUserName = "", loginUserEmail = "", emlpoyeeId = "", loginUserContactNo = "", loginUserProfile = "", CurrentUser = "", JobTitle = "";
+    bool isScheduled = Convert.ToBoolean(Session["IsInterviewDone"]);
+    bool isHROpen = Convert.ToBoolean(Session["AcceptDisputeByHR"]);
+    long loginUserType = 0;
+    long locationId = 0;
+    long UserId = 0;
+    if (ObjLogin != null)
+    {
+        emlpoyeeId = ObjLogin.UserName;
+        loginUserName = ObjLogin.FName + "'s";
+        loginUserEmail = ObjLogin.Email;
+        loginUserProfile = ObjLogin.UserProfile;
+        loginUserType = ObjLogin.UserRoleId;
+        //loginUserContactNo = ObjLogin.ContactNo;
+        locationId = ObjLogin.LocationID;
+        UserId = ObjLogin.UserId;
+        CurrentUser = WorkOrderEMS.Helper.Cryptography.GetEncryptedData(ObjLogin.UserName, true);
+        JobTitle = ObjLogin.JobTitleName;
+    }
+}
+<link href="~/Content/Report-NavBar/bootstrap-clockpicker.css" rel="stylesheet" />
 
 <div class="card" data-aos="fade-up" id="gridArea">
-    <div class="card-header" style="height: 45px; display:none">
+    <div class="card-header" style="height: 45px;">
         <h4 class="card-title addWhite"><b>Performance Management</b></h4>
+        <span>
+            <i class="fa fa-refresh fa-2x" style="cursor:pointer;" aria-hidden="true" id="RefreshGrid" onclick="RefreshPerformanceGrid()" title="Refresh"></i>
+        </span>
     </div>
-    <button class="btn btn-danger"  onclick="SelfAssessment();" title="Self Assessment" style="cursor:pointer;display:inline;position: absolute;right: 2%;margin: 1% 0px 0px 0px;">
+    <a href="#" role="button" data-toggle="dropdown" style="cursor:pointer;display:inline;position: absolute;right: 2%;margin: 4% -18px 0px 0px;padding:10px;background-color:black;border-radius:25px 0px 0px 25px;">
+        <i class="fa fa-arrow-left fa-2x"></i>
+    </a>
+
+    <button class="btn btn-danger dropdown-menu dropdown-menu-right animated fadeInRight" onclick="SelfAssessment();" title="Self Assessment" style="cursor:pointer;display:inline;position: absolute;right: 2%;margin: 5% 0px 0px 0px;background-color:red;">
         <i class="fa fa-user-circle-o fa-2x" aria-hidden="true" onclick="SelfAssessment();" title="Self Assessment"></i>
         Self Assessment
     </button>
     <div class="card-body">
         <div class="custom-tab-1">
             <ul class="nav nav-tabs">
+                @if (isHROpen == true)
+                {
+                    <li class="nav-item">
+                        <a class="nav-link" onclick="getTabIdEvent(this)" data-toggle="tab" href="#th306090">30-60-90</a>
+                    </li>
+                }
+                else
+                {
+                    <li class="nav-item">
+                        <a class="nav-link active" onclick="getTabIdEvent(this)" data-toggle="tab" href="#th306090">30-60-90</a>
+                    </li>
+                }
                 <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#th306090">30-60-90</a>
+                    <a class="nav-link" data-toggle="tab" onclick="getTabIdEvent(this)" href="#Expectations">Q-Expectations</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#Expectations">Q-Expectations</a>
+                    <a class="nav-link" data-toggle="tab" onclick="getTabIdEvent(this)" href="#Evaluations">Q-Evaluations</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#Evaluations">Q-Evaluations</a>
+                    <a class="nav-link" data-toggle="tab" onclick="getTabIdEvent(this)" href="#CorrectiveAction">Corrective Action</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#CorrectiveAction">Corrective Action</a>
+                    <a class="nav-link" data-toggle="tab" onclick="getTabIdEvent(this)" href="#TabMeetingDetails">Meeting Details</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#TabMeetingDetails">Meeting Details</a>
-                </li>
+                @if (JobTitle != "" && JobTitle != null && JobTitle == WorkOrderEMS.Helper.JobTItle.HR && isHROpen == true)
+                {
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" onclick="getTabIdEvent(this)" href="#TabHREvaluation">Evalaution Process</a>
+                    </li>
+                }
+                else if(JobTitle != "" && JobTitle != null && JobTitle == WorkOrderEMS.Helper.JobTItle.HR)
+                {
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" onclick="getTabIdEvent(this)" href="#TabHREvaluation">Evalaution Process</a>
+                    </li>
+                }
             </ul>
             <div class="tab-content">
-                <div class="tab-pane fade show active" id="th306090" role="tabpanel">
-                    <div id="List306090"></div>
-                </div>
+                @if (isHROpen == true)
+                {
+                    <div class="tab-pane fade" id="th306090" role="tabpanel">
+                        <div id="List306090"></div>
+                    </div>
+                }
+                else
+                {
+                    <div class="tab-pane fade show active" id="th306090" role="tabpanel">
+                        <div id="List306090"></div>
+                    </div>
+                }
                 <div class="tab-pane fade" id="Expectations">
                     <div id="ListQExpectations"></div>
                 </div>
@@ -43,6 +104,18 @@
                 <div class="tab-pane fade" id="TabMeetingDetails">
                     <div id="ListScheduledMeeting"></div>
                 </div>
+                @if (JobTitle != "" && JobTitle != null && JobTitle == WorkOrderEMS.Helper.JobTItle.HR && isHROpen == true)
+                {
+                    <div class="tab-pane fade show active" id="TabHREvaluation">
+                        <div id="ListHREvalutionProcess"></div>
+                    </div>
+                }
+                @if (JobTitle != "" && JobTitle != null && JobTitle == WorkOrderEMS.Helper.JobTItle.HR )
+                {
+                    <div class="tab-pane fade" id="TabHREvaluation">
+                        <div id="ListHREvalutionProcess"></div>
+                    </div>
+                }
             </div>
         </div>
     </div>
@@ -95,8 +168,8 @@
                                         <input placeholder="Start Date" class="form-control input-rounded required " data-val="true" data-val-date="The field Start Date must be a date." data-val-required="Start Date field is required." id="StartDate" name="StartDate" type="text" value="">
                                     </div>
                                     @*<div class="col-sm-4">
-                                        <input class="form-control input-rounded required" data-val="true" data-val-date="The field End Date must be a date." data-val-required="End Date field is required." id="EndDate" name="EndDate" onkeypress="return isNumberKey(event)" placeholder="End Date" type="text" value="">
-                                    </div>*@
+                                            <input class="form-control input-rounded required" data-val="true" data-val-date="The field End Date must be a date." data-val-required="End Date field is required." id="EndDate" name="EndDate" onkeypress="return isNumberKey(event)" placeholder="End Date" type="text" value="">
+                                        </div>*@
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-sm-4">
@@ -124,15 +197,15 @@
 
                             </div>
                             <div class="modal-footer">
-                                <input type="button" id="SetUpMeeting" class="btn btn-primary pull-right" style="width: 90px;background-color:#0aa0cd;" value="Save">
+                                <input type="button" id="SetUpMeeting" class="btn btn-primary pull-right style-SaveCloseCancel" style="width: 90px;background-color:#0aa0cd;" value="Save">
                             </div>
-                            </div>
-</form>
+                        </div>
+                    </form>
                 </div>
             </div>
             @*<div class="modal-footer">
-                <button type="submit" id="" class="btn btn-primary">OK</button>
-            </div>*@
+                    <button type="submit" id="" class="btn btn-primary">OK</button>
+                </div>*@
         </div>
     </div>
 </div>
@@ -151,11 +224,33 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button   class="btn btn-primary" data-dismiss="modal" style="width: 90px">OK</button>
+                <button class="btn btn-primary" data-dismiss="modal" style="border-radius: 100px;width: 150px;background-image: linear-gradient(to left, #3cffdb, #425fe0);">OK</button>
             </div>
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="SuccessModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="SaveMeetingDetails">Setup Meeting </h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body ">
+                <div id="AcceptDisputeBody">
+                   
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="UpdateByHRbtn" style="border-radius: 100px;width: 150px;background-image: linear-gradient(to left, #3cffdb, #425fe0);" onclick="AcceptDisputeByHR('S');">Submit</button>
+                <button class="btn btn-primary" id="AcceptByHRbtn" style="border-radius: 100px;width: 150px;background-image: linear-gradient(to left, #3cffdb, #425fe0);" onclick="AcceptDisputeByHR('U');">Accept</button>
+                <button class="btn btn-primary" id="DisputeByHRbtn" style="border-radius: 100px;width: 150px;background-image: linear-gradient(to left, #3cffdb, #425fe0);" onclick="AcceptDisputeByHR('V');">Dispute</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal fade" id="ErrorModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -171,7 +266,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary" data-dismiss="modal" style="width: 90px">OK</button>
+                <button class="btn btn-primary style-SaveCloseCancel" data-dismiss="modal" style="width: 90px">OK</button>
             </div>
         </div>
     </div>
@@ -187,11 +282,32 @@
                 <div>
                     <label id="labelAddCalendar">
                         Please complete the meeting before submitting the Evaluation
-                        </label>
+                    </label>
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary" data-dismiss="modal" style="width:90px;">OK</button>
+                <button class="btn btn-primary" data-dismiss="modal" style="border-radius: 100px;width: 150px;background-image: linear-gradient(to left, #3cffdb, #425fe0);">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="MeetingScheduleModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="SaveMeetingDetails">Meeting Schedule</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body ">
+                <div>
+                    <label id="labelAddCalendar">
+                       Are sure want to arrage a meeting with <span id="empName"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" style="border-radius: 100px;width: 150px;background-image: linear-gradient(to left, #3cffdb, #425fe0);" onclick="ScheduleAppraisalMeeting();">Ok</button>
+                <button class="btn btn-primary" data-dismiss="modal" style="border-radius: 100px;width: 150px;background-image: linear-gradient(to left, #3cffdb, #425fe0);">Cancel</button>
             </div>
         </div>
     </div>
@@ -211,12 +327,12 @@
     $("#SetUpMeeting").on('click', function () {
         var obj = {};
         ReceipientEmailId = $("#ReceipientEmailId").val();
-        EmailTo= $("#EmailTo").val();
-        Subject= $("#Subject").val();
-        StartDate= $("#StartDate").val();
-        StartTime= $("#StartTime").val();
-        Body= $("#Body").val();
-        FinYear= $("#FinYear").val();
+        EmailTo = $("#EmailTo").val();
+        Subject = $("#Subject").val();
+        StartDate = $("#StartDate").val();
+        StartTime = $("#StartTime").val();
+        Body = $("#Body").val();
+        FinYear = $("#FinYear").val();
         FinQrtr = $("#FinQrtr").val();
         obj = {
             'ReceipientEmailId': ReceipientEmailId
@@ -231,18 +347,18 @@
         $.ajax({
             type: "POST",
             data: obj,
-            dataType:'JSON',
+            dataType: 'JSON',
             url: '../NewAdmin/SetupMeeting/',
             error: function (xhr, status, error) {
                 $("#SetUpMeetingModal").modal('hide');
-                    $("#ErrorModal").modal('show');
+                $("#ErrorModal").modal('show');
 
             },
             success: function (result) {
 
-                    $("#SetUpMeetingModal").modal('hide');
-                    $("#SuccessModal").modal('show');
-                
+                $("#SetUpMeetingModal").modal('hide');
+                $("#SuccessModal").modal('show');
+
             }
         });
     });

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WorkOrderEMS.Models.NewAdminModel.FormsModel;
 
 namespace WorkOrderEMS.Models
 {
@@ -121,11 +122,24 @@ namespace WorkOrderEMS.Models
         public string I9F_Sec3_C_NameOfEmployerOrAuthorized { get; set; }
 
         public bool IsSave { get; set; }
-        public bool  IsSignature { get; set; }
+        public bool IsSignature { get; set; }
         public string EmployeeSignatureName { get; set; }
         //public string EmployeeSignatureTranslatorImage { get; set; }
         public string RefreshTokenI9 { get; set; }
         public long I9CompanyId { get; set; }
         public string Case_Number { get; set; }
+        //public FormNameStatus FormNameS { get; set; }//
+        public string formName { get; set; }
+        public string FormStatusw4 { get; set; }
+        public string FormStatusI9 { get; set; }
+        public string FormStatusdd { get; set; }
+        public string FormStatusEvf { get; set; }
+        public string FormStatussif { get; set; }
+        public string FormStatusbcf { get; set; }
+        public string FormStatusrop { get; set; }
+        public string FormStatusprfecf { get; set; }
+        public string FormStatusprfcaf { get; set; }
+        public string FormStatusprf { get; set; }
+        public string FormStatusff { get; set; }
     }
 }

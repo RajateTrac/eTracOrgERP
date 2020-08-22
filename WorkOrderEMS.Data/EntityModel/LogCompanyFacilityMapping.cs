@@ -30,7 +30,5 @@ namespace WorkOrderEMS.Data.EntityModel
         public string LCFM_Comment { get; set; }
         public string LCFM_IsApprove { get; set; }
         public string LCFM_IsActive { get; set; }
-    
-        public virtual Company Company { get; set; }
     }
 }

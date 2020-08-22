@@ -2342,7 +2342,7 @@ namespace WorkOrderEMS.BusinessLogic.Managers
                     MiscellaneousID = a.MiscellaneousID,
                     eScanQRCID = a.eScanId,
                     IsRead = a.IsRead,
-                    CreatedBy = a.CreatedBy,
+                    CreatedBy = a.CreatedBy.ToString(),
                     NotificationId = a.NID
                 }).ToList();
                 var userDetails = _db.UserRegistrations.Where(x => x.UserId == UserId && x.IsDeleted == false && x.IsEmailVerify == true).FirstOrDefault();
@@ -2350,7 +2350,7 @@ namespace WorkOrderEMS.BusinessLogic.Managers
                 {
                     foreach (var item in notification)
                     {
-                        var assignedBy = _db.UserRegistrations.Where(x => x.UserId == item.CreatedBy && x.IsDeleted == false && x.IsEmailVerify == true).FirstOrDefault();
+                        var assignedBy = _db.UserRegistrations.Where(x => x.UserId == Convert.ToInt64(item.CreatedBy) && x.IsDeleted == false && x.IsEmailVerify == true).FirstOrDefault();
 
                         #region Wo
                         if (item.WorkOrderID != null && item.WorkOrderID > 0)
@@ -2680,7 +2680,7 @@ namespace WorkOrderEMS.BusinessLogic.Managers
                     MiscellaneousID = a.MiscellaneousID,
                     eScanQRCID = a.eScanId,
                     IsRead = a.IsRead,
-                    CreatedBy = a.CreatedBy,
+                    CreatedBy = a.CreatedBy.ToString(),
                     NotificationId = a.NID,
                 }).ToList();
                 foreach (var item in underMe)
@@ -2694,7 +2694,7 @@ namespace WorkOrderEMS.BusinessLogic.Managers
                         MiscellaneousID = a.MiscellaneousID,
                         eScanQRCID = a.eScanId,
                         IsRead = a.IsRead,
-                        CreatedBy = a.CreatedBy,
+                        CreatedBy = a.CreatedBy.ToString(),
                         NotificationId = a.NID,
                     }).ToList();
                     notification.AddRange(result);
@@ -2706,7 +2706,7 @@ namespace WorkOrderEMS.BusinessLogic.Managers
                 {
                     foreach (var item in notification)
                     {
-                        var assignedBy = _db.UserRegistrations.Where(x => x.UserId == item.CreatedBy && x.IsDeleted == false && x.IsEmailVerify == true).FirstOrDefault();
+                        var assignedBy = _db.UserRegistrations.Where(x => x.UserId == Convert.ToInt64(item.CreatedBy) && x.IsDeleted == false && x.IsEmailVerify == true).FirstOrDefault();
                         #region eScan
                         if (item.eScanQRCID != null && item.eScanQRCID > 0)
                         {
@@ -2751,7 +2751,7 @@ namespace WorkOrderEMS.BusinessLogic.Managers
             }
 
         }
-        public List<CustomSlotTime> GetSlotTimings(long userid, string date)
+        public List<CustomSlotTime> GetSlotTimings(string EmpId, string date)
         {
             List<CustomSlotTime> ListSlotTime = new List<CustomSlotTime>();
             try
@@ -2765,7 +2765,8 @@ namespace WorkOrderEMS.BusinessLogic.Managers
                     //    SLT_fromTime = x.SLT_fromTime.ToString()
 
                     //}).ToList();
-                    ListSlotTime = _db.spGetFreeSlote(userid.ToString(),Convert.ToDateTime(date)).Select(x => new CustomSlotTime()
+                    var newdate = Convert.ToDateTime(date);
+                    ListSlotTime = _db.spGetFreeSlote(EmpId, newdate).Select(x => new CustomSlotTime()
                     {
                         SLT_Id = x.SLT_Id,
                         SLT_fromTime = x.SLT_fromTime.ToString()
@@ -2805,9 +2806,9 @@ namespace WorkOrderEMS.BusinessLogic.Managers
                 case APIName.I9CaseSubmit:
                     outputData = Newtonsoft.Json.JsonConvert.SerializeObject(obj);
                     break;
-                //case APIName.FloridaBlueAuthentication:
-                //    outputData = Newtonsoft.Json.JsonConvert.SerializeObject(obj);
-                //    break;
+                case APIName.BackGroudScreening:
+                    outputData = Newtonsoft.Json.JsonConvert.SerializeObject(obj);
+                    break;
             }           
             return outputData;
         }

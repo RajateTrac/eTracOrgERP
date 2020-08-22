@@ -36,9 +36,5 @@ namespace WorkOrderEMS.Data.EntityModel
         public string LCAD_CardHolderName { get; set; }
         public Nullable<System.DateTime> LCAD_CardExpirationDate { get; set; }
         public string LCAD_IsPrimary { get; set; }
-    
-        public virtual Company Company { get; set; }
-        public virtual CompanyAccountDetail CompanyAccountDetail { get; set; }
-        public virtual PaymentMode PaymentMode { get; set; }
     }
 }

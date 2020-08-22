@@ -1,11 +1,17 @@
-﻿@model WorkOrderEMS.Models.Employee.EducationVarificationModel
+﻿@model IEnumerable<WorkOrderEMS.Models.Employee.EducationVarificationModel>
+    @{ 
+        string currentDate = DateTime.Now.Date.ToString();
+        long ApplicantId = Convert.ToInt64(Session["ApplicantId"]);
+        int i = 0;
+        int j = 0;
+    }
 <style>
     .p1 {
         font-size: 20px;
         font-family: Times New Roman;
         margin-top: 4%;
         padding-top: 1%;
-        margin-left: 10%;
+        margin-left: 2%;
         color: #000;
     }
 
@@ -64,53 +70,80 @@
         width: 85%;
     }
 </style>
+<link href="~/Content/toastr.min.css" rel="stylesheet" />
 @using (Html.BeginForm("_EducationVarificationForm", "Guest", FormMethod.Post, new { id = "educationverificationform" }))
 {
-    <div class=" container p1">
-        <div class="row">
-            <div class="col-lg-3 col-md-3">
-                <img src="~/Images/FormImages/image-form.jpg" alt="background image" />
-            </div>
-            <div class="col-lg-9 col-md-9 text-center">
-                <h3><u>Education Verification Form</u></h3>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-3"></div>
-            <div class="col-lg-9 col-md-12">
-                <p>Name of Applicant @Html.TextBoxFor(x => x.Name, new { @class = "text-line", @style = "width:79%;" }) @Html.ValidationMessageFor(x => x.Name, "", new { @style = "color:red;" })</p>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-3"></div>
-            <div class="col-lg-9 col-md-12">
-                <div class="row">
-                    <div class="col-md-2"><p>Date of Birth</p></div>
-                    <div class="col-md-10 SetWidth">
-                        @Html.EditorFor(x => x.DOB, new { @class = "text-line", @style = "width:79%;" }) @Html.ValidationMessageFor(x => x.Name, "", new { @style = "color:red" })
-                    </div>
-                </div>
 
-            </div>
+<div class=" container p1">
+    <div class="row">
+        <div class="col-lg-3 col-md-3">
+            <img src="~/Images/FormImages/image-form.jpg" alt="background image" />
         </div>
+        <div class="col-lg-9 col-md-9 text-center">
+            <h3><u>Education Verification Form</u></h3>
+        </div>
+    </div>
+    @foreach (var item in Model)
+    {
+        if (j == 0)
+        {
+            <input type="hidden" value="@item.FormStatusw4" name="FormStatusw4" id="FormStatusw4">
+            <input type="hidden" value="@item.FormStatusI9" name="FormStatusI9" id="FormStatusI9">
+            <input type="hidden" value="@item.FormStatusdd" name="FormStatusdd" id="FormStatusdd">
+            <input type="hidden" value="@item.FormStatusEvf" name="FormStatusEvf" id="FormStatusEvf">
+            <input type="hidden" value="@item.FormStatussif" name="FormStatussif" id="FormStatussif">
+            <input type="hidden" value="@item.FormStatusbcf" name="FormStatusbcf" id="FormStatusbcf">
+            <input type="hidden" value="@item.FormStatusrop" name="FormStatusrop" id="FormStatusrop">
+            <input type="hidden" value="@item.FormStatusprfecf" name="FormStatusprfecf" id="FormStatusprfecf">
+            <input type="hidden" value="@item.FormStatusprfcaf" name="FormStatusprfcaf" id="FormStatusprfcaf">
+            <input type="hidden" value="@item.FormStatusprf" name="FormStatusprf" id="FormStatusprf">
+            <input type="hidden" value="@item.FormStatusff" name="FormStatusff" id="FormStatusff">
+            <div class="row">
+                <div class="col-lg-3"></div>
+                <div class="col-lg-9 col-md-12">
+                    <p>Name of Applicant @Html.TextBoxFor(x => item.Name, new { @class = "text-line", @style = "width:79%;" }) @Html.ValidationMessageFor(x => item.Name, "", new { @style = "color:red;" })</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-3"></div>
+                <div class="col-lg-9 col-md-12">
+                    <div class="row">
+                        <div class="col-md-2"><p>Date of Birth</p></div>
+                        <div class="col-md-10 SetWidth">
+                            @Html.TextBoxFor(x => item.DOB, "{0:yyyy-MM-dd}", new { @class = "text-line", @style = "width:79%;" }) @Html.ValidationMessageFor(x => item.Name, "", new { @style = "color:red" })
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-3"></div>
+                <div class="col-lg-9 col-md-12">
+                    <p>Social Security Number @Html.TextBoxFor(x => item.SSN, new { @class = "text-line", @style = "width:74.4%;" }) @Html.ValidationMessageFor(x => item.SSN, "", new { @style = "color:red;" })</p>
+                </div>
+            </div>
+            j = j + 1;
+        }
+    }
+    @foreach (var item in Model)
+    {
+
+        //if (Model.Count() > 0)
+        //{
+
+        //}
         <div class="row">
             <div class="col-lg-3"></div>
             <div class="col-lg-9 col-md-12">
-                <p>Social Security Number @Html.TextBoxFor(x => x.SSN, new { @class = "text-line", @style = "width:74.4%;" }) @Html.ValidationMessageFor(x => x.Name, "", new { @style = "color:red;" })</p>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-3"></div>
-            <div class="col-lg-9 col-md-12">
-                <p>Name of High School @Html.TextBoxFor(x => x.HighSchool.SchoolName, new { @class = "text-line", @style = "width:76.5%;" }) @Html.ValidationMessageFor(x => x.Name, "", new { @style = "color:red;" })</p>
+                <p>Name of High School @Html.TextBoxFor(x => item.HighSchool.SchoolName, new { @class = "text-line", @style = "width:76.5%;" }) @Html.ValidationMessageFor(x => item.Name, "", new { @style = "color:red;" })</p>
             </div>
         </div>
         <div class="row">
             <div class="col-lg-3"></div>
             <div class="col-lg-9 col-md-12">
                 <p>
-                    City @Html.TextBoxFor(x => x.HighSchool.City, new { @class = "text-line", @style = "width:46%;" }) @Html.ValidationMessageFor(x => x.HighSchool.City, "", new { @style = "color:red;" })
-                    State @Html.TextBoxFor(x => x.HighSchool.State, new { @class = "text-line", @style = "width:345px;" }) @Html.ValidationMessageFor(x => x.HighSchool.State, "", new { @style = "color:red;" })
+                    City @Html.TextBoxFor(x => item.HighSchool.City, new { @class = "text-line", @style = "width:46%;" }) @Html.ValidationMessageFor(x => item.HighSchool.City, "", new { @style = "color:red;" })
+                    State @Html.TextBoxFor(x => item.HighSchool.State, new { @class = "text-line", @style = "width:345px;" }) @Html.ValidationMessageFor(x => item.HighSchool.State, "", new { @style = "color:red;" })
                 </p>
             </div>
         </div>
@@ -120,87 +153,193 @@
                 <div class="row">
                     <div class="col-md-6">
                         <p>
-                            Attended from @Html.EditorFor(x => x.HighSchool.AttendFrom, "{0:yyyy-MM-dd}", new { @class = "text-line date", @style = "width:35%;" }) @Html.ValidationMessageFor(x => x.HighSchool.AttendFrom, "", new { @style = "color:red;" })
+                            Attended from @Html.TextBoxFor(x => item.HighSchool.AttendFrom, "{0:yyyy-MM-dd}", new { @class = "text-line date", @style = "width:35%;" }) @Html.ValidationMessageFor(x => item.HighSchool.AttendFrom, "", new { @style = "color:red;" })
                             <br />(Please provide month and year)
                         </p>
                     </div>
                     <div class="col-md-6">
                         <p>
-                            Attended to @Html.EditorFor(x => x.HighSchool.AttendTo, new { @class = "text-line", @style = "width:36.5%;" }) @Html.ValidationMessageFor(x => x.HighSchool.AttendTo, "", new { @style = "color:red;" })
+                            Attended to @Html.TextBoxFor(x => item.HighSchool.AttendTo, "{0:yyyy-MM-dd}", new { @class = "text-line", @style = "width:36.5%;" }) @Html.ValidationMessageFor(x => item.HighSchool.AttendTo, "", new { @style = "color:red;" })
                         </p>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-lg-3"></div>
-            <div class="col-lg-9 col-md-12">
-                <p>Name of Higher Education School @Html.TextBoxFor(x => x.HigherSchool.SchoolName, new { @class = "text-line", @style = "width:65%;" }) @Html.ValidationMessageFor(x => x.HigherSchool.SchoolName, "", new { @style = "color:red;" })</p>
+        if (item.HigherSchool != null && item.HigherSchool.Cretificate != null)
+        {
+            <div class="row">
+                <div class="col-lg-3"></div>
+                <div class="col-lg-9 col-md-12">
+                    <p>
+                        Type of Diploma/Certificate @Html.TextBoxFor(x => item.HigherSchool.Cretificate, new { @class = "text-line", @style = "width:71.5%;" }) @Html.ValidationMessageFor(x => item.HigherSchool.AttendFrom, "", new { @style = "color:red;" })
+                        <br />(Highest Degree Obtained)
+                    </p>
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-3"></div>
-            <div class="col-lg-9 col-md-12">
-                <p>City @Html.TextBoxFor(x => x.HigherSchool.City, new { @class = "text-line", @style = "width:45%;" }) @Html.ValidationMessageFor(x => x.HigherSchool.AttendFrom, "", new { @style = "color:red;" }) State @Html.TextBoxFor(x => x.HigherSchool.State, new { @class = "text-line", @style = "width:43.5%;" }) @Html.ValidationMessageFor(x => x.HigherSchool.AttendFrom, "", new { @style = "color:red;" })</p>
+        }
+    }
+    @foreach (var item in Model)
+    {
+        if (i == 0)
+        {
+            <div class="row">
+                <div class="col-lg-3"></div>
+                <div class="col-lg-9 col-md-12">
+                    <p>
+                        I authorize AllStar Backgrounds to conduct an investigation of my education history and further release the companies, schools, or persons from liability or damages for providing information.<br />
+                        I hereby state that the information on this form is true and complete. In the event of employment, I understand that false, misleading or omitted information given in application
+                        documents or employment interviews may result in dismissal. I agree that the above information is true.
+                    </p>
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-3"></div>
-            <div class="col-lg-9 col-md-12">
-                <p>
-                    Attended from @Html.EditorFor(x => x.HigherSchool.AttendFrom, new { @class = "text-line date", @style = "width:150px;border: none;border - bottom: 1px solid;font - weight: bold; " }) @Html.ValidationMessageFor(x => x.HigherSchool.AttendFrom, "", new { @style = "color:red;" })  Attended to @Html.EditorFor(x => x.HigherSchool.AttendTo, new { @class = "text-line", @style = "width:150px;" }) @Html.ValidationMessageFor(x => x.HigherSchool.AttendFrom, "", new { @style = "color:red;" })
-                    <br />(Please provide month and year)
-                </p>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-3"></div>
-            <div class="col-lg-9 col-md-12">
-                <p>
-                    Type of Diploma/Certificate @Html.TextBoxFor(x => x.HigherSchool.Cretificate, new { @class = "text-line", @style = "width:71.5%;" }) @Html.ValidationMessageFor(x => x.HigherSchool.AttendFrom, "", new { @style = "color:red;" })
-                    <br />(Highest Degree Obtained)
-                </p>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-3"></div>
-            <div class="col-lg-9 col-md-12">
-                <p>
-                    I authorize AllStar Backgrounds to conduct an investigation of my education history and further release the companies, schools, or persons from liability or damages for providing information.<br />
-                    I hereby state that the information on this form is true and complete. In the event of employment, I understand that false, misleading or omitted information given in application
-                    documents or employment interviews may result in dismissal. I agree that the above information is true.
-                </p>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-3"></div>
-            <div class="col-lg-9 col-md-12">
-                <span>
-                    <span id="ShowHideSignatureSpan">
-                        <input type="text" style="width:290px;" class="text-line" />
-                    </span>
-                    <img id="openItForSignature" style="display:none;width:163px;height:47px;" />
-                    <span>
-                        <span class="btn btn-success" style="border-radius:100px;width:20%;" id="AddSignature">
-                            Add Signature
+            <div class="row">
+                <div class="col-lg-3"></div>
+                @Html.HiddenFor(x => item.Signature, new { @id = "EmployeeEVFSignature" })
+                @if (item.FormStatusEvf == "true")
+                {
+                    <div class="col-lg-9 col-md-12">
+                        <span>
+
+                            <img id="OpenEducationVerificationSign" style="width:163px;height:47px;" />
+                            <br />Signature
                         </span>
-                    </span><br />Signature
-                </span>
+
+                    </div>
+                }
+                else
+                {
+                    <div class="col-lg-9 col-md-12">
+                        <span>
+                            <span id="ShowHideSignatureSpan hideTextBoxAndButton">
+                                <input type="text" style="width:290px;" class="text-line hideTextBoxAndButton" />
+                            </span>
+                            <img id="OpenEducationVerificationSign" style="display:none;width:163px;height:47px;" />
+                            <span>
+                                <span class="btn btn-success hideTextBoxAndButton" style="border-radius: 100px;width: 20%;background-image: linear-gradient(to left, #3cffdb, #425fe0);" id="AddSignatureEducationVerification" onclick="OpenSignature('EducationVerificationForm','EmployeeEducationVerificationSignature','OpenEducationVerificationSign','hideTextBoxAndButton','myModalForSignatureEducationVerification','colors_sketchEducationVerification')">
+                                    Add Signature
+                                </span>
+                            </span><br />Signature
+                        </span>
+
+                    </div>
+                }
+
+
             </div>
+            i = i + 1;
+        }
+    }
+    <div class="row">
+        <div class="col-lg-3"></div>
+        <div class="col-lg-9 col-md-12">
+            <p><input type="text" style="width:290px;" name="Date" id="ShowHideSignatureSpan" class="text-line" value="@currentDate" /><br />Date</p>
         </div>
-        <div class="row">
-            <div class="col-lg-3"></div>
-            <div class="col-lg-9 col-md-12">
-                <p><input type="text" style="width:290px;" id="ShowHideSignatureSpan" class="text-line" /><br />Date</p>
-            </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-3"></div>
+        <div class="col-lg-9 col-md-12">
+            <p><b><center>AllStar Backgrounds – <a href="mailto: info@allstarbackgrounds.com">info@allstarbackgrounds.com</a> – Ph 800-570-0546 Fax 888-502-1299</center></b></p>
+
+            @*<span>
+                @Html.CheckBox("IsSave", new { @style = "height: 18px;width: 31px;" })
+                i hereby declare that the above information is true to the best of my knowledge
+                <span style="cursor:pointer;" onclick="SubmitForm(this, educationverificationform)" title="Go to next Rate of pay">
+                    <a><i class="fa fa-long-arrow-right" style="font-size: 40px;color: steelblue;margin-left: 967px;"></i></a>
+                    </span>
+                </span>*@
+
         </div>
-        <div class="row">
-            <div class="col-lg-3"></div>
-            <div class="col-lg-9 col-md-12">
-                <p><b><center>AllStar Backgrounds – <a href="mailto: info@allstarbackgrounds.com">info@allstarbackgrounds.com</a> – Ph 800-570-0546 Fax 888-502-1299</center></b></p>
-                <span> @Html.CheckBoxFor(x => x.IsSave, new { @style = "height: 18px;width: 31px;" })    i hereby declare that the above information is true to the best of my knowledge <span style="cursor:pointer;" onclick="SubmitForm(this, educationverificationform)" title="Go to next Rate of pay"><a><i class="fa fa-long-arrow-right" style="font-size: 40px;color: steelblue;margin-left: 967px;"></i></a></span></span>
-            </div>
+    </div>
+</div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <div class="row" style="height: 50px;background-color: #292b48;bottom: 0;overflow: hidden;position: fixed;width: 100%;margin-left: 0px;">
+        <div class="col-md-4 text-right">
+
+        </div>
+        <div class="col-md-4 text-center">
+            <span>
+                <i class="fa fa-check-square" aria-hidden="true" title="Go To CheckList" onclick="GuestCheckList(this,educationverificationform)" style="font-size: 20px;margin-top: 15px;color: #6cc387f2;padding-right:30px; cursor:pointer;"></i>
+            </span>
+
+            <span>
+                <a><i class="fa fa-question-circle" aria-hidden="true" title="Help" style="font-size: 20px;color: #f73c3c;margin-top: 6px;padding-right:30px;cursor:pointer;" onclick="SendFormIssueNotification('Education Verification', '@ApplicantId');"></i></a>
+            </span>
+
+            <span>
+                <a><i class="fa fa-floppy-o" aria-hidden="true" onclick="SaveBeforeNext(this,educationverificationform)" title="Save" style="font-size: 20px;color: #6cc387f2;margin-top: 6px;padding-right:30px;cursor:pointer;"></i></a>
+            </span>
+
+        </div>
+        <div class="col-md-4 text-right">
+            <span style="cursor:pointer;" onclick="SubmitForm(this, educationverificationform)" title="Go to next Rate of pay">
+                <a><i class="fa fa-long-arrow-right" title="Next" style="font-size: 45px;color: #6cc387f2;margin-top: 2px;"></i></a>
+            </span>
         </div>
     </div>
 }
+<div class="modal fade preview" id="myModalForSignatureEducationVerification" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" style="width:40%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Add Signature</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">X</span></button>
+            </div>
+            <div class="modal-body" style="margin-left:0px;">
+                <div id="divDetailPreview" class="">
+                    <div>
+                        <div class="" id="DivSignatureI9">
+                            <div class="form-group">
+                                <div class="col-lg-7 col-md-8 col-sm-8 col-xs-12">
+                                    <div class="tools">
+                                        <a href="#colors_sketch" data-tool="marker">Marker</a> <a href="#colors_sketch" data-tool="eraser">Eraser</a>
+                                    </div>
+                                    <br />
+                                    <canvas id="colors_sketchEducationVerification" width="450" height="200"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="background: white;">
+                <input type="button" class="btn btn-primary" id="btnSaveSign" data-dismiss="modal" value="Save as Image" style="border-radius: 100px; width: 25%; background-image: linear-gradient(to left, #3cffdb, #425fe0);" />
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/toastr.min.js"></script>
 <script src="~/Scripts/Guest/ApplicantFormSave.js"></script>
+<script src="~/Scripts/Guest/SketchSignature.js"></script>
+<script>
+    $(".DisabledAll").attr({ style: "cursor:not-allowed;" })//css("cursor","not-allowed")
+    $(".DisabledAll").prop("readonly", true);
+    $(function () {
+
+         var formEvf = $("#FormStatusEvf").val();
+        if (formEvf == "true") {
+            debugger
+            var EvfSign = $("#EmployeeEVFSignature").val();
+            //var neww4Sign = w4Sign.replace("-", "/");
+            $("#OpenEducationVerificationSign").attr("src", EvfSign);
+        }
+        else {
+             $('#colors_sketchEducationVerification').sketch();
+        $(".tools a").eq(0).attr("style", "color:#000");
+        $(".tools a").click(function () {
+            $(".tools a").removeAttr("style");
+            $(this).attr("style", "color:#000");
+        });
+        $("#btnSaveSign").bind("click", function () {
+            var base64 = $('#colors_sketchEducationVerification')[0].toDataURL();
+            $("#OpenEducationVerificationSign").attr("src", base64);
+            $("#OpenEducationVerificationSign").show();
+            $(".hideTextBoxAndButton").hide();
+            $("#EmployeeEducationVerificationSignature").val(base64);
+        });
+        }
+       
+    });
+</script>

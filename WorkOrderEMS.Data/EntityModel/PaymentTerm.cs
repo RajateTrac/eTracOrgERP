@@ -14,18 +14,9 @@ namespace WorkOrderEMS.Data.EntityModel
     
     public partial class PaymentTerm
     {
-        public PaymentTerm()
-        {
-            this.Contracts = new HashSet<Contract>();
-            this.LogContracts = new HashSet<LogContract>();
-        }
-    
         public long PTM_Id { get; set; }
         public string PTM_Term { get; set; }
         public int PTM_GracePeriod { get; set; }
         public string PTM_IsActive { get; set; }
-    
-        public virtual ICollection<Contract> Contracts { get; set; }
-        public virtual ICollection<LogContract> LogContracts { get; set; }
     }
 }

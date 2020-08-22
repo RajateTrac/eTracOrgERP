@@ -27,8 +27,9 @@ namespace WorkOrderEMS.Models.NewAdminModel
         public string MeetingDate { get; set; }
 
         public string MeetingTime { get; set; }
-
-
+        public int? Days { get; set; }
+        public long? RMS_Id { get; set; }
+        public bool IsCurrentEmployee { get; set; }
     }
     public class GWCQUestionModel
     {
@@ -80,6 +81,7 @@ namespace WorkOrderEMS.Models.NewAdminModel
         public string CHE_IsActive { get; set; }
         public string CHE_ASQ_Question { get; set; }
         public long  CHE_Id { get; set; }
+        public string Status { get; set; }
 
     }
 
@@ -97,6 +99,7 @@ namespace WorkOrderEMS.Models.NewAdminModel
         public Nullable<System.DateTime> RMS_InterviewDateTime { get; set; }
         public Nullable<System.DateTime> RMS_Date { get; set; }
         public string RMS_IsActive { get; set; }
+        public string Action { get; set; }
     }
     public  class ReviewMeeting
     {

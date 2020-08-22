@@ -12,6 +12,7 @@ namespace WorkOrderEMS.Models
     public class CommonApplicantModel
     {
         public long ApplicantId { get; set; }
+        public string ApplicantPhoto { get; set; }
         public List<ApplicantPersonalInfo> ApplicantPersonalInfo { get; set; }
         public List<ApplicantAddress> ApplicantAddress { get; set; }
         public List<ApplicantContactInfo> ApplicantContactInfo { get; set; }
@@ -26,9 +27,11 @@ namespace WorkOrderEMS.Models
         public List<ApplicantLicenseHeald> ApplicantLicenseHeald { get; set; }
         public List<ApplicantSchecduleAvaliblity> ApplicantSchecduleAvaliblity { get; set; }
         public AcadmicCertification AcadmicCertification { get; set; }
+        public List<AcadmicCertification> ListAcadmicCertification { get; set; }
         public Desclaimer Desclaimer { get; set; }
 
-        public CommonApplicantModel() {
+        public CommonApplicantModel()
+        {
             ApplicantId = new long();
             ApplicantPersonalInfo = new List<ApplicantPersonalInfo>();
             ApplicantPersonalInfo a = new ApplicantPersonalInfo();
@@ -77,8 +80,9 @@ namespace WorkOrderEMS.Models
     public class ApplicantPersonalInfo
     {
         public char API_Action { get; set; }
-        public long API_Id { get; set; }        
+        public long API_Id { get; set; }
         public long? API_APT_ApplicantId { get; set; }
+        public string API_Title { get; set; }
         [Required]
         [DisplayName("First Name")]
         public string API_FirstName { get; set; }
@@ -100,12 +104,13 @@ namespace WorkOrderEMS.Models
         [Required]
         [DisplayName("DL Number")]
         //public string DL_Number { get; set; }
-        public string API_DLNumber { get; set; }    
+        public string API_DLNumber { get; set; }
         [Required]
         //public decimal? DesireSalary { get; set; }
         public decimal? API_DesireSalaryWages { get; set; }
         public string API_IsActive { get; set; }
-        public string API_Title { get; set; }
+        public DateTime? DOB { get; set; }
+
     }
 
     public class Desclaimer
@@ -121,7 +126,59 @@ namespace WorkOrderEMS.Models
     {
         public long UserId { get; set; }
         public bool IsSignature { get; set; }
-        public ApplicantPersonalInfo ApplicantPersonalInfo { get; set; }
+        public ApplicantPersonalInfoBackground ApplicantPersonalInfo { get; set; }
         public List<ApplicantAddress> ApplicantAddress { get; set; }
+        public string Singnature { get; set; }
+        public string formName { get; set; }
+        public string FormStatusw4 { get; set; }
+        public string FormStatusI9 { get; set; }
+        public string FormStatusdd { get; set; }
+        public string FormStatusEvf { get; set; }
+        public string FormStatussif { get; set; }
+        public string FormStatusbcf { get; set; }
+        public string FormStatusrop { get; set; }
+        public string FormStatusprfecf { get; set; }
+        public string FormStatusprfcaf { get; set; }
+        public string API_FirstName { get; set; }
+        public long? API_APT_ApplicantId { get; set; }
+        public string FormStatusprf { get; set; }
+        public string FormStatusff { get; set; }
+
+    }
+
+    public class ApplicantPersonalInfoBackground
+    {
+        public char API_Action { get; set; }
+        public long API_Id { get; set; }
+        public long? API_APT_ApplicantId { get; set; }
+        public string API_Title { get; set; }
+        [Required]
+        [DisplayName("First Name")]
+        public string API_FirstName { get; set; }
+        //public string FirstName { get; set; }
+        [Required]
+        [DisplayName("Middle Name")]
+        public string API_MiddleName { get; set; }
+        //public string MiddleName { get; set; }
+        [Required]
+        [DisplayName("Last Name")]
+        public string API_LastName { get; set; }
+        //public string LastName { get; set; }
+        //public string Resume { get; set; }
+        public string API_Resume { get; set; }
+        [Required]
+        [DisplayName("SSN")]
+        //public string SSN { get; set; }
+        public string API_SSN { get; set; }
+        [Required]
+        [DisplayName("DL Number")]
+        //public string DL_Number { get; set; }
+        public string API_DLNumber { get; set; }
+        [Required]
+        //public decimal? DesireSalary { get; set; }
+        public decimal? API_DesireSalaryWages { get; set; }
+        public string API_IsActive { get; set; }
+         public DateTime? DOB { get; set; }
+
     }
 }

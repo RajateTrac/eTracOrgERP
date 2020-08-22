@@ -337,9 +337,17 @@ namespace WorkOrderEMS.Helper
         {
             return string.Format(CultureInfo.InvariantCulture, "{0} has been hired by {1}  for location {2} please add assets for him.", ApplicantName, HiringManagerName, LocationName);
         }
+        public static string OfferAccepted(string ApplicantName, string HiringManagerName, string LocationName, string position)
+        {
+            return string.Format(CultureInfo.InvariantCulture, "{0} has been accepted offer for title {3} for location {2} please hired him.", ApplicantName, HiringManagerName, LocationName, position);
+        }
         public static string OfferCouterByAppicant(string ApplicantName, string JobTitle, string LocationName)
         {
             return string.Format(CultureInfo.InvariantCulture, "{0} has been counter offer for postition {1} . please check comment and send onother offer if needed.", ApplicantName, JobTitle);
+        }
+        public static string HiredApplicant(string ApplicantName, string JobTitle, string LocationName)
+        {
+            return string.Format(CultureInfo.InvariantCulture, "{0} has been hired for postition {1} . please add assets for him.", ApplicantName, JobTitle);
         }
         public static string OfferRejectByAppicant(string ApplicantName, string JobTitle, string LocationName)
         {
@@ -357,9 +365,13 @@ namespace WorkOrderEMS.Helper
         {
             return string.Format(CultureInfo.InvariantCulture, "Candidate Has been rejected for this {0} .", JobTitle);
         }
-        public static string AssessmentClearReject(string JobTitle)
+        public static string AssessmentReject(string JobTitle)
         {
             return string.Format(CultureInfo.InvariantCulture, "Candidate Has been rejected for this {0} .", JobTitle);
+        }
+        public static string AssessmentClear(string JobTitle)
+        {
+            return string.Format(CultureInfo.InvariantCulture, "Candidate Has been selected for this {0} .", JobTitle);
         }
         public static string OnboardingComplete(string ApplicantName)
         {
@@ -371,7 +383,91 @@ namespace WorkOrderEMS.Helper
         }
         public static string EvaluationCompleteByManager(string EmployeeName, string ManagerName, string Assessment)
         {
-            return string.Format(CultureInfo.InvariantCulture, " The Manager {0} has been completed the evaluation {1} for employee {2}.", EmployeeName, Assessment, ManagerName);
+            return string.Format(CultureInfo.InvariantCulture, " The Manager {2} has been completed the evaluation {1} for employee {0}.", EmployeeName, Assessment, ManagerName);
+        }
+        public static string EvaluationCompleteByManagerHR(string EmployeeName, string ManagerName, string Assessment)
+        {
+            return string.Format(CultureInfo.InvariantCulture, " The Manager {2} has been completed the evaluation {1} for employee {0}.", EmployeeName, Assessment, ManagerName);
+        }
+        public static string AssetLost(string EmployeeName)
+        {
+            return string.Format(CultureInfo.InvariantCulture, "Asset lost by {0}", EmployeeName);
+        }
+        public static string TerminationDeny(string EmployeeName)
+        {
+            return string.Format(CultureInfo.InvariantCulture, "Termination denied for {0}", EmployeeName);
+        }
+        public static string TerminationApprove(string EmployeeName)
+        {
+            return string.Format(CultureInfo.InvariantCulture, "Termination Approved for {0}", EmployeeName);
+        }
+        public static string CorrectiveActionRequest(string EmployeeName)
+        {
+            return string.Format(CultureInfo.InvariantCulture, "Corrective Action for {0}", EmployeeName);
+        }
+        public static string CorrectiveActionApprove(string EmployeeName)
+        {
+            return string.Format(CultureInfo.InvariantCulture, "Corrective Action Approve for {0}", EmployeeName);
+        }
+        public static string CorrectiveActionDeny(string EmployeeName)
+        {
+            return string.Format(CultureInfo.InvariantCulture, "Corrective Action Denied for {0}", EmployeeName);
+        }
+
+        public static string CorrectiveActionMeeting(string EmployeeName)
+        {
+            return string.Format(CultureInfo.InvariantCulture, "Meeting for Corrective Action with {0}", EmployeeName);
+        }
+
+        public static string EmployeeCorrectiveActionDispute(string EmployeeName)
+        {
+            return string.Format(CultureInfo.InvariantCulture, "Corrective Action Dispute by {0}", EmployeeName);
+        }
+
+        public static string CorrectiveActionMeetingDateTime(string ManagerName, string DTone, string DTtwo, string DTthree)
+        {
+            return string.Format(CultureInfo.InvariantCulture, "Corrective Action Meeting Date&Time with {0}, {1}+ {2}+ {3}", ManagerName, DTone, DTtwo, DTthree);
+        }
+        public static string CorrectiveActionMeetingDateTime(string ManagerName, string DTone)
+        {
+            return string.Format(CultureInfo.InvariantCulture, "Corrective Action Meeting Date&Time with {0}, {1}", ManagerName, DTone);
+        }
+        public static string OnbordingFormHRNotification(string ApplicantName, string FormName)
+        {
+            return string.Format(CultureInfo.InvariantCulture, "The applicant {0} need help in {1} form.", ApplicantName, FormName);
+        }
+        public static string UnlockEmployee()
+        {
+            return string.Format(CultureInfo.InvariantCulture, "Your assessment has been unlocked by manager please complete it within 48 hours otherwise your system will lock.");
+        }
+        public static string MeetingAppriasal(string ManagerName)
+        {
+            return string.Format(CultureInfo.InvariantCulture, "Your meeting has been schedule with manager {0} please accept the meeting withing 48 hours.", ManagerName);
+        }
+        public static string HRDenyAppriasal(string UserName)
+        {
+            return string.Format(CultureInfo.InvariantCulture, "The appriasal of employee {0} has been deny by HR, please fix the issue.", UserName);
+        }
+        public static string FinalSubmitByManager(string UserName)
+        {
+            return string.Format(CultureInfo.InvariantCulture, "Your Appriasal has been done please accept and dispute it within 48 hour.", UserName);
+        }
+        public static string HRAcceptDispute(string UserName, string Remedy)
+        {
+            return string.Format(CultureInfo.InvariantCulture, "HR has accept dispute with remedy{1}.", UserName, Remedy);
+        }
+        public static string EMPAcceptDispute(string UserName, string status)
+        {
+            return string.Format(CultureInfo.InvariantCulture, "The employee {0} has {1}  the appriasal.", UserName, status);
+        }
+
+        public static string HRAcceptDisputeDeny(string UserName)
+        {
+            return string.Format(CultureInfo.InvariantCulture, "your Appriasal has been done please accept and dispute it within 48 hour.", UserName);
+        }
+        public static string TerminationRequestForEmployee(string EmployeeName, string ManagerName)
+        {
+            return string.Format(CultureInfo.InvariantCulture, "{0} has requested for Termination of {1}", ManagerName, EmployeeName);
         }
     }
 }

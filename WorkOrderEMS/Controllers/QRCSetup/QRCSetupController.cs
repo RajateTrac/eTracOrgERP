@@ -207,7 +207,7 @@ namespace WorkOrderEMS.Controllers.QRCSetup
                         if (ObjQRCModel != null && _fnResult == Result.Completed)
                         {
                             var obj = new NotificationDetailModel();
-                            obj.CreatedBy = ObjLoginModel.UserId;
+                            obj.CreatedBy = ObjLoginModel.UserId.ToString();
                             obj.CreatedDate = Convert.ToDateTime(DateTime.UtcNow);
                             //1obj.AssignTo = ObjQRCModel.AssignToUserId;
                             obj.eScanQRCID = _qRCId;

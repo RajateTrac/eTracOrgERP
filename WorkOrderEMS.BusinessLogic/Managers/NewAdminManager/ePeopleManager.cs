@@ -7,10 +7,12 @@ using System.Threading.Tasks;
 using WorkOrderEMS.BusinessLogic.Managers;
 using WorkOrderEMS.Data;
 using WorkOrderEMS.Data.DataRepository;
+using WorkOrderEMS.Data.DataRepository.NewAdminRepository;
 using WorkOrderEMS.Data.EntityModel;
 using WorkOrderEMS.Helper;
 using WorkOrderEMS.Models;
 using WorkOrderEMS.Models.Employee;
+using WorkOrderEMS.Models.NewAdminModel;
 
 namespace WorkOrderEMS.BusinessLogic
 {
@@ -111,6 +113,7 @@ namespace WorkOrderEMS.BusinessLogic
                         }).ToList();
                         foreach (var item in data)
                         {
+                            item.UserEncrptedId = Cryptography.GetEncryptedData(UserId.ToString(), true);
                             item.ProfilePhoto = item.ProfilePhoto == null ? HostingPrefix + ProfilePicPath.Replace("~", "") + "no-profile-pic.jpg" : HostingPrefix + ProfilePicPath.Replace("~", "") + item.ProfilePhoto;
                             lstDetails.Add(item);
                         }
@@ -362,6 +365,7 @@ namespace WorkOrderEMS.BusinessLogic
                             Name = x.EmployeeName,
                             HiringDate = x.EMP_DateOfJoining,
                             UserType = x.JBT_JobTitle,
+                            EmployeeId = x.EMP_EmployeeID,
                             ProfileImage = x.EMP_Photo == null ? HostingPrefix + ProfilePicPath.Replace("~", "") + "no-profile-pic.jpg" : HostingPrefix + ProfilePicPath.Replace("~", "") + x.EMP_Photo,
                         }).ToList();
                     }
@@ -668,13 +672,20 @@ namespace WorkOrderEMS.BusinessLogic
                     var tt = new GuestUserRepository();
                     var data = tt.GetDirectDepositeDataByEmployeeId(model.EmployeeId);
                     if (data != null)
-                        return Context.spSetDirectDepositForm("U", model.EmployeeId, model.Account1.EmployeeBankName, model.Account1.AccountType,
-                            model.Account1.Account, model.Account1.BankRouting, model.Account1.DepositeAmount, model.Account2.EmployeeBankName, model.Account2.AccountType, model.Account2.Account
-                            , model.Account2.BankRouting, model.VoidCheck, "Y") > 0 ? true : false;
+                        //    return Context.spSetDirectDepositForm("U", model.EmployeeId, model.Account1.EmployeeBankName, model.Account1.AccountType,
+                        //        model.Account1.Account, model.Account1.BankRouting, model.Account1.DepositeAmount, model.Account2.EmployeeBankName, model.Account2.AccountType, model.Account2.Account
+                        //        , model.Account2.BankRouting, model.VoidCheck, "Y") > 0 ? true : false;
 
-                    return Context.spSetDirectDepositForm("I", model.EmployeeId, model.Account1.EmployeeBankName, model.Account1.AccountType,
-                            model.Account1.Account, model.Account1.BankRouting, model.Account1.DepositeAmount.HasValue ? model.Account1.DepositeAmount.Value : 0, model.Account2.EmployeeBankName, model.Account2.AccountType, model.Account2.Account
-                            , model.Account2.BankRouting, model.VoidCheck, "Y") > 0 ? true : false;
+                        //return Context.spSetDirectDepositForm("I", model.EmployeeId, model.Account1.EmployeeBankName, model.Account1.AccountType,
+                        //        model.Account1.Account, model.Account1.BankRouting, model.Account1.DepositeAmount.HasValue ? model.Account1.DepositeAmount.Value : 0, model.Account2.EmployeeBankName, model.Account2.AccountType, model.Account2.Account
+                        //        , model.Account2.BankRouting, model.VoidCheck, "Y") > 0 ? true : false;
+                        return Context.spSetDirectDepositForm("U", model.EmployeeId, model.EmployeeBankName1, model.AccountType1,
+                               model.Account1, model.BankRouting1, model.DepositeAmount1, model.EmployeeBankName2, model.AccountType2, model.Account2
+                               , model.BankRouting2, model.VoidCheck, "Y") > 0 ? true : false;
+
+                    return Context.spSetDirectDepositForm("I", model.EmployeeId, model.EmployeeBankName1, model.AccountType1,
+                            model.Account1, model.BankRouting1, model.DepositeAmount1.HasValue ? model.DepositeAmount1.Value : 0, model.EmployeeBankName2, model.AccountType2, model.Account2
+                            , model.BankRouting2, model.VoidCheck, "Y") > 0 ? true : false;
                 }
             }
             catch (Exception ex)
@@ -982,6 +993,7 @@ namespace WorkOrderEMS.BusinessLogic
                 #region Email
                 if (ApplicantId > 0)
                 {
+                    var getApplicantDeails = objworkorderEMSEntities.spGetApplicantAllDetails(ApplicantId).FirstOrDefault();
                     var objEmailLogRepository = new EmailLogRepository();
                     var objEmailReturn = new List<EmailToManagerModel>();
                     var objListEmailog = new List<EmailLog>();
@@ -990,6 +1002,8 @@ namespace WorkOrderEMS.BusinessLogic
                     {
                         bool IsSent = false;
                         var objEmailHelper = new EmailHelper();
+                        objEmailHelper.Name = getApplicantDeails.API_FirstName + " " + getApplicantDeails.API_LastName;
+                        objEmailHelper.UserName = getApplicantDeails.API_FirstName + " " + getApplicantDeails.API_LastName; 
                         objEmailHelper.emailid = "assessment.check@gmail.com";
                         //objEmailHelper.AcceptAssessmentLink = HostingPrefix + "api/ServiceApi/GetAssessmentList?ApplicantId="+ ApplicantId+"&";
                         objEmailHelper.AcceptAssessmentLink = HostingPrefix + "GetMailData/GetAssessmentStatus?ApplicantId=" + ApplicantId + "&Status="+"Y";
@@ -1143,96 +1157,102 @@ namespace WorkOrderEMS.BusinessLogic
                     if (ActionVal == "Assessment")
                     {
                         if(IsActive == "Y")
-                        Status = IsActive == "Y" ? ApplicantStatus.Hired : ApplicantIsActiveStatus.Pass;
+                        Status = IsActive == "Y" ? ApplicantStatus.Assessment : ApplicantIsActiveStatus.Pass; //Status = IsActive == "Y" ? ApplicantStatus.Hired : ApplicantIsActiveStatus.Pass;
                         else
                             Status = IsActive == "N" ? ApplicantStatus.Assessment : ApplicantIsActiveStatus.Fail;
                         var isSaved = ePeopleRepository.SendForAssessment(Status, IsActive, ApplicantId);
-                        var getApplicantDetails = objworkorderEMSEntities.spGetApplicantAllDetails(ApplicantId).FirstOrDefault();
-                        string message = DarMessage.AssessmentClearReject(getApplicantDetails.JBT_JobTitle);
+                        var getApplicantDetails =  objworkorderEMSEntities.spGetApplicantAllDetails(ApplicantId).FirstOrDefault();
+                        string message = IsActive == "N" ? DarMessage.AssessmentReject(getApplicantDetails.JBT_JobTitle) : DarMessage.AssessmentClear(getApplicantDetails.JBT_JobTitle);
                         var saveNotification = objworkorderEMSEntities.spSetNotification("I", null, message,
-                                                        "ePeople", ModuleSubModule.AssessmentStatus, ApplicantId.ToString(), getApplicantDetails.HiringManagerEmployeeId, getApplicantDetails.HiringManagerEmployeeId, true, false, Priority.Medium, null, false, "Y");
+                                                       ModuleSubModule.ePeople, ModuleSubModule.AssessmentStatus, ApplicantId.ToString(), getApplicantDetails.HiringManagerEmployeeId, getApplicantDetails.HiringManagerEmployeeId, true, false, Priority.Medium, null, false, "Y");
                     }
                     else if (ActionVal == "Offer")
                     {
                         var isSaved = ePeopleRepository.SendForAssessment(ApplicantStatus.Offer, IsActive, ApplicantId);
-                        
+
                         #region Email
                         var getEMPData = objworkorderEMSEntities.spGetApplicantAllDetails(ApplicantId).FirstOrDefault();
-                        var getLocationCode = objworkorderEMSEntities.LocationMasters.Where(x => x.LocationId == getEMPData.LocationId).FirstOrDefault().Address2.Substring(0,3).ToUpper();
-                        var getLastEmp_Id = objworkorderEMSEntities.Employees.OrderByDescending(x => x.EMP_Id).FirstOrDefault().EMP_Id;
-                        if (getEMPData != null && getLocationCode != null && getLastEmp_Id > 0)
-                        {
-                            if (IsActive == ApplicantIsActiveStatus.OfferAccepted)
-                            {
-                                //Make Employee by last Id and Location code
-                                var value = getLastEmp_Id + 1;
-                                employeeID = getLocationCode + "000" + value;
-                                var saveEployee = objworkorderEMSEntities.spSetEmployee("I", null, employeeID, ApplicantId, getEMPData.API_FirstName, getEMPData.API_MidName,
-                                                                          getEMPData.API_LastName, getEMPData.ACI_eMail, getEMPData.ACI_PhoneNo, null, null,null, getEMPData.ALA_Photo, null, 9,
-                                                                          null, getEMPData.HiringManagerEmployeeId, getEMPData.APT_DateOfJoining, getEMPData.LocationId,
-                                                                          getEMPData.UserId, DateTime.Now, "Y", Convert.ToInt64(UserType.GuestUser), null, null, null, null, null);
-                                
-                            }
-                            string applicantName = getEMPData.API_FirstName + getEMPData.API_LastName;
-                            string message = IsActive == ApplicantIsActiveStatus.OfferAccepted ? DarMessage.AddAssetsForHiredApplicant(applicantName, getEMPData.HiringManagerName, getEMPData.LocationName) : IsActive == "C" ? DarMessage.OfferCouterByAppicant(applicantName, getEMPData.JBT_JobTitle, getEMPData.LocationName) : DarMessage.OfferRejectByAppicant(applicantName, getEMPData.JBT_JobTitle, getEMPData.LocationName);
-                            var saveNotification = objworkorderEMSEntities.spSetNotification("I", null, message,
-                                                        "ePeople", ModuleSubModule.OnBoarding, ApplicantId.ToString(), getEMPData.HiringManagerEmployeeId, getEMPData.HiringManagerEmployeeId, true, false, "H", null, false, "Y");
-                            if (ApplicantId > 0 && IsActive == ApplicantIsActiveStatus.OfferAccepted)
-                            {
-                                //var objEmailLogRepository = new EmailLogRepository();
-                                var objEmailReturn = new List<EmailToManagerModel>();
-                                var objListEmailog = new List<EmailLog>();
-                                var objTemplateModel = new TemplateModel();
-                                if (getEMPData != null)
-                                {
-                                    bool IsSent = false;
-                                    var objEmailHelper = new EmailHelper();
-                                    objEmailHelper.emailid = getEMPData.ACI_eMail;
-                                    objEmailHelper.Name = getEMPData.API_FirstName + " "+ getEMPData.API_LastName;
-                                    //By Default password will be this will change it if requirment changes
-                                    objEmailHelper.Password = "Elite@123";
-                                    objEmailHelper.UserName = employeeID;
-                                    objEmailHelper.emailid = getEMPData.ACI_eMail;
-                                    objEmailHelper.JobTitle = getEMPData.JBT_JobTitle;
-                                    //objEmailHelper.AcceptAssessmentLink = HostingPrefix + "api/ServiceApi/GetAssessmentList?ApplicantId="+ ApplicantId+"&";
-                                    objEmailHelper.AcceptAssessmentLink = HostingPrefix + "GetMailData/LoginForOnboarding?ApplicantId=" + ApplicantId;
-                                    objEmailHelper.MailType = IsActive == ApplicantIsActiveStatus.OfferAccepted ? "OFFERACCEPTED": IsActive == "C"?"OFFERCOUNTER":"OFFERREJECTED";
-                                    objEmailHelper.Subject = IsActive == ApplicantIsActiveStatus.OfferAccepted ? "eTrac : Thanks for accepting offer letter": IsActive == "C"? "eTrac : Thanks for Countering offer" :"eTrac : Offer Rejected";
-                                    objEmailHelper.SentBy = Convert.ToInt64(getEMPData.UserId);
-                                    objEmailHelper.TimeAttempted = DateTime.UtcNow.ToMobileClientTimeZone(objTemplateModel.TimeZoneName, objTemplateModel.TimeZoneOffset, objTemplateModel.IsTimeZoneinDaylight, false).ToString();
-                                    IsSent = objEmailHelper.SendEmailWithTemplate();
-                                    if (IsSent == true)
-                                    {
-                                        var objEmailog = new EmailLog();
-                                        try
-                                        {
-                                            objEmailog.CreatedBy = Convert.ToInt64(getEMPData.UserId);
-                                            objEmailog.CreatedDate = DateTime.UtcNow;
-                                            objEmailog.DeletedBy = null;
-                                            objEmailog.DeletedOn = null;
-                                            objEmailog.LocationId = getEMPData.LocationId;
-                                            objEmailog.ModifiedBy = null;
-                                            objEmailog.ModifiedOn = null;
-                                            objEmailog.SentBy = getEMPData.UserId;
-                                            objEmailog.SentEmail = getEMPData.ACI_eMail;
-                                            objEmailog.Subject = objEmailHelper.Subject;
-                                            objEmailog.SentTo = ApplicantId;
-                                            objListEmailog.Add(objEmailog);
-                                        }
-                                        catch (Exception)
-                                        {
-                                            throw;
-                                        }
-                                    }
-                                    using (var context = new workorderEMSEntities())
-                                    {
-                                        context.EmailLogs.AddRange(objListEmailog);
-                                        context.SaveChanges();
-                                    }
-                                    #endregion Email
-                                }
-                            }
-                        }
+                        string applicantName = getEMPData.API_FirstName + getEMPData.API_LastName;
+                        string message = IsActive == ApplicantIsActiveStatus.OfferAccepted ? DarMessage.OfferAccepted(applicantName, getEMPData.HiringManagerName, getEMPData.LocationName, getEMPData.JBT_JobTitle) : IsActive == "C" ? DarMessage.OfferCouterByAppicant(applicantName, getEMPData.JBT_JobTitle, getEMPData.LocationName) : DarMessage.OfferRejectByAppicant(applicantName, getEMPData.JBT_JobTitle, getEMPData.LocationName);
+                        var saveNotification = objworkorderEMSEntities.spSetNotification("I", null, message,
+                                                    "ePeople", ModuleSubModule.OnBoarding, ApplicantId.ToString(), getEMPData.HiringManagerEmployeeId, getEMPData.HiringManagerEmployeeId, true, false, "H", null, false, "Y");
+                        //var getEMPData = objworkorderEMSEntities.spGetApplicantAllDetails(ApplicantId).FirstOrDefault();
+                        //var getLocationCode = objworkorderEMSEntities.LocationMasters.Where(x => x.LocationId == getEMPData.LocationId).FirstOrDefault().Address2.Substring(0,3).ToUpper();
+                        //var getLastEmp_Id = objworkorderEMSEntities.Employees.OrderByDescending(x => x.EMP_Id).FirstOrDefault().EMP_Id;
+                        //if (getEMPData != null && getLocationCode != null && getLastEmp_Id > 0)
+                        //{
+                        //    if (IsActive == ApplicantIsActiveStatus.OfferAccepted)
+                        //    {
+                        //        //Make Employee by last Id and Location code
+                        //        var value = getLastEmp_Id + 1;
+                        //        employeeID = getLocationCode + "000" + value;
+                        //        var saveEployee = objworkorderEMSEntities.spSetEmployee("I", null, employeeID, ApplicantId, getEMPData.API_FirstName, getEMPData.API_MidName,
+                        //                                                  getEMPData.API_LastName, getEMPData.ACI_eMail, getEMPData.ACI_PhoneNo, null, null,null, getEMPData.ALA_Photo, null, 9,
+                        //                                                  null, getEMPData.HiringManagerEmployeeId, getEMPData.APT_DateOfJoining, getEMPData.LocationId,
+                        //                                                  getEMPData.UserId, DateTime.Now, "Y", Convert.ToInt64(UserType.GuestUser), null, null, null, null, null);
+
+                        //    }
+                        //    string applicantName = getEMPData.API_FirstName + getEMPData.API_LastName;
+                        //    string message = IsActive == ApplicantIsActiveStatus.OfferAccepted ? DarMessage.AddAssetsForHiredApplicant(applicantName, getEMPData.HiringManagerName, getEMPData.LocationName) : IsActive == "C" ? DarMessage.OfferCouterByAppicant(applicantName, getEMPData.JBT_JobTitle, getEMPData.LocationName) : DarMessage.OfferRejectByAppicant(applicantName, getEMPData.JBT_JobTitle, getEMPData.LocationName);
+                        //    var saveNotification = objworkorderEMSEntities.spSetNotification("I", null, message,
+                        //                                "ePeople", ModuleSubModule.OnBoarding, ApplicantId.ToString(), getEMPData.HiringManagerEmployeeId, getEMPData.HiringManagerEmployeeId, true, false, "H", null, false, "Y");
+                        //    if (ApplicantId > 0 && IsActive == ApplicantIsActiveStatus.OfferAccepted)
+                        //    {
+                        //        //var objEmailLogRepository = new EmailLogRepository();
+                        //        var objEmailReturn = new List<EmailToManagerModel>();
+                        //        var objListEmailog = new List<EmailLog>();
+                        //        var objTemplateModel = new TemplateModel();
+                        //        if (getEMPData != null)
+                        //        {
+                        //            bool IsSent = false;
+                        //            var objEmailHelper = new EmailHelper();
+                        //            objEmailHelper.emailid = getEMPData.ACI_eMail;
+                        //            objEmailHelper.Name = getEMPData.API_FirstName + " "+ getEMPData.API_LastName;
+                        //            //By Default password will be this will change it if requirment changes
+                        //            objEmailHelper.Password = "Elite@123";
+                        //            objEmailHelper.UserName = employeeID;
+                        //            objEmailHelper.emailid = getEMPData.ACI_eMail;
+                        //            objEmailHelper.JobTitle = getEMPData.JBT_JobTitle;
+                        //            //objEmailHelper.AcceptAssessmentLink = HostingPrefix + "api/ServiceApi/GetAssessmentList?ApplicantId="+ ApplicantId+"&";
+                        //            objEmailHelper.AcceptAssessmentLink = HostingPrefix + "GetMailData/LoginForOnboarding?ApplicantId=" + ApplicantId;
+                        //            objEmailHelper.MailType = IsActive == ApplicantIsActiveStatus.OfferAccepted ? "OFFERACCEPTED": IsActive == "C"?"OFFERCOUNTER":"OFFERREJECTED";
+                        //            objEmailHelper.Subject = IsActive == ApplicantIsActiveStatus.OfferAccepted ? "eTrac : Thanks for accepting offer letter": IsActive == "C"? "eTrac : Thanks for Countering offer" :"eTrac : Offer Rejected";
+                        //            objEmailHelper.SentBy = Convert.ToInt64(getEMPData.UserId);
+                        //            objEmailHelper.TimeAttempted = DateTime.UtcNow.ToMobileClientTimeZone(objTemplateModel.TimeZoneName, objTemplateModel.TimeZoneOffset, objTemplateModel.IsTimeZoneinDaylight, false).ToString();
+                        //            IsSent = objEmailHelper.SendEmailWithTemplate();
+                        //            if (IsSent == true)
+                        //            {
+                        //                var objEmailog = new EmailLog();
+                        //                try
+                        //                {
+                        //                    objEmailog.CreatedBy = Convert.ToInt64(getEMPData.UserId);
+                        //                    objEmailog.CreatedDate = DateTime.UtcNow;
+                        //                    objEmailog.DeletedBy = null;
+                        //                    objEmailog.DeletedOn = null;
+                        //                    objEmailog.LocationId = getEMPData.LocationId;
+                        //                    objEmailog.ModifiedBy = null;
+                        //                    objEmailog.ModifiedOn = null;
+                        //                    objEmailog.SentBy = getEMPData.UserId;
+                        //                    objEmailog.SentEmail = getEMPData.ACI_eMail;
+                        //                    objEmailog.Subject = objEmailHelper.Subject;
+                        //                    objEmailog.SentTo = ApplicantId;
+                        //                    objListEmailog.Add(objEmailog);
+                        //                }
+                        //                catch (Exception)
+                        //                {
+                        //                    throw;
+                        //                }
+                        //            }
+                        //            using (var context = new workorderEMSEntities())
+                        //            {
+                        //                context.EmailLogs.AddRange(objListEmailog);
+                        //                context.SaveChanges();
+                        //            }
+                        //            #endregion Email
+                        //        }
+                        //    }
+                        //}
+                        #endregion Mail
                     }
                     //if(ActionVal == "Background")
                     //{
@@ -1242,7 +1262,7 @@ namespace WorkOrderEMS.BusinessLogic
                     //{
                     //    Status = "E";
                     //}
-                    
+
                     isCleared = true;
                 }
             }
@@ -1276,9 +1296,9 @@ namespace WorkOrderEMS.BusinessLogic
                         IPT_Id = a.IPT_Id
                     }).FirstOrDefault();
                 var getJobDetails = objworkorderEMSEntities.spGetMyOpening(getDetails.JobId).FirstOrDefault().JBT_JobTitle;
-                var message = status == "Y"?  DarMessage.InterviewAcceptByApplicant(getJobDetails,status == "Y"?"Accept":"Reject"): DarMessage.InterviewDenyByApplicant(getJobDetails);
+                var message = status == "A"?  DarMessage.InterviewAcceptByApplicant(getJobDetails,status == "A"?"Accept":"Reject"): DarMessage.InterviewDenyByApplicant(getJobDetails);
                 var saveNotification = objworkorderEMSEntities.spSetNotification("I", null, message,
-                                                        "ePeople", ModuleSubModule.InterviewerAcceptDeny, getDetails.IPT_Id.ToString(), getDetails.HiringManagerId, getDetails.HiringManagerId, true, false, Priority.Medium, null, false, "Y");
+                                                        ModuleSubModule.ePeople, ModuleSubModule.InterviewerAcceptDeny, getDetails.IPT_Id.ToString(), getDetails.HiringManagerId, getDetails.HiringManagerId, true, false, Priority.Medium, null, false, "Y");
             }
         }
 
@@ -1306,6 +1326,149 @@ namespace WorkOrderEMS.BusinessLogic
             }
             else
                 return new BenefitList();
+        }
+
+        /// <summary>
+        /// Created By : Ashwajit Bansod
+        /// Created Date : 13-05-2020
+        /// Created For : To get Employee status
+        /// </summary>
+        /// <param name="ApplicantId"></param>
+        /// <returns></returns>
+        public string GetApplicantStatus(long ApplicantId)
+        {
+            string Status = string.Empty;
+            try
+            {
+                if (ApplicantId > 0)
+                {
+                    var getAptDetails = objworkorderEMSEntities.spGetMyOpening(null).Where(x => x.APT_ApplicantId == ApplicantId).FirstOrDefault();
+                    if (getAptDetails.APT_Status != null)
+                    {
+                        Status = getAptDetails.APT_Status == "Applied" ? "Applied"
+                             : getAptDetails.APT_Status == "Screened" ? "Screened"
+                             : getAptDetails.APT_Status == "IntervieweSchedule" ? "Interview Schedule"
+                             : getAptDetails.APT_Status == "InterviewCanceled" ? "Interview Canceled"
+                             : getAptDetails.APT_Status == "Shortlisted" ? "Shortlisted"
+                             : getAptDetails.APT_Status == "AssessmentSend" ? "Assessment Send"
+                             : getAptDetails.APT_Status == "AssessmentPass" ? "Assessment Pass"
+                             : getAptDetails.APT_Status == "AssessmentFail" ? "Assessment Fail"
+                             : getAptDetails.APT_Status == "OnHold" ? "On Hold"
+                             : getAptDetails.APT_Status == "Hired" ? "Hired"
+                             : getAptDetails.APT_Status == "OfferSent" ? "Offer Sent"
+                             : getAptDetails.APT_Status == "OfferAccepted" ? "Offer Accepted"
+                             : getAptDetails.APT_Status == "OfferCountered" ? "Offer Countered"
+                             : getAptDetails.APT_Status == "OfferDeclined" ? "Offer Declined"
+                             : getAptDetails.APT_Status == "OfferCancled" ? "Offer Cancled"
+                             : getAptDetails.APT_Status == "Onboarding" ? "On boarding"
+                             : getAptDetails.APT_Status == "Onboarded" ? "On boarded"
+                             : getAptDetails.APT_Status == "OnboardingDrop" ? "Onboarding Drop"
+                             : getAptDetails.APT_Status == "BackgroundCheckSend" ? "Background Check Send"
+                             : getAptDetails.APT_Status == "BackgroundCheckPass" ? "Background Check Pass"
+                             : getAptDetails.APT_Status == "BackgroundCheckFail" ? "Background Check Fail"
+                             : getAptDetails.APT_Status == "OrientationSchedule" ? "Orientation Schedule"
+                             : getAptDetails.APT_Status == "OrientationDone" ? "Orientation Done"
+                             : getAptDetails.APT_Status == "OrientationNotDone" ? "Orientation Not Done"
+                             : "No Entry";
+                             
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                Exception_B.Exception_B.exceptionHandel_Runtime(ex, "public string GetEmployeeStatus(long ApplicantId)", "Exception While getting applicant status", ApplicantId);
+                throw;
+            }
+            return Status;
+        }
+        /// <summary>
+        /// Created By : Ashwajit Bansod
+        /// Created Date : 14-05-2020
+        /// Created For : To set job status by job id
+        /// </summary>
+        /// <param name="JobId"></param>
+        /// <param name="JobStatus"></param>
+        /// <returns></returns>
+        public bool UpdateCloseHoldOpenJob(long JobId, string JobStatus)
+        {
+            bool isUpdate = false;
+            try
+            {
+                if (JobId > 0 && JobStatus != null)
+                {
+                    var getJobDetails = objworkorderEMSEntities.JobPostings.Where(x => x.JPS_JobPostingId == JobId).FirstOrDefault();
+                    var update = objworkorderEMSEntities.spSetJobPosting("U", JobId, getJobDetails.JPS_JobPostingIdRecruitee, getJobDetails.JPS_JobTitleID,
+                        getJobDetails.JPS_HiringManagerID, getJobDetails.JPS_LocationId, getJobDetails.JPS_NumberOfPost, getJobDetails.JPS_DrivingType, getJobDetails.JPS_MinimumQulification,JobStatus);
+                    isUpdate = true;
+                }
+                else
+                    isUpdate = false;
+            }
+            catch (Exception ex)
+            {
+                isUpdate = false;
+                Exception_B.Exception_B.exceptionHandel_Runtime(ex, "public bool UpdateCloseHoldOpenJob(long JobId, string JobStatus)", "Exception While updating job status", JobId);
+                throw;
+            }
+            return isUpdate;
+        }
+
+        /// <summary>
+        /// Created By : Ashwajit Bansod
+        /// Created Date : 10-Aug-2020
+        /// Created For : To update status of performance.
+        /// </summary>
+        /// <param name="EmployeeId"></param>
+        /// <param name="Status"></param>
+        /// <param name="UserName"></param>
+        /// <returns></returns>
+        public bool Status(string EmployeeId, string Status, string UserName, long? RMS_Id, string Assessment)
+        {
+            var _Notification = new NotificationManager();
+            var getEMPDetails = new GlobalAdminManager();
+            var objSetupMeeting = new SetupMeeting();
+            var ObjPerformanceRepository = new PerformanceRepository();
+            bool isSaved = false;
+            try
+            {
+                if(EmployeeId != null && Status != null && UserName != null)
+                {
+                    var update = objworkorderEMSEntities.spSet306090UpdateStatus(EmployeeId,null,null,null, Status);
+                    var dataEMP = getEMPDetails.GetEmployeeDetails(EmployeeId);
+                    switch (Status)
+                    {
+                        case "I":
+                            objSetupMeeting.ReceipientEmailId = EmployeeId;
+                            objSetupMeeting.FinYear = DateTime.Now.Year.ToString();
+                            objSetupMeeting.FinQrtr = Assessment;
+                            objSetupMeeting.Action = "U";
+                            objSetupMeeting.RMS_Id = Convert.ToInt64(RMS_Id);
+                            ObjPerformanceRepository.SaveMeetingDetails(objSetupMeeting);
+                            break;
+                        case "K":
+                            objSetupMeeting.ReceipientEmailId = EmployeeId;
+                            objSetupMeeting.FinYear = DateTime.Now.Year.ToString();
+                            objSetupMeeting.FinQrtr = Assessment;
+                            objSetupMeeting.Action = "U";
+                            objSetupMeeting.RMS_Id = Convert.ToInt64(RMS_Id);
+                            ObjPerformanceRepository.SaveMeetingDetails(objSetupMeeting);
+                            break;
+                        case "F":
+                            string Message = DarMessage.FinalSubmitByManager(dataEMP.EMP_FirstName + " " + dataEMP.EMP_LastName);
+                            var data = _Notification.GetNotificationData(EmployeeId, EmployeeId, true, Message, ModuleSubModule.FinalSubmitEvaluation, ModuleSubModule.Performance, EmployeeId, "M", UserName);
+                            break;
+                    }
+                    isSaved = true;
+                }
+                else
+                    isSaved = true;
+            }
+            catch(Exception ex)
+            {
+                Exception_B.Exception_B.exceptionHandel_Runtime(ex, "public bool Status(string EmployeeId, string Status, string UserName)", "Exception While updating performance status", EmployeeId);
+                throw;
+            }
+            return isSaved;
         }
     }
 }

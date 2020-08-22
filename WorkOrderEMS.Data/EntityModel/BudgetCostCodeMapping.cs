@@ -26,8 +26,5 @@ namespace WorkOrderEMS.Data.EntityModel
         public string BCM_BudgetSource { get; set; }
         public string BCM_BudgetStatus { get; set; }
         public string BCM_IsActive { get; set; }
-    
-        public virtual CostCodeLocationMapping CostCodeLocationMapping { get; set; }
-        public virtual CostCodeLocationMapping CostCodeLocationMapping1 { get; set; }
     }
 }

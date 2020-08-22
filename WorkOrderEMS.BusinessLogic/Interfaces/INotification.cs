@@ -15,5 +15,9 @@ namespace WorkOrderEMS.BusinessLogic
         bool ReadNotificationById(long NotificationId);
         ApplicantDetails GetApplicantDetails(long ApplicantId);
         bool SaveNotification(NotificationDetailModel obj);
+        NotificationDetailModel NotificationDetailsforMeetingDateTime(NotificationDetailModel obj);
+        bool ScheduleAppriasalMeetingNotification(string EmployeeId, string ManagerId, string Assessmnt);
+        bool UnlockEmployee(string EmployeeId, string ManagerId);
+        NotificationDetailModel GetNotificationData(string EmployeeId, string AssignedId, bool AssignStatus, string Message, string SubModule, string Module, string SubModuleId, string Priority, string UserName);
     }
 }

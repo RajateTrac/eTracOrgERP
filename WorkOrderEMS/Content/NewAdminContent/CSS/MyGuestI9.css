@@ -1,0 +1,24 @@
+﻿
+
+
+@media only screen and (max-width: 768px) {
+    #RenderPageId {
+        width: 174%;
+    }
+    .I9-mtable1 {
+        width: 40%;
+        position: absolute;
+        top: 51%;
+        left: 64%;
+    }
+    .I9-mBorderBottom{
+        width:391px;
+    }
+    .I9-marrow {
+        font-size: 40px;
+        color: steelblue;
+        margin-left: 1048px;
+        margin-top: 2%;
+    }
+
+}

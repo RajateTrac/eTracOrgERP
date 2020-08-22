@@ -109,8 +109,18 @@ namespace WorkOrderEMS.BusinessLogic
                     RolesAndResponsibility = x.VST_RolesAndResponsiblities,
                     IsActive = x.VST_IsExempt,
                     SeatingName = x.VST_Title,
-                    VST_Level = x.VST_Level
-                    //Image = HostingPrefix + ProfileImagePath.Replace("~", "") + "no-profile-pic.jpg"
+                    VST_Level = x.VST_Level,
+                    nodeId = "0-"+ x.VST_Id,
+                    parentNodeId = x.VST_Id == 1?null: "0-"+ x.VST_ParentId,
+                    width = 342,
+                    height = 146,
+                    borderWidth = 1,
+                    borderRadius = 5,
+                    connectorLineWidth = 5,
+                    dashArray = "",
+                    expanded = false,
+                    directSubordinates = 4,
+
                 }).ToList();
                 if (data.Count() > 0)
                 {
@@ -118,10 +128,135 @@ namespace WorkOrderEMS.BusinessLogic
                     {
                         if (item.JobDescription != null)
                         {
+                            var backgroundColor = new borderColor();
+                            var borderColorImage = new borderColor();
+                            var connectorLineColor = new borderColor();
+                            var nodeImage = new nodeImage();
+                            backgroundColor.green = 182;
+                            backgroundColor.red = 51;
+                            backgroundColor.blue = 208;
+                            backgroundColor.alpha = 1;
+                            item.backgroundColor = backgroundColor;
+
+                            connectorLineColor.red = 220;
+                            connectorLineColor.green = 189;
+                            connectorLineColor.blue = 207;
+                            connectorLineColor.alpha = 1;
+                            item.connectorLineColor = connectorLineColor;
+
+                            nodeImage.url = "https://raw.githubusercontent.com/bumbeishvili/Assets/master/Projects/D3/Organization%20Chart/cto.jpg";
+                            nodeImage.width = 100;
+                            nodeImage.height = 100;
+                            nodeImage.centerTopDistance = 0;
+                            nodeImage.centerLeftDistance = 0;
+                            nodeImage.cornerShape = "CIRCLE";
+                            nodeImage.borderWidth = 0;
+                            borderColorImage.alpha = 1;
+                            borderColorImage.green = 123;
+                            borderColorImage.red = 19;
+                            borderColorImage.blue = 128;
+                            nodeImage.borderColor = borderColorImage;
+                            item.nodeImage = nodeImage;
+
                             item.JobDescription = item.JobDescription.Replace("|", ",");
+                            item.template  = "<div style=\"margin-left:70px;\n margin-top:10px;\n font-size:20px;\nfont-weight:bold;\n \">" + item.SeatingName + "</div>\n<div style=\"margin-left:70px;\nmargin-top:3px;\nfont-size:16px;\n\">Cheaf Executive Officer <br>sdfsdfhdsjkh </div>\n\n<div style=\"margin-left:70px;\nmargin-top:3px;\nfont-size:14px;\n\">Business first</div>\n\n<div style=\"margin-left:196px;\nmargin-top:15px;\nfont-size:13px;\nposition:absolute;\nbottom:5px;\n\">\n<div>CTO office</div>\n<div style=\"margin-top:5px\">Corporate</div>\n</div>\n</div>";
                             //item.JDSplitedString = item.JobDescription.Split('|');
                             lstVSC.Add(item);
                         }
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Exception_B.Exception_B.exceptionHandel_Runtime(ex, "List<AddChartModel> ListVehicleSeatingChart(long? LocationId)", "Exception While getting list Vehicle seating chart.", LocationId);
+                throw;
+            }
+            return lstVSC;
+        }
+
+        public List<AddChartModelTest> ListVehicleSeatingChartTest(long? LocationId)
+        {
+            var _VSCRepository = new VehicleSeatingChartRepository();
+            var lstVSC = new List<AddChartModelTest>();
+           
+            try
+            {
+                var data = _VSCRepository.GetVSCList(LocationId).ToList();
+
+                if (data.Count() > 0)
+                {
+                    foreach (var item in data)
+                    {
+                        var lVSCData = new AddChartModelTest();
+                        var backgroundColor = new backgroundColor();
+                        var borderColorImage = new borderColor();
+                        var borderColor = new borderColor();
+                        var nodeImage = new nodeImage();
+                        var nodeIcon = new nodeIcon();
+                        var connectorLineColor = new connectorLineColor();
+
+                        //Main json
+                        lVSCData.nodeId = "O-" + item.VST_Id;
+                        lVSCData.parentNodeId = item.VST_Id == 1 ?null: "O-" + item.VST_ParentId;
+                        lVSCData.width = 342;
+                        lVSCData.height = 146;
+                        lVSCData.borderWidth = 1; 
+                        lVSCData.borderRadius = 5;
+
+                        //Sub Json for Border color
+                        borderColor.red = 15;
+                        borderColor.green = 140;
+                        borderColor.blue = 121;
+                        borderColor.alpha = 1;
+                        lVSCData.borderColor = borderColor;
+
+                        //Sub json for border color
+                        backgroundColor.green = 182;
+                        backgroundColor.red = 51;
+                        backgroundColor.blue = 208;
+                        backgroundColor.alpha = 1;
+                        lVSCData.backgroundColor = backgroundColor;
+
+                        //Sub json for node image
+                        nodeImage.url = "";
+                        nodeImage.width = 100;
+                        nodeImage.height = 100;
+                        nodeImage.centerTopDistance = 0;
+                        nodeImage.centerLeftDistance = 0;
+                        nodeImage.cornerShape = "CIRCLE";
+                        nodeImage.shadow = false;
+                        nodeImage.borderWidth = 0;
+                        borderColorImage.alpha = 1;
+                        borderColorImage.green = 123;
+                        borderColorImage.red = 19;
+                        borderColorImage.blue = 128;
+                        nodeImage.borderColor = borderColorImage;
+                        lVSCData.nodeImage = nodeImage;
+
+                        //Sub json for node icon
+                        nodeIcon.icon = "";
+                        nodeIcon.size = 30;
+                        lVSCData.nodeIcon = nodeIcon;
+                        lVSCData.template = "<div style='margin-left:70px;margin-top:10px; font-size:20px;font-weight:bold;'>Test</div><div style='margin-left:70px;margin-top:3px;font-size:16px;'>Cheaf Executive Officer <br>sdfsdfhdsjkh </div><div style='margin-left:70px;margin-top:3px;font-size:14px;'>Business first</div><div style='margin-left:196px;'margin-top:15px;font-size:13px;position:absolute;bottom:5px;'><div>CTO office</div><div style='margin-top:5px'>Corporate</div></div></div>";
+
+                        //sub json for connector Line Color
+                        connectorLineColor.red = 220;
+                        connectorLineColor.green = 189;
+                        connectorLineColor.blue = 207;
+                        connectorLineColor.alpha = 1;
+                        lVSCData.connectorLineColor = connectorLineColor;
+
+                        lVSCData.connectorLineWidth = 5;
+                        lVSCData.dashArray = "";
+                        lVSCData.expanded = false;
+                        lVSCData.directSubordinates = 0;
+                        lVSCData.totalSubordinates = 0;
+                        //item.JobDescription = item.JobDescription.Replace("|", ",");
+
+                        //item.JDSplitedString = item.JobDescription.Split('|');
+                        lstVSC.Add(lVSCData);
+                        return lstVSC;
                     }
                 }
 
@@ -270,7 +405,9 @@ namespace WorkOrderEMS.BusinessLogic
                             SeatingName = x.VST_Title,
                             Department = x.DPT_Id,
                             DepartmentName = x.DPT_Name,
-
+                            RateOfPay = x.VST_RateOfPay,
+                            EmploymentClassification = x.VST_IsExempt,
+                            EmploymentStatus = x.VST_EmploymentStatus
                         }).FirstOrDefault();
                 }
             }
@@ -456,6 +593,46 @@ namespace WorkOrderEMS.BusinessLogic
             catch (Exception ex)
             {
                 Exception_B.Exception_B.exceptionHandel_Runtime(ex, "public bool SaceAccessPermission(AccessPermisionTreeViewModel obj)", "Exception While saving access permission", Obj);
+                throw;
+            }
+            return isSaved;
+        }
+        /// <summary>
+        /// Created By  : Ashwajit Bansod
+        /// Created Date: 20-05-2020
+        /// Created For : TO soft delete job title
+        /// </summary>
+        /// <param name="JobId"></param>
+        /// <returns></returns>
+        public bool DeleteJobTitleById(long JobId)
+        {
+            var _VSCRepository = new VehicleSeatingChartRepository();
+            var Obj = new AddChartModel();
+            bool isSaved = false;
+            workorderEMSEntities _db = new workorderEMSEntities();
+            try
+            {
+                if(JobId > 0)
+                {
+                    var getJobTitleData = _db.JobTitles.Where(x => x.JBT_Id == JobId && x.JBT_IsActive == "Y").FirstOrDefault();
+                    Obj.IsActive = "X";
+                    Obj.Action = "U";
+                    Obj.JobTitleDesc = getJobTitleData.JBT_JobTitle;
+                    Obj.JobTitleCount = getJobTitleData.JBT_JobCount;
+                    Obj.Id = JobId;
+                    Obj.parentId = getJobTitleData.JBT_VST_Id;
+                    isSaved = _VSCRepository.SaveJobTitleRepository(Obj);
+                    isSaved = true;
+                }
+                else
+                {
+                    isSaved = false;
+                }
+            }
+            catch(Exception ex)
+            {
+                isSaved = false;
+                Exception_B.Exception_B.exceptionHandel_Runtime(ex, "public bool DeleteJobTitleById(long JobId)", "Exception While delete job title", JobId);
                 throw;
             }
             return isSaved;

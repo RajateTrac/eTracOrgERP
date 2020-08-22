@@ -58,6 +58,8 @@ var $_OperationName = "", $_workRequestAssignmentId = 0, $_UserId = 0, $_Request
                             var $iconUserView = $("<span>").append('<i class= "fa fa-user" style="color:black;margin-left: 11px;margin-top: 12px;" ></i>');//attr({ class: "fa fa-user fa-2x" }).attr({ style: "color:white;background-color:#36CA7E;margin-left:20px;border-radius:35px;width:35px;height:35px" });
                             var $iconTransfer = $("<span>").append('<i class= "fa fa-file" style="color:white;margin-left: 11px;margin-top: 12px;"></i>');//attr({ class: "fa fa-file fa-2x" }).attr({ style: "color:white;background-color:#D26C36;margin-left:20px;border-radius:35px;width:35px;height:35px" });
                             var $iconText = $("<span>").append('<i class= "fa fa-file-text" style="color:white;margin-left: 11px;margin-top: 12px;" ></i>');//.attr({ class: "fa fa-file-text fa-2x" }).attr({ style: "color:white;background-color:#32ACDA;margin-left:20px;border-radius:35px;width:35px;height:35px" });
+                            var $iconFunFacts = $("<span>").append('<i class= "fa fa-futbol-o" style="color:blue;margin-left: 11px;margin-top: 12px;" ></i>');
+
                             var $customEditButton = $("<span style='background: green; width: 35px; height: 35px;border-radius: 35px;'>")
                                 .attr({ title: jsGrid.fields.control.prototype.filesButtonTooltip })
                                 .attr({ id: "btn-file-" + item.id }).click(function (e) {
@@ -87,6 +89,7 @@ var $_OperationName = "", $_workRequestAssignmentId = 0, $_UserId = 0, $_Request
                                     //$("#EmployeeImage").attr("src", item.ProfileImage)
                                     e.stopPropagation();
                                 }).append($iconFolder);
+
                             var $customUserViewButton = $("<span style='background: #36CA7E; width: 35px; height: 35px;border-radius: 35px;margin-left:15px;'>")
                                   .attr({ title: jsGrid.fields.control.prototype.profileButtonTooltip })
                                   .attr({ id: "btn-profile-" + item.id }).click(function (e) {
@@ -109,10 +112,12 @@ var $_OperationName = "", $_workRequestAssignmentId = 0, $_UserId = 0, $_Request
                                           }
                                       });
                                   }).append($iconUserView);
+
                             var $customTransferButton = $("<span style='background: #D26C36; width: 35px; height: 35px;border-radius: 35px;margin-left:15px;'>")
                                  .attr({ title: jsGrid.fields.control.prototype.SignatureButtonTooltip })
                                  .attr({ id: "btn-edit-" + item.id }).click(function (e) {
                                  }).append($iconTransfer);
+
                             var $customTextButton = $("<span style='background: #32ACDA; width: 35px; height: 35px;border-radius: 35px;margin-left:15px;'>")
                                  .attr({ title: jsGrid.fields.control.prototype.statusButtonTooltip })
                                  .attr({ id: "btn-status-" + item.id }).click(function (e) {
@@ -120,8 +125,33 @@ var $_OperationName = "", $_workRequestAssignmentId = 0, $_UserId = 0, $_Request
                                      $("#myModalForChangeStatusData").modal('show');
 
                                  }).append($iconText);
+                            var $customFunFactsButton = $("<span style='background: #54da327d; width: 35px; height: 35px;border-radius: 35px;margin-left:15px;'>")
+                                .attr({ title: "edit fun facts" })
+                                .attr({ id: "btn-status-" + item.id }).click(function (e) {
+                                    GetEMPId = item.EmployeeId;
+                                    $.ajax({
+                                        type: "POST",
+                                        // data: { 'Id': item.id},
+                                        url: base_url + '/EPeople/GetFunFactsOfEmployee?Id=' + item.EmployeeId,
+                                        beforeSend: function () {
+                                            new fn_showMaskloader('Please wait...');
+                                        },
+                                        contentType: "application/json; charset=utf-8",
+                                        error: function (xhr, status, error) {
+                                        },
+                                        success: function (result) {
+                                            
+                                            $("#myModalForupdateFunFacts").modal('show');
+                                            $("#ContaierUpdateFunFacts").html(result)
+                                        },
+                                        complete: function () {
+                                            fn_hideMaskloader();
+                                        }
+                                    });
+                                  
+                                }).append($iconFunFacts);
 
-                            return $("<div>").attr({ class: "btn-toolbar" }).append($customEditButton).append($customUserViewButton).append($customTransferButton).append($customTextButton).append($customTextButton);
+                            return $("<div>").attr({ class: "btn-toolbar" }).append($customEditButton).append($customUserViewButton).append($customTransferButton).append($customTextButton).append($customTextButton).append($customFunFactsButton);
                         }
                     },
                        {
@@ -175,6 +205,7 @@ var $_OperationName = "", $_workRequestAssignmentId = 0, $_UserId = 0, $_Request
                                    .attr({ title: jsGrid.fields.control.prototype.diagramEmployeeTooltip })
                                    .attr({ id: "btn-diagram-" + item.id }).click(function (e) {
                                        //$('#RenderPageId').load(base_url + '/EPeople/ChartDetailsView?Id=' + item.id);
+
                                        $('#RenderPageId').load(base_url + '/EPeople/ChartDetailsViewDemo?Id=' + item.id);
                                    }).append($DiagramView);
                                return $("<div>").attr({ class: "btn-toolbar" }).append($customEditButton);
@@ -186,7 +217,6 @@ var $_OperationName = "", $_workRequestAssignmentId = 0, $_UserId = 0, $_Request
                                 var $customEditButton = $("<span>")
                                     .attr({ title: jsGrid.fields.control.prototype.userEmployeeTooltip })
                                     .attr({ id: "btn-user-view" + item.id }).click(function (e) {
-                                        debugger
                                         $.ajax({
                                             type: "POST",
                                             url: base_url + '/EPeople/GetUserTreeViewList1?Id=' + item.id + "&LocationId=" + $_LocationId,
@@ -207,9 +237,7 @@ var $_OperationName = "", $_workRequestAssignmentId = 0, $_UserId = 0, $_Request
                                         });
                                         $("#viewUserTreeData").html()
                                         $("#myModalForViewUserChart").modal("show");
-                                        //ViewTreeUserData(item.id);
 
-                                      
                                         e.stopPropagation();
                                     }).append($UserView);
                                 return $("<div>").attr({ class: "btn-toolbar" }).append($customEditButton);
@@ -280,8 +308,8 @@ $(document).ready(function () {
         error: function (xhr, status, error) {
         },
         success: function (result) {
-            debugger
-            $("#UserSettingId").html(result);           
+            
+            $("#UserSettingId").html(result);
         },
         complete: function () {
             fn_hideMaskloader();
@@ -293,7 +321,7 @@ $(document).ready(function () {
     })
 
         $(".ActionRequisition").click(function () {
-       debugger
+       
        var value =  $(this).attr("value");
        if (value == 1) {
            $.ajax({
@@ -422,7 +450,6 @@ $(document).ready(function () {
     //});
 
     $("#PlusMinusJobTitle").click(function () {
-        debugger
         var object = new Object();
         object.JobTitleLastCount = $('#JobTitleLastCount').val();
         object.JobTitleId = $('#JobTitleId').val();
@@ -437,7 +464,6 @@ $(document).ready(function () {
                 new fn_showMaskloader('Please wait...');
             },
             success: function (result) {
-                debugger
                 $("#divAddRemoveJobTitle").html("");
                 $("#myModalToAddRemoveJobCount").modal("hide");
                 $("#ListRquisitionData").jsGrid("loadData");
@@ -464,7 +490,6 @@ $(document).ready(function () {
     });
 
     $(".SaveDemotion").click(function () {
-        debugger
         var modelData = $("#SaveStatusEmployee").serialize();
         $.ajax({
             type: "POST",
@@ -489,10 +514,32 @@ $(document).ready(function () {
             }
         });
     })
+    $("#UpdateFunFacts").click(function () {
+        
+        var data = $("#ApplicantFunFactForm").serialize();
+        $.ajax({
+            type: "POST",
+            // data: { 'Id': item.id},
+            url: base_url + '/EPeople/UpdateFunFactsOfEmployee',
+            data: data,
+            beforeSend: function () {
+                new fn_showMaskloader('Please wait...');
+            },
+            error: function (err) {
+            },
+            success: function (result) {
+                $("#myModalForupdateFunFacts").modal('hide');
+                $("#ContaierUpdateFunFacts").html("")
+                toastr.success("updated successfully");
+            },
+            complete: function () {
+                fn_hideMaskloader();
+            }
+        });
+    });
 })
 
 function myFunction() {
-    debugger
     var value = $("#GetDetailsRequisition option:selected").val();
         $.ajax({
             url: base_url+'/EPeople/GetVCSDetailsById?VSCId=' + value,
@@ -503,7 +550,6 @@ function myFunction() {
                 new fn_showMaskloader('Please wait...');
             },
             success: function (result) {
-                debugger
                 $("#divOpenRquisitionActionDelete").html("");
                 $("#divOpenRquisitionActionDelete").html(result);
                 $("#MaintainSizeForDelete").css("width", "805px");
@@ -518,7 +564,6 @@ function myFunction() {
 }
 
 function DeleteRequisition() {
-    debugger
     var value = $("#VSTIdToDelete").val();
     //var value = $("#GetDetailsRequisition option:selected").val();
     $.ajax({
@@ -529,7 +574,6 @@ function DeleteRequisition() {
             new fn_showMaskloader('Please wait...');
         },
         success: function (result) {
-            debugger
             $("#divOpenRquisitionActionDelete").html("");
             $("#MaintainSizeForDelete").css("width", "");
             $("#myModalForGetDetailsToDeleteRequisition").modal('hide');
@@ -545,7 +589,6 @@ function DeleteRequisition() {
 }
 
 function GetJobTitleCount() {
-    debugger
     var value = $("#GetJobTitleDetails option:selected").val();   
     $.ajax({
         url: '../EPeople/GetJobTitleCount?VSCId=' + value,
@@ -555,7 +598,6 @@ function GetJobTitleCount() {
             new fn_showMaskloader('Please wait...');
         },
         success: function (result) {
-            debugger
             if (result.length > 0) {
                 var VSCDDL = '<select style="    width: 559px;height: 58px;margin-top: 110px;" id="GetJobTitle" onchange="BindJobTitleDetailsForPlusMinus()" class="form-control input-rounded"><option value="0">-Select Job Title to add remove head count-</option>'
                 for (var i = 0; i < result.length; i++) {
@@ -582,7 +624,6 @@ function GetJobTitleCount() {
 }
 
 function BindJobTitleDetailsForPlusMinus() {
-    debugger
     var value = $("#GetJobTitle option:selected").val();
     $.ajax({
         url: '../EPeople/GetJobTitleCountById?JobId=' + value ,
@@ -592,7 +633,6 @@ function BindJobTitleDetailsForPlusMinus() {
             new fn_showMaskloader('Please wait...');
         },
         success: function (result) {
-            debugger
             $("#myModalToAddRemoveJobCount").modal("show");
             $("#divAddRemoveJobTitle").html(result);
             $("#myModalForVSCDropDown").modal("hide"); 
@@ -607,14 +647,12 @@ function BindJobTitleDetailsForPlusMinus() {
 }
 
 function GetFileId($_this) {
-    debugger
     FileId = $_this.value;
     $("#myModalToAddInputAndFileName").modal('show');
     $("#myModalForAddFileData").modal('hide');
 
 }
 function saveFile() {
-    debugger
     var fileUpload = $("#myfileUpload").get(0);
     var EmployeeIdFile = $("#EmployeeIdFile").val();
     var fileName = $("#fileNameInputVal").val();
@@ -654,7 +692,6 @@ function saveFile() {
 }
 
 function SaveEmployeeStatus(data) {
-    debugger
     var modelData = $("#SaveStatusEmployee").serialize();
     $.ajax({
         type: "POST",
@@ -688,12 +725,89 @@ function OpenJobPostingForm(id) {
         type: "GET",
         url: origin_Url + '/EPeople/OpenJobPostingForm?CSVChartId=' + id, //'@Url.Action("SaveVCS", "AdminDashboard", new { area = "AdminSection" })',
         success: function (Data) {
-            debugger
             $("#divOpenJobPostForm").html("");
             $("#divOpenJobPostForm").html(Data)
             $("#myModalToAddJobPost").modal('show');
         },
         error: function (err) {
+        }
+    });
+}
+
+function AddFileData($_this) {
+    var getEmployeeId = $($_this).attr("data-id");
+    $.ajax({
+        type: "POST",
+        url: base_url + '/EPeople/GetUserTreeViewList1?Id=' + getEmployeeId + "&LocationId=" + $_LocationId,
+        beforeSend: function () {
+            new fn_showMaskloader('Please wait...');
+        },
+        contentType: "application/json; charset=utf-8",
+        error: function (xhr, status, error) {
+        },
+        success: function (result) {
+            $("#viewUserTreeData").html(result);
+            $("#myModalForViewUserChart").modal('show');
+        },
+        complete: function () {
+            fn_hideMaskloader();
+        }
+    });
+    $("#viewUserTreeData").html()
+    $("#myModalForViewUserChart").modal("show");
+}
+function EditUserInfo($_this) {
+    var getEmployeeId = $($_this).attr("data-id");
+    $.ajax({
+        type: "POST",
+        // data: { 'Id': item.id},
+        url: base_url + '/EPeople/GetEmployeeDetailsForEdit?Id=' + getEmployeeId,
+        beforeSend: function () {
+            new fn_showMaskloader('Please wait...');
+        },
+        contentType: "application/json; charset=utf-8",
+        error: function (xhr, status, error) {
+        },
+        success: function (result) {
+            $("#ContaierEditUserInfo").html(result);
+            $("#myModalForeditUserInfoData").modal('show');
+        },
+        complete: function () {
+            fn_hideMaskloader();
+        }
+    });
+}
+
+function AddAssessment($_this) {
+
+}
+function EmployeeStatusChange($_this) {
+    var getEmployeeId = $($_this).attr("data-id");
+    GetEMPId = getEmployeeId;
+    $("#myModalForChangeStatusData").modal('show');
+}
+function OpenDocumentViewModel($_this) {
+    debugger
+    var emp_Id = $($_this).attr("emp-id");
+    var fileid = $($_this).attr("fileId");
+    var filename = $($_this).attr("fileName");
+    var attacmentLink = $($_this).attr("link")
+    $.ajax({
+        type: "POST",
+        // data: { 'Id': item.id},
+        url: base_url + '/EPeople/GetFileForView?EmployeeId=' + emp_Id + "&FileId=" + fileid + "&FileName" + filename + "&AttachmentLink" + attacmentLink,
+        beforeSend: function () {
+            new fn_showMaskloader('Please wait...');
+        },
+        contentType: "application/json; charset=utf-8",
+        error: function (xhr, status, error) {
+        },
+        success: function (result) {
+            $("#ContaierDisplayFiles").html(result);
+            $("#myModalForDisplayPDFFIles").modal('show');
+        },
+        complete: function () {
+            fn_hideMaskloader();
         }
     });
 }

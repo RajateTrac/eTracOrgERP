@@ -20,7 +20,5 @@ namespace WorkOrderEMS.Data.EntityModel
         public string CCD_Description { get; set; }
         public string CCD_FacilityType { get; set; }
         public string CCD_IsActive { get; set; }
-    
-        public virtual CostCodeMaster CostCodeMaster { get; set; }
     }
 }

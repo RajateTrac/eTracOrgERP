@@ -24,4 +24,11 @@ namespace WorkOrderEMS.Models
         public int records { get; set; }
         public List<DepartmentModel> rows { get; set; }
     }
+    public class DepartmentEmployeeList
+    {
+        public string DepartmentName { get; set; }
+        public string Email { get; set; }
+        public string EmployeeId { get; set; }
+        public string EmployeeName { get; set; }
+    }
 }

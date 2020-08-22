@@ -1,0 +1,208 @@
+﻿@model WorkOrderEMS.Models.RateOfPayModel
+<style media="screen">
+    .headerText {
+        margin-bottom: 7%;
+    }
+
+    .PADlerigrop {
+        padding: 0 200px 0 220px;
+    }
+
+    .formFirst {
+        margin-left: 25%;
+    }
+
+    .formSecond {
+        margin-left: 23%;
+    }
+
+    .formThird {
+        margin-left: 26%;
+    }
+
+    .formFourth {
+        margin-left: 30%;
+    }
+
+    .formFifth {
+        margin-left: 32.5%;
+    }
+
+    .formSixth {
+        margin-left: 33%;
+    }
+
+    .formSeventh {
+        margin-left: 30.5%;
+    }
+
+    .formEight {
+        margin-left: 22.5%;
+    }
+
+    .formBorder {
+        border-top: hidden;
+        border-right: hidden;
+        border-left: hidden;
+        border-bottom: 1px solid #27232396;
+        width: 56%;
+    }
+
+    .formBorder1 {
+        border-top: hidden;
+        border-right: hidden;
+        border-left: hidden;
+        border-bottom: 1px solid #27232396;
+        width: 98%;
+    }
+
+    .topMar {
+        margin-top: 25px;
+    }
+
+    .topMar1 {
+        margin-top: 50px;
+    }
+
+    .topMar2 {
+        margin-top: 25px;
+        margin-bottom: 25px;
+    }
+
+    p.textSize {
+        font-family: sans-serif;
+        font-size: 12px;
+    }
+
+    .botMar {
+        margin-bottom: 50px;
+    }
+
+    #imgWidth {
+        margin-top: 20px;
+        width: 40%;
+        margin-bottom: 10px;
+    }
+
+    .radioButtonCss {
+        width: 12px;
+        height: 12px;
+    }
+</style>
+<div class="container PADlerigrop" style="padding: 0 100px 0 100px;">
+    <div class="text-center" style="margin-top:10%;">
+        <img id="imgWidth" src="~/Images/FormImages/image-form.jpg" alt="Elite Parking">
+    </div>
+    <div class="text-center headerText">
+        <h3><u>Rate of Pay</u></h3>
+    </div>
+    <form id="RateOfPay">
+        <div>
+            <label for="Employee Name" style="font-family: sans-serif;font-size: 14px;">Employee Name:</label>
+            @Html.TextBoxFor(model => model.EmployeeName, new { @class = "form-group formBorder formFirst" })
+        </div>
+        <div style="margin-top:3%;font-family:sans-serif;font-size: 14px;">
+            <label for="Employee Number">Employee Number:</label>
+            @Html.TextBoxFor(model => model.EmployeeNumber, new { @class = "form-group formBorder formSecond" })
+        </div>
+        <div style="margin-top:3%;font-family:sans-serif;font-size: 14px;">
+            <label for="Employee Name">Manager Name:</label>
+            @Html.TextBoxFor(model => model.ManagerName, new { @class = "form-group formBorder formThird" })
+        </div>
+        <div style="margin-top: 3%;font-family:sans-serif;font-size: 14px;">
+            <label for="Employee Name">Operations:</label>
+            @Html.TextBoxFor(model => model.Operations, new { @class = "form-group formBorder formFourth" })
+        </div>
+        <div>
+            <label for="Employee Name" style="margin-top:3%;font-family:sans-serif;font-size: 14px;">Location:</label>
+            @Html.TextBoxFor(model => model.Location, new { @class = "form-group formBorder formFifth" })
+        </div>
+        <div style="margin-top:3%;font-family:sans-serif;font-size: 14px;">
+            <label for="Employee Name">Job Title:</label>
+            @Html.TextBoxFor(model => model.JobTitle, new { @class = "form-group formBorder formSixth" })
+        </div>
+        <div style="margin-top: 3%;font-family:sans-serif;font-size: 14px;">
+            <label for="Employee Name">Rate of Pay:</label>
+            @Html.TextBoxFor(model => model.RateOfPay, new { @class = "form-group formBorder formSeventh" })
+        </div>
+        <div style="margin-top:3%;font-family:sans-serif;font-size: 14px;">
+            <label for="Employee Name">Type of Pay Change:</label>
+            @Html.TextBoxFor(model => model.TypeOfPayChange, new { @class = "form-group formBorder formEight", @placeholder = "New Hire" })
+        </div>
+        <div class="topMar">
+            <div class="row">
+                <div class="col">
+                    @if (Model.JobStatus == "Y")
+                    {
+                        <label for="Exempt">Exempt(Salary)</label>
+                    }
+                    else
+                    {
+                        <label for="Exempt">Non Exempt(Salary)</label>
+                    }
+                </div>
+            </div>
+        </div>
+        @*<div class="topMar">
+            <div class="row">
+                <div class="col-md-12 col-sm-12">
+                    @Html.RadioButtonFor(x => x.JobStatus, "Male", new { @checked = "checked", @class = "radioButtonCss", @style = "width: 12px;height: 12px;" })
+                    <label for="Exempt" style="font-family:sans-serif;font-size: 14px;">Exempt(Salary)</label>
+
+                    @Html.RadioButtonFor(x => x.JobStatus, "Male", new { @class = "radioButtonCss", @style = "width: 12px;height: 12px;margin-left:40%;" })
+                    <label for="ft" style="font-family:sans-serif;font-size: 14px;">FT (32+ Hrs)</label>
+                </div>
+
+            </div>
+            <div class="row" style="margin-top:5%;">
+                <div class="col">
+                    @Html.RadioButtonFor(x => x.JobStatus, "Male", new { @class = "radioButtonCss", @style = "width: 12px;height: 12px;" })
+                    <label for="NExempt" style="font-family:sans-serif;font-size: 14px;">Non-Exempt(Hourly)</label>
+
+                    @Html.RadioButtonFor(x => x.JobStatus, "Male", new { @class = "radioButtonCss", @style = "width: 12px;height: 12px;margin-left:35%;" })
+                    <label for="ft" style="font-family:sans-serif;font-size: 14px;">PT (<32 Hrs)</label>
+                </div>
+
+            </div>
+        </div>*@
+        <div class="row topMar1">
+            <div class="col">
+                <img id="openItForSignature" src="@Model.SignatureBase" style="width:163px;height:47px;" />
+                @Html.TextBoxFor(model => model.Emp_Date, new { @class = "formBorder1", @style = "border-top: hidden;border-right: hidden;border-left: hidden;border-bottom: 1px solid #27232396;width: 40%;margin-left:15%;" })
+                <br />
+                <label for="employeesignature" style="font-family:sans-serif;font-size: 14px;">Employee Signature</label>
+                <label for="Date" style="font-family:sans-serif;font-size: 14px;margin-left:40%;">Date</label>
+            </div>
+
+        </div>
+        <div class="row topMar1">
+            <div class="col">
+                <img id="openItForSignatureManager" style="display:none; width: 163px; height: 47px;" />
+                @Html.TextBoxFor(model => model.Man_Date, new { @class = "formBorder1", @style = "border-top: hidden;border-right: hidden;border-left: hidden;border-bottom: 1px solid #27232396;width: 40%;margin-left:15%;" })
+                <br />
+                <label for="msSignature" style="font-family:sans-serif;font-size: 14px;">Manager/Superviser Signature</label>
+                <label for="Date" style="font-family:sans-serif;font-size: 14px;margin-left:30%;">Date</label>
+            </div>
+
+        </div>
+        <div class="topMar1">
+            <hr>
+            <p>Approved by:</p>
+        </div>
+        <div class="row topMar2">
+            <div class="col">
+                @Html.TextBoxFor(model => model.ApprovedBy, new { @class = "formBorder1", @style = "border-top: hidden;border-right: hidden;border-left: hidden;border-bottom: 1px solid #27232396;width: 40%;" })
+                @Html.TextBoxFor(model => model.ApprovedDate, new { @class = "formBorder1", @style = "border-top: hidden;border-right: hidden;border-left: hidden;border-bottom: 1px solid #27232396;width: 40%;margin-left:17%;" })
+                <br>
+                <label for="directorOfculture" style="font-family:sans-serif;font-size: 14px;">Director of Culture</label>
+                <label for="Date" style="font-family:sans-serif;font-size: 14px;margin-left:42%;">Date</label>
+            </div>
+        </div>
+        <div class="text-center botMar">
+            <p class="textSize" style="margin-left:13%;">*Do not present to Employee for signature without approval by Director of Culture</p>
+        </div>
+        <br><br><br><br>
+    </form>
+</div>
+
+

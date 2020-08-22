@@ -14,11 +14,6 @@ namespace WorkOrderEMS.Data.EntityModel
     
     public partial class Bill
     {
-        public Bill()
-        {
-            this.LogBills = new HashSet<LogBill>();
-        }
-    
         public long BLL_Id { get; set; }
         public long BLL_QBKId { get; set; }
         public Nullable<long> BLL_POD_Id { get; set; }
@@ -33,8 +28,6 @@ namespace WorkOrderEMS.Data.EntityModel
         public string BLL_InvoiceDocument { get; set; }
         public string BLL_IsActive { get; set; }
     
-        public virtual Company Company { get; set; }
         public virtual LocationMaster LocationMaster { get; set; }
-        public virtual ICollection<LogBill> LogBills { get; set; }
     }
 }

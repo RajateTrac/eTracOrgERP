@@ -87,11 +87,13 @@ namespace WorkOrderEMS.Controllers
                     isCleared = false;
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex)    
             {
-                return View("~/Views/Login/Index.cshtml");
+                ViewBag.Error = ex.Message;
+                return View("~/Views/Error/_Error.cshtml");
             }
-            return View("~/Views/Guest/ThankYou.cshtml");
+            return View("~/Views/Error/_ThankYou.cshtml");
+           // return View("~/Views/Guest/ThankYou.cshtml");
             //return Json(false, JsonRequestBehavior.AllowGet);
         }
 
@@ -166,6 +168,11 @@ namespace WorkOrderEMS.Controllers
                 ViewBag.Error = ex;
                 return View("~/Views/Error/_Error.cshtml");
             }
+        }
+
+        public ActionResult ThankYou()
+        {
+            return View("~/Views/Error/_ThankYou.cshtml");
         }
     }
 }

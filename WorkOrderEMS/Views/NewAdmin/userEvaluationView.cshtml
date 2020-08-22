@@ -4,13 +4,20 @@
     //Layout = "~/Views/Shared/_NewAdminLayout.cshtml";
     Layout = null;
     int count = 0;
+    string JobTitle = "";
     var employeeInfo = ViewData["employeeInfo"] as WorkOrderEMS.Models.NewAdminModel.GWCQUestionModel;
+    WorkOrderEMS.Models.eTracLoginModel ObjLogin = (WorkOrderEMS.Models.eTracLoginModel)Session["eTrac"];
     var isSubmitted = "Y";
+    string UsernName = "";
     if (Model.Count() > 0)
     {
         isSubmitted = Model.First().SAR_IsActive != null ? Model.FirstOrDefault().SAR_IsActive : "Y";
     }
-
+    if (ObjLogin != null)
+    {
+        JobTitle = ObjLogin.JobTitleName;
+        UsernName = ObjLogin.UserName;
+    }
     @*@Html.Hidden(isSubmitted, new { id = "isSubmitted" })*@
     <input type="hidden" value="@isSubmitted" id="isSubmitted" />
 
@@ -73,14 +80,7 @@
             </div>
         </div>
         <div class="col-sm-1" style="margin: 0px 0px 0px 0px;">
-            <i id="back" class="fa fa-arrow-circle-o-left x4" style="
-    font-size: 36px;
-    cursor:pointer;
-    margin-left: 10px;
-    margin-top: 0px;
-    width: 64px;
-    float: none;
-    " title="back"></i>
+            <i id="back" class="fa fa-arrow-circle-o-left x4" style="font-size: 36px;cursor:pointer;margin-left: 10px;margin-top: 0px;width: 64px;float: none;"title="back"></i>
         </div>
     </div>
 }
@@ -416,12 +416,36 @@
     <div class="col-sm-2"></div>
 
     <div class="col-sm-8" style="align-content:center">
-        <td>
-            @if (isSubmitted == "S")
-            {
-                <button id="draft" class="btn btn-secondary" disabled onclick="saveEvaluation306090('Draft')">Draft</button>
+        <td id="addButton">
+            @*@if (isSubmitted == "S" && employeeInfo.Status == "")
+            {*@
+            @*<button id="draft" class="btn btn-secondary" disabled onclick="saveEvaluation306090('Draft')">Draft</button>
 
-                <button id="submit" class="btn btn-success" disabled onclick="saveEvaluation306090('Submit')">Submit</button>
+            <button id="submit" class="btn btn-success" disabled onclick="saveEvaluation306090('Submit')">Submit</button>*@
+            @*<button id="submit" class="btn btn-secondary" onclick="FinalSubmitStatus()">Final Submit</button>*@
+            @*}*@
+            @if (employeeInfo.Status == "Meeting Scheduled" && JobTitle != WorkOrderEMS.Helper.JobTItle.HR && employeeInfo.EmployeeId != UsernName)
+            {
+                <button id="submitStart" class="btn btn-secondary hidemeetingStart" onclick="UpdatePerformanceStatus('@employeeInfo.EmployeeId','S')">Start Meeting</button>
+                //}
+                //else if (isSubmitted == "Meeting Start" && JobTitle != WorkOrderEMS.Helper.JobTItle.HR)
+                //{
+                <button id="submitStop" class="btn btn-secondary hidemeetingStop" style="display:none;" onclick="UpdatePerformanceStatus('@employeeInfo.EmployeeId','D')">Stop Meeting</button>
+                //}
+                //else if (employeeInfo.Status == "Meeting Done" && employeeInfo.EmployeeId != UsernName && JobTitle != WorkOrderEMS.Helper.JobTItle.HR)
+                //{
+                <button id="submitFinal" class="btn btn-secondary hidemeetingFinal" style="display:none;" onclick="UpdatePerformanceStatus('@employeeInfo.EmployeeId','F')">Final Submit</button>
+            }
+            else if (employeeInfo.Status == "Final Submit" && employeeInfo.EmployeeId == UsernName && JobTitle != WorkOrderEMS.Helper.JobTItle.HR)
+            {
+                <button id="submitAccept" class="btn btn-secondary" onclick="AcceptDisputeMeeting('@employeeInfo.EmployeeId','A')">Accept</button>
+                <button id="submitDispute" class="btn btn-secondary" onclick="AcceptDisputeMeeting('@employeeInfo.EmployeeId','D')">Dispute</button>
+            }
+            else if (JobTitle != "" && JobTitle != null && JobTitle == WorkOrderEMS.Helper.JobTItle.HR)
+            {
+                <button id="draft" class="btn btn-secondary" onclick="ApproveDenyPopUp(true)">Approve</button>
+
+                <button id="Deny" onclick="ApproveDenyPopUp(false)" class="btn btn-danger">Deny</button>
             }
             else
             {
@@ -429,9 +453,12 @@
 
                 <button id="submit" class="btn btn-success" onclick="saveEvaluation306090('Submit')">Submit</button>
             }
-        </td>
-    </div>
 
+        </td>
+        <br />
+        <br />
+    </div>
+   
 </div>
 <div class="modal fade" id="SaveAssessmentModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -454,6 +481,76 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="HRCommentAppriasal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="SaveAssessmentModalLabel">Deny Comment</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body " style="margin-left:0px;">
+                <div>
+                    <label style="color: red;padding: 16px;padding-left: 157px;">Do you realy want to deny this evaluation.Please add comment.</label>
+                    <div class="form-group row">
+                        <div class="col-2">
+                            <label>Comment :</label>
+                        </div>
+                        <div class="col-9">
+                            <textarea class="form-control" id="denyComment"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" id="SaveComment" class="btn btn-primary" onclick="SaveHRComment();" style="width: 90px">Save</button>
+                <button type="submit" id="Cancel" class="btn btn-primary" data-dismiss="modal" style="width: 90px">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="AcceptDisputeMeeting" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="DivAcceptDisputeMeeting"></h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body ">
+                <div>
+                    <div class="form-group row hideshowFileDispute">
+                        <label class="col-sm-2">Attachment :</label>
+                        <div class="col-sm-4">
+                            <div class="input-group">
+                                <div class="custom-file " >
+                                    <input type="file" class="custom-file-input" id="uploadDisputeAttachment">
+                                    <label class="custom-file-label" id="uploadDisputeAttachmentLabel">Choose file</label>
+                                </div>
+                            </div>
+                        </div>
+                        <label class="col-sm-2">Potential Outcome :</label>
+                        <div class="col-sm-4">
+                            <select class="form-control input-rounded">
+                                <option>Remove From Personal File</option>
+                                <option>Co-ordingate Discusiion with Management, HR &Aacute; Team Member</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row hideshowAccept">
+                        <label class="col-sm-2">Comment :</label>
+                        <div class="col-sm-10">
+                            <textarea id="addComment"></textarea>
+                        </div>                     
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" id="AcceptComment" class="btn btn-primary" onclick="SaveCommentEMP('@employeeInfo.EmployeeId','A')" style="width: 90px;display:none;">Submit</button>
+                <button type="submit" id="DisputeComment" class="btn btn-primary" onclick="SaveCommentEMP('@employeeInfo.EmployeeId','D')" style="width: 90px;display:none;">Submit</button>
+                <button type="submit" id="CancelComment" class="btn btn-primary" style="width: 90px;" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
     $("document").ready(function () {
         var base_url = window.location.origin;
@@ -461,8 +558,84 @@
         $("td.ans input[type='radio']").on("click", function () {
             enableDisableBtn();
         })
+        $("#uploadDisputeAttachment").change(function () {
 
+            var allowedExtensions = /(\.pdf|\.doc|\.docx|\.txt)$/i;
+            var size = this.files[0].size;
+            $("#uploadDisputeAttachmentLabel").html(this.files[0].name);
+            if (!allowedExtensions.exec($(this).val().toLowerCase())) {
+                alert("Invalid file type");
+                $(this).val("");
+                return false;
+            }
+            else if (size >= 4194304) {
+                alert("Max file size 4 mb.");
+                $(this).val("");
+                return false;
+            }
+        })
     });
+    var status = "";
+    function ApproveDenyPopUp(value) {
+
+        if (value == false) {
+            status = "P";
+            $("#HRCommentAppriasal").modal('show');
+        }
+        else {
+            status = "Q";
+        }
+    }
+    function AcceptDisputeMeeting($_EmployeeId,$_Status) {
+        if ($_Status == "A") {
+            $("#DivAcceptDisputeMeeting").html("Accept Appriasal");
+            $("#AcceptComment, .hideshowAccept").show();
+            $("#DisputeComment, .hideshowFileDispute").hide();
+        }
+        else {
+            $("#DivAcceptDisputeMeeting").html("Dispute Appriasal");
+            $("#AcceptComment, .hideshowAccept").hide();
+            $("#DisputeComment, .hideshowFileDispute").show();
+        }
+        $("#AcceptDisputeMeeting").modal("show");
+    }
+    @*function FinalSubmitStatus(employeeId) {
+        debugger
+        var data = $("#denyComment").val();
+        UpdatePerformanceStatus('@employeeInfo.EmployeeId',status);
+        $.ajax({
+            type: "POST",
+            url: base_url + '/NewAdmin/PerformanceStatusChange?EmployeeId='+'@employeeInfo.EmployeeId' + '&Status='+'@WorkOrderEMS.Helper.ModuleSubModule.HRDenyToManager',
+            success: function (result) {
+                $("#HRCommentAppriasal").modal('hide');
+            },
+            error: function (err) {
+            },
+        });
+    }*@
+    function SaveHRComment() {
+        debugger
+        var data = $("#denyComment").val();
+        UpdatePerformanceStatus('@employeeInfo.EmployeeId',status);
+        $.ajax({
+            type: "POST",
+            url: base_url + '/Notification/SetNotification?EmployeeId='+'@employeeInfo.EmployeeId' + '&SubModule='+'@WorkOrderEMS.Helper.ModuleSubModule.HRDenyToManager',
+            success: function (result) {
+                $("#HRCommentAppriasal").modal('hide');
+            },
+            error: function (err) {
+            },
+        });
+        @*$.ajax({
+            type: "POST",
+            url: base_url + '/NewAdmin/UpdatePDF?EmployeeId='+'@employeeInfo.SAR_EMP_EmployeeId' + '&Comment='+data,
+            success: function (result) {
+            },
+            error: function (err) {
+            },
+        });*@
+
+    }
     function enableDisableBtn() {
         if ($("td.ans input[type='radio']:checked").length == 7 && $("#isSubmitted").val() != "S") {
 

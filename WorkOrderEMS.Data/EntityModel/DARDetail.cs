@@ -14,11 +14,6 @@ namespace WorkOrderEMS.Data.EntityModel
     
     public partial class DARDetail
     {
-        public DARDetail()
-        {
-            this.eFleetFuelings = new HashSet<eFleetFueling>();
-        }
-    
         public long DARId { get; set; }
         public long UserId { get; set; }
         public Nullable<long> LocationId { get; set; }
@@ -55,7 +50,5 @@ namespace WorkOrderEMS.Data.EntityModel
         public string EmpSignatureImage { get; set; }
         public string CustomerSignatureImage { get; set; }
         public string DisclaimerFormFile { get; set; }
-    
-        public virtual ICollection<eFleetFueling> eFleetFuelings { get; set; }
     }
 }

@@ -23,8 +23,8 @@ namespace WorkOrderEMS.Data.EntityModel
         public string ALA_eMailId { get; set; }
         public string ALA_Question { get; set; }
         public string ALA_Answer { get; set; }
+        public string ALA_Photo { get; set; }
         public Nullable<System.DateTime> ALA_Date { get; set; }
         public string ALA_IsActive { get; set; }
-        public string ALA_Photo { get; set; }
     }
 }

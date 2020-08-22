@@ -6,9 +6,11 @@ using System.Data.Entity.Core.Objects;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using WorkOrderEMS.BusinessLogic;
@@ -16,6 +18,7 @@ using WorkOrderEMS.BusinessLogic.Interfaces;
 using WorkOrderEMS.BusinessLogic.Managers;
 using WorkOrderEMS.Data;
 using WorkOrderEMS.Data.Classes;
+using WorkOrderEMS.Data.DataRepository;
 using WorkOrderEMS.Data.EntityModel;
 using WorkOrderEMS.Helper;
 using WorkOrderEMS.Helpers;
@@ -24,6 +27,7 @@ using WorkOrderEMS.Models.CommonModels;
 using WorkOrderEMS.Models.Employee;
 using WorkOrderEMS.Models.ManagerModels;
 using WorkOrderEMS.Models.NewAdminModel;
+using WorkOrderEMS.Models.Performance;
 
 namespace WorkOrderEMS.Controllers.NewAdmin
 {
@@ -39,15 +43,18 @@ namespace WorkOrderEMS.Controllers.NewAdmin
         private readonly IePeopleManager _IePeopleManager;
         private readonly IApplicantManager _IApplicantManager;
         private readonly IGuestUser _IGuestUserRepository;
+        private readonly IFillableFormManager _IFillableFormManager;
+        private readonly INotification _INotification;
         private readonly string HostingPrefix = Convert.ToString(System.Configuration.ConfigurationManager.AppSettings["hostingPrefix"], CultureInfo.InvariantCulture);
         private readonly string WorkRequestImagepath = ConfigurationManager.AppSettings["WorkRequestImage"];
         private readonly string ProfilePicPath = ConfigurationManager.AppSettings["ProfilePicPath"];
         private readonly string ConstantImages = ConfigurationManager.AppSettings["ConstantImages"];
         private readonly string NoImage = ConfigurationManager.AppSettings["DefaultImage"];
+        private readonly string SinglePDFDocPath  = ConfigurationManager.AppSettings["FilesUploadRedYellowGreen"];
 
 
         DBUtilities DB = new DBUtilities();
-        public NewAdminController(IDepartment _IDepartment, IGlobalAdmin _GlobalAdminManager, ICommonMethod _ICommonMethod, IQRCSetup _IQRCSetup, IePeopleManager _IePeopleManager, IApplicantManager _IApplicantManager, IGuestUser _IGuestUserRepository)
+        public NewAdminController(IDepartment _IDepartment, IGlobalAdmin _GlobalAdminManager, ICommonMethod _ICommonMethod, IQRCSetup _IQRCSetup, IePeopleManager _IePeopleManager, IApplicantManager _IApplicantManager, IGuestUser _IGuestUserRepository, IFillableFormManager _IFillableFormManager, INotification _INotification)
         {
             this._IDepartment = _IDepartment;
             this._GlobalAdminManager = _GlobalAdminManager;
@@ -56,9 +63,11 @@ namespace WorkOrderEMS.Controllers.NewAdmin
             this._IePeopleManager = _IePeopleManager;
             this._IApplicantManager = _IApplicantManager;
             this._IGuestUserRepository = _IGuestUserRepository;
+            this._IFillableFormManager = _IFillableFormManager;
+            this._INotification = _INotification;
         }
         public ActionResult Index()
-        { 
+        {
             //if(Session["eTrac"]==null)
             //{
             //  string usedd=  HttpContext.User.Identity.Name;
@@ -558,7 +567,7 @@ namespace WorkOrderEMS.Controllers.NewAdmin
                 Employee_Id = Id;
             }
 
-            ListQuestions = _GlobalAdminManager.GetGWCQuestions(Employee_Id, Assesment,null);
+            ListQuestions = _GlobalAdminManager.GetGWCQuestions(Employee_Id, Assesment, null);
             ViewData["employeeInfo"] = new GWCQUestionModel() { EmployeeName = Name, AssessmentType = Assesment, Image = Image, JobTitle = JobTitle, Department = Department, LocationName = LocationName };
             return PartialView("userAssessmentView", ListQuestions);
         }
@@ -617,9 +626,37 @@ namespace WorkOrderEMS.Controllers.NewAdmin
                 List<PerformanceModel> ITAdministratorList = _GlobalAdminManager.GetListOf306090ForJSGrid(ObjLoginModel.UserName, Convert.ToInt64(locationId), page, rows, sidx, sord, txtSearch, UserType, out paramTotalRecords);
                 foreach (var ITAdmin in ITAdministratorList)
                 {
+                    var empid = ITAdmin.EMP_EmployeeID;
+                   
+                    ITAdmin.IsCurrentEmployee = (ITAdmin.EMP_EmployeeID == ObjLoginModel.UserName) ? true : false;
                     ITAdmin.EMP_Photo = (ITAdmin.EMP_Photo == "" || ITAdmin.EMP_Photo == "null") ? HostingPrefix + ConstantImages.Replace("~", "") + "no-profile-pic.jpg" : HostingPrefix + ProfilePicPath.Replace("~/", "") + ITAdmin.EMP_Photo;
                     ITAdmin.EMP_EmployeeID = Cryptography.GetEncryptedData(ITAdmin.EMP_EmployeeID.ToString(), true);
-                    ITAdmin.Status=ITAdmin.Status=="S"? "Assessment Submitted" : ITAdmin.Status == "Y" ? "Assessment Drafted" : "Assessment Pending";
+                    ITAdmin.Status = ITAdmin.Status == "S" ? "Assessment Submitted" : ITAdmin.Status == "Y" ? "Assessment Drafted" 
+                        : (ITAdmin.Status == "G" && ITAdmin.Days > 3) 
+                        ? "Assessment Lock" 
+                        : (ITAdmin.Status == "E" && ITAdmin.Days > 3) 
+                        ? "Evaluation Lock" 
+                        : ITAdmin.Status == "C"?"Evaluation Done"
+                        : (ITAdmin.Status == "E" && ITAdmin.Days <= 3 && ObjLoginModel.UserName != empid)
+                        ?"Assessment Submitted"
+                        : (ITAdmin.Status == PerformanceEmployeeStatus.FinalSubmitByManager && ObjLoginModel.UserName == empid)
+                        ?"Final Submit"
+                        : (ObjLoginModel.UserName == empid && ITAdmin.Status == "E" && ITAdmin.Days <= 3) 
+                        ? "Evaluation Pending"                
+                        : (ITAdmin.Status == PerformanceEmployeeStatus.MeetingSchedule && ObjLoginModel.UserName != empid)
+                        ? "Meeting Scheduled"
+                        : (ITAdmin.Status == PerformanceEmployeeStatus.MeetingSchedule && ObjLoginModel.UserName == empid)
+                        ? "Meeting Schedule"
+                        : (ITAdmin.Status == PerformanceEmployeeStatus.MeetingDone && ObjLoginModel.UserName == empid)
+                        ? "Meeting Done"
+                        : (ITAdmin.Status == PerformanceEmployeeStatus.MeetingStart && ObjLoginModel.UserName != empid)
+                        ? "Meeting Start"
+                        : (ITAdmin.Status == PerformanceEmployeeStatus.EMPDispute && ObjLoginModel.UserName == empid)
+                        ? "Dispute"
+                        : (ITAdmin.Status == PerformanceEmployeeStatus.EMPDispute && ObjLoginModel.UserName != empid && ObjLoginModel.JobTitleName == WorkOrderEMS.Helper.JobTItle.HR)
+                        ? "Dispute Appriasal"
+                        : "Assessment Pending"
+                        ;
                     detailsList.Add(ITAdmin);
                 }
             }
@@ -668,7 +705,7 @@ namespace WorkOrderEMS.Controllers.NewAdmin
         }
 
         [HttpPost]
-        public ActionResult userEvaluationView(string Id, string Assesment, string Name, string Image, string JobTitle, string Department, string LocationName)
+        public ActionResult userEvaluationView(string Id, string Assesment, string Name, string Image, string JobTitle, string Department, string LocationName, string Status)
         {
             eTracLoginModel ObjLoginModel = null;
             string Employee_Id = string.Empty;
@@ -681,14 +718,14 @@ namespace WorkOrderEMS.Controllers.NewAdmin
             List<GWCQUestionModel> ListQuestions = new List<GWCQUestionModel>();
             try
             {
-                Employee_Id = Cryptography.GetDecryptedData(Id, true);
+                Employee_Id =  Cryptography.GetDecryptedData(Id, true);
             }
             catch (Exception e)
             {
                 Employee_Id = Id;
             }
-            ListQuestions = _GlobalAdminManager.GetGWCQuestions(Employee_Id, Assesment=="30"?"31":Assesment=="60"?"61":"91",null);
-            ViewData["employeeInfo"] = new GWCQUestionModel(){ EmployeeName=Name,AssessmentType=Assesment,Image=Image, JobTitle=JobTitle,Department=Department,LocationName=LocationName }; 
+            ListQuestions = _GlobalAdminManager.GetGWCQuestions(Employee_Id, Assesment == "30" ? "31" : Assesment == "60" ? "61" : "91", null);
+            ViewData["employeeInfo"] = new GWCQUestionModel() {EmployeeId= Employee_Id, EmployeeName = Name, AssessmentType = Assesment, Image = Image, JobTitle = JobTitle, Department = Department, LocationName = LocationName, Status = Status };
             return PartialView("userEvaluationView", ListQuestions);
         }
 
@@ -723,6 +760,9 @@ namespace WorkOrderEMS.Controllers.NewAdmin
             try
             {
                 result = _GlobalAdminManager.saveEvaluation(data, "S", ObjLoginModel.UserName);
+                //if (result)
+                //   AssessmentEvaluationPDF(data, ObjLoginModel.UserName);
+
             }
             catch (Exception ex)
             { return Json(ex.Message, JsonRequestBehavior.AllowGet); }
@@ -749,6 +789,7 @@ namespace WorkOrderEMS.Controllers.NewAdmin
         /// <returns></returns>
         [HttpGet]
         public JsonResult GetListOfQExpectationsForJSGrid(string _search, long? UserId, long? locationId, int? rows = 20, int? page = 1, int? TotalRecords = 10, string sord = null, string txtSearch = null, string sidx = null, string UserType = null)
+        
         {
             eTracLoginModel ObjLoginModel = null;
             var detailsList = new List<PerformanceModel>();
@@ -778,7 +819,7 @@ namespace WorkOrderEMS.Controllers.NewAdmin
                     ITAdmin.EMP_Photo = (ITAdmin.EMP_Photo == "" || ITAdmin.EMP_Photo == "null") ? HostingPrefix + ConstantImages.Replace("~", "") + "no-profile-pic.jpg" : HostingPrefix + ProfilePicPath.Replace("~/", "") + ITAdmin.EMP_Photo;
 
                     ITAdmin.EMP_EmployeeID = Cryptography.GetEncryptedData(ITAdmin.EMP_EmployeeID.ToString(), true);
-                    ITAdmin.Status = ITAdmin.Status=="C"? "Expectations Submitted" : ITAdmin.Status == "S" ? "Expectations Submitted" : ITAdmin.Status == "Y" ? "Expectations Drafted" : "Expectations Pending";
+                    ITAdmin.Status = ITAdmin.Status == "C" ? "Expectations Submitted" : ITAdmin.Status == "S" ? "Expectations Submitted" : ITAdmin.Status == "Y" ? "Expectations Drafted" : "Expectations Pending";
                     detailsList.Add(ITAdmin);
                 }
             }
@@ -788,7 +829,7 @@ namespace WorkOrderEMS.Controllers.NewAdmin
         }
 
         [HttpPost]
-        public ActionResult userExpectationsView(string Id, string Assesment,string Name,string Image,string JobTitle, string FinYear, string FinQuarter, string Department, string LocationName)
+        public ActionResult userExpectationsView(string Id, string Assesment, string Name, string Image, string JobTitle, string FinYear, string FinQuarter, string Department, string LocationName)
         {
             eTracLoginModel ObjLoginModel = null;
             string Employee_Id = string.Empty;
@@ -808,7 +849,7 @@ namespace WorkOrderEMS.Controllers.NewAdmin
                 Employee_Id = Id;
             }
 
-            ListQuestions = _GlobalAdminManager.GetGWCQuestions(Employee_Id, Assesment,"Expectation");
+            ListQuestions = _GlobalAdminManager.GetGWCQuestions(Employee_Id, Assesment, "Expectation");
             foreach (var item in ListQuestions)
             {
                 item.EEL_FinencialYear = FinYear;
@@ -818,7 +859,7 @@ namespace WorkOrderEMS.Controllers.NewAdmin
 
 
             }
-            ViewData["employeeInfo"] = new GWCQUestionModel() { EmployeeId= Employee_Id, EmployeeName = Name, AssessmentType = Assesment, Image = Image, JobTitle = JobTitle, Department= Department, LocationName= LocationName };
+            ViewData["employeeInfo"] = new GWCQUestionModel() { EmployeeId = Employee_Id, EmployeeName = Name, AssessmentType = Assesment, Image = Image, JobTitle = JobTitle, Department = Department, LocationName = LocationName };
             return PartialView("userExpectationsView", ListQuestions);
         }
 
@@ -860,6 +901,7 @@ namespace WorkOrderEMS.Controllers.NewAdmin
 
         }
 
+        #region Hiring ob boarding
         [HttpGet]
         public ActionResult HiringOnBoardingDashboard()
         {
@@ -881,6 +923,62 @@ namespace WorkOrderEMS.Controllers.NewAdmin
             var myOpenings = _GlobalAdminManager.GetMyOpenings(PostingId);
             return Json(myOpenings, JsonRequestBehavior.AllowGet);
         }
+
+        /// <summary>
+        /// Created by: Rajat Toppo
+        /// Date: 15/06/2020
+        /// Get status of applicantcount status in Donut chart 
+        /// </summary>
+        /// <param name="JobPostingId"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult GetApplicantJobSummary(long JobPostingId)
+        {
+            eTracLoginModel ObjLoginModel = null;
+            try
+            {
+                if (Session["eTrac"] != null)
+                {
+                    ObjLoginModel = (eTracLoginModel)(Session["eTrac"]);
+                }
+                var getCount = _GlobalAdminManager.GetEMP_ApplicantCount(Convert.ToInt64(JobPostingId));
+                return Json(getCount, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(null, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+        /// <summary>
+        /// Created by : Ashwajit Bansod
+        /// Created Date : 07-07-2020
+        /// Created For : To Set applicant status
+        /// </summary>
+        /// <param name="ApplicantId"></param>
+        /// <param name="Status"></param>
+        /// <param name="IsActive"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult SaveApplicantStatus(long ApplicantId, string Status, string IsActive)
+        {
+            eTracLoginModel ObjLoginModel = null;
+            try
+            {
+                if (Session["eTrac"] != null)
+                {
+                    ObjLoginModel = (eTracLoginModel)(Session["eTrac"]);
+                }
+                var getCount = _IApplicantManager.SetApplicantStatus(ApplicantId, Status, IsActive);
+                return Json(getCount, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(null, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
         [HttpGet]
         public ActionResult MyInterviews()
         {
@@ -888,6 +986,20 @@ namespace WorkOrderEMS.Controllers.NewAdmin
             var myOpenings = _GlobalAdminManager.GetMyInterviews(ObjLoginModel.UserId);
             return Json(myOpenings, JsonRequestBehavior.AllowGet);
         }
+        /// <summary>
+        /// Created By : Ashwajit Bansod
+        /// Created Date : 24-07-2020
+        /// Created For : To get onboarding list
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult OnboardingList()
+        {
+            var ObjLoginModel = (eTracLoginModel)(Session["eTrac"]);
+            var myOpenings = _GlobalAdminManager.GetOnbaordingList(ObjLoginModel.UserId);
+            return Json(myOpenings, JsonRequestBehavior.AllowGet);
+        }
+        
         [HttpGet]
         public ActionResult GetJobPostong()
         {
@@ -900,7 +1012,7 @@ namespace WorkOrderEMS.Controllers.NewAdmin
         {
             InfoFactSheet sheet = new InfoFactSheet { ResumePath = "" };
             sheet.model = model;
-                                         
+
             return PartialView("ePeople/_infoFactSheet", sheet);
         }
         [HttpGet]
@@ -931,7 +1043,7 @@ namespace WorkOrderEMS.Controllers.NewAdmin
         [HttpGet]
         public PartialViewResult CheckForTypeInterview(long id)
         {
-            if(id > 0)
+            if (id > 0)
             {
                 var getDataForIsExempt = _IApplicantManager.GetRateOfPayInfo(id, null);
                 return PartialView("ePeople/OnBoarding/_CheckForDOT", getDataForIsExempt);
@@ -943,7 +1055,33 @@ namespace WorkOrderEMS.Controllers.NewAdmin
             //var questions = _GlobalAdminManager.GetInterviewQuestions().Where(x => x.INQ_Id == 1).ToList();
             // var questions = _GlobalAdminManager.GetInterviewQuestions("Y").ToList();//.Where(x => x.INQ_Id == 1).ToList();
             //Session["eTrac_questions"] = questions;
-            
+
+        }
+        /// <summary>
+        /// Created By  :Ashwajit Bansod
+        /// Created Date : 12-06-2020
+        /// Created For : To cancel interview by login interviewer.
+        /// </summary>
+        /// <param name="InterviewerID"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult CancelInterview(string InterviewerID, long ApplicantId, string Comment)
+        {
+            bool isCanceled = false;
+            try
+            {
+                if(InterviewerID != null && ApplicantId > 0)
+                {
+                    //var  checkMail = 
+                    isCanceled = _IApplicantManager.CancelInterviewManager(InterviewerID, ApplicantId, Comment);
+                }
+            }
+            catch(Exception ex)
+            {
+                ViewBag.Message = ex.Message;
+                ViewBag.ClassName = "danger";
+            }
+            return Json(isCanceled, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -951,6 +1089,7 @@ namespace WorkOrderEMS.Controllers.NewAdmin
         {
             IEnumerable<InterviewQuestionMaster> Masterquestions = (List<InterviewQuestionMaster>)Session["eTrac_questions"];
             var questions = new InterviewQuestionAnswerModel();
+            var ObjLoginModel = (eTracLoginModel)(Session["eTrac"]);
             int num = 0;
             if (Applicant > 0 && id != 6)
             {
@@ -1005,7 +1144,7 @@ namespace WorkOrderEMS.Controllers.NewAdmin
             }
             else
             {
-                var getLst = _GlobalAdminManager.GetInterviewAnswerByApplicantId(Applicant);
+                var getLst = _GlobalAdminManager.GetInterviewAnswerByApplicantId(Applicant, ObjLoginModel.UserName);
                 getLst.IsShortlisted = false;
                 Session["IsInterviewDone"] = true;
                 return PartialView("~/Views/NewAdmin/ePeople/OnBoarding/_ViewAnswerQuestion.cshtml", getLst);
@@ -1078,10 +1217,114 @@ namespace WorkOrderEMS.Controllers.NewAdmin
             var isAnsSaveSuccess = _GlobalAdminManager.SaveInterviewAnswers(model, AnswerArr, ObjLoginModel.UserId);
             return Json(true ? true : false, JsonRequestBehavior.AllowGet);
         }
+
+        /// <summary>
+        /// Created By : Ashwajit bansod
+        /// Created For : To change the status interview schedule to Interview Completed
+        /// Created Date : 29-06-2020
+        /// </summary>
+        /// <param name="ApplicantId"></param>
+        /// <returns></returns>
+        public JsonResult InterviewCompleted(long ApplicantId)
+        {
+            string Message = string.Empty;
+            try
+            {
+                if (ApplicantId > 0)
+                {
+                    var isSaved = _IApplicantManager.InterviewCompleted(ApplicantId);
+                    if (isSaved)
+                        Message = CommonMessage.ApplicantScreened();
+                    else
+                        Message = CommonMessage.ApplicantReject();
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(ex, JsonRequestBehavior.AllowGet);
+            }
+            return Json(Message, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult OriantationDone(long ApplicantId, string Status, string IsActive)
+        {
+            try
+            {
+                var ObjLoginModel = (eTracLoginModel)(Session["eTrac"]);
+                if (ApplicantId > 0 && Status != null && IsActive != null)
+                {
+                    var setStatus = _IApplicantManager.SetApplicantStatus(ApplicantId, Status, IsActive);
+                    var sentMail = _IApplicantManager.SendMailToEmployeeOriantationDone(ApplicantId, ObjLoginModel.UserName, IsActive);
+                    return Json(true, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return Json(false, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(ex, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
         public FileStreamResult GetPDF()
         {
             FileStream fs = new FileStream(Server.MapPath("~/App_Data/resume.pdf"), FileMode.Open, FileAccess.Read);
             return File(fs, "application/pdf");
+        }
+
+        /// <summary>
+        /// Created By : Ashwajit Bansod
+        /// Created Date : To download single PDF.
+        /// </summary>
+        /// <param name="ApplicantId"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public FileResult SinglePDFDownload(string stFile)
+        {
+            byte[] fileBytes = System.IO.File.ReadAllBytes(stFile);
+
+            return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, Path.GetFileName(stFile));
+            //try
+            //{
+            //    if (ApplicantId > 0)
+            //    {
+            //        var getEmployee = _IApplicantManager.GetEmployeeData(ApplicantId);
+            //        var getDetails = _IApplicantManager.GetFilesData("Onboarding Files", getEmployee.EMP_EmployeeID);
+            //        string RootDirectory = System.Web.Hosting.HostingEnvironment.ApplicationPhysicalPath;
+            //        string IsFileExist = RootDirectory + SinglePDFDocPath.Replace("~\\","");
+            //        RootDirectory = IsFileExist + getDetails;
+            //        //RootDirectory = RootDirectory.Substring(0, RootDirectory.Length - 2).Substring(0, RootDirectory.Substring(0, RootDirectory.Length - 2).LastIndexOf("\\")) + DisclaimerFormPath + ObjWorkRequestAssignmentModel.DisclaimerForm;
+
+            //        string path = Server.MapPath("~/Content/FilesRGY");
+
+            //        byte[] fileBytes = System.IO.File.ReadAllBytes(path + @"\" + getDetails);
+            //        string contentType = "application/pdf";
+            //        return File(RootDirectory, contentType, "Report.pdf");
+            //       // return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, getDetails);
+            //        //if (Directory.GetFiles(IsFileExist, getDetails).Length > 0)
+            //        //{
+            //        //    byte[] fileBytes = System.IO.File.ReadAllBytes(RootDirectory);
+            //        //    return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, getDetails);
+            //        //}
+            //        //else
+            //        //{
+            //        //    RootDirectory = System.Web.Hosting.HostingEnvironment.ApplicationPhysicalPath + SinglePDFDocPath + "FileNotFound.png";
+            //        //    byte[] fileBytes = System.IO.File.ReadAllBytes(RootDirectory);
+            //        //    return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, "FileNotFound.png");
+            //        //}
+            //    }
+            //    else { return File(System.Web.Hosting.HostingEnvironment.ApplicationPhysicalPath, "application/pdf", "FileNotFound.png"); }
+            //}
+            //catch (Exception ex)
+            //{
+            //    ViewBag.Message = ex.Message;
+            //    ViewBag.AlertMessageClass = "Danger";
+            //    //return Json(ex.Message);
+            //}
+            //return File(System.Web.Hosting.HostingEnvironment.ApplicationPhysicalPath, "application/pdf", "FileNotFound.png");
         }
         #region Hiring On Boarding
         [HttpGet]
@@ -1133,7 +1376,6 @@ namespace WorkOrderEMS.Controllers.NewAdmin
             var ObjLoginModel = (eTracLoginModel)(Session["eTrac"]);
             var res = _GlobalAdminManager.IsInterviewerOnline(ApplicantId, ObjLoginModel.UserId, IsAvailable, Comment);
             return Json(res, JsonRequestBehavior.AllowGet);
-
         }
         [HttpGet]
         public JsonResult GetScore(long ApplicantId)
@@ -1157,7 +1399,12 @@ namespace WorkOrderEMS.Controllers.NewAdmin
         [HttpPost]
         public ActionResult GetApplicantInterviewAnswerDetails(int ApplicantId)
         {
-            var getLst = _GlobalAdminManager.GetInterviewAnswerByApplicantId(ApplicantId);
+            eTracLoginModel ObjLoginModel = null;
+            if (Session["eTrac"] != null)
+            {
+                ObjLoginModel = (eTracLoginModel)(Session["eTrac"]);
+            }
+            var getLst = _GlobalAdminManager.GetInterviewAnswerByApplicantId(ApplicantId, ObjLoginModel.UserName);
             Session["IsInterviewDone"] = true;
             getLst.IsShortlisted = true;
             return PartialView("~/Views/NewAdmin/ePeople/OnBoarding/_ViewAnswerQuestion.cshtml", getLst);
@@ -1246,13 +1493,13 @@ namespace WorkOrderEMS.Controllers.NewAdmin
             eTracLoginModel ObjLoginModel = null;
             try
             {
-                if(status != null && ApplicantId > 0)
+                if (status != null && ApplicantId > 0)
                 {
                     string IsActive = "Y";
                     var isAccept = _GlobalAdminManager.SetInterviewAcceptCancel(status, ApplicantId, IsActive);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
 
             }
@@ -1263,7 +1510,7 @@ namespace WorkOrderEMS.Controllers.NewAdmin
         [HttpPost]
         public PartialViewResult ShowAssetsForApplicant(long ApplicantId)
         {
-            var model  = new AssetsAllocationModel();
+            var model = new AssetsAllocationModel();
             model.ApplicantId = ApplicantId;
             return PartialView("~/Views/NewAdmin/ePeople/OnBoarding/_AssetsAllocation.cshtml", model);
         }
@@ -1281,11 +1528,11 @@ namespace WorkOrderEMS.Controllers.NewAdmin
             bool isSaved = false;
             if (Session["eTrac"] != null)
             {
-                ObjLoginModel = (eTracLoginModel)(Session["eTrac"]);               
+                ObjLoginModel = (eTracLoginModel)(Session["eTrac"]);
             }
             try
             {
-                if(model != null)
+                if (model != null)
                 {
                     if (model.AssetsId == 0)
                     {
@@ -1299,7 +1546,7 @@ namespace WorkOrderEMS.Controllers.NewAdmin
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return Json(isSaved, JsonRequestBehavior.AllowGet);
             }
@@ -1333,10 +1580,10 @@ namespace WorkOrderEMS.Controllers.NewAdmin
             try
             {
                 if (model != null)
-                {                    
-                   model.Action = "I";
-                   model.UserId = ObjLoginModel.UserId;
-                   isSaved = _IApplicantManager.SendOffer(model);                                        
+                {
+                    model.Action = "I";
+                    model.UserId = ObjLoginModel.UserId;
+                    isSaved = _IApplicantManager.SendOffer(model);
                 }
             }
             catch (Exception ex)
@@ -1346,6 +1593,103 @@ namespace WorkOrderEMS.Controllers.NewAdmin
             return Json(isSaved, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// Created By : Ashwajit Bansod
+        /// Created Date : 14--5-2020
+        /// Created For : TO open close and hold job by job id
+        /// </summary>
+        /// <param name="JobId"></param>
+        /// <param name="JobStatus"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult CloseHoldOpenJob(long JobId, string JobStatus)
+        {
+            try
+            {
+                if (JobId > 0 && JobStatus != null)
+                {
+                    var update = _IePeopleManager.UpdateCloseHoldOpenJob(JobId, JobStatus);
+                    if (update)
+                        return Json(true, JsonRequestBehavior.AllowGet);
+                    else
+                        return Json(false, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return Json(false, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(false, JsonRequestBehavior.AllowGet);
+            }
+        }
+        /// <summary>
+        /// Created By : Ashwajit Bansod
+        /// Created Date : 24-05-2020
+        /// Created For : TO view document for applicant id also bind applicant id through viewbag
+        /// </summary>
+        /// <param name="ApplicantId"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult OpenDocuments(long ApplicantId)
+        {
+            ViewBag.ApplicantId = ApplicantId;
+            return PartialView("~/Views/NewAdmin/ePeople/OnBoarding/_ViewDocument.cshtml");
+        }
+
+        public FileStreamResult GetCertificate(long id)
+        {
+            FileStream fs = new FileStream(Server.MapPath("~/App_Data/resume.pdf"), FileMode.Open, FileAccess.Read);
+            return File(fs, "application/pdf");
+        }
+
+        [HttpPost]
+        public JsonResult GetCountOfHiredAndTotalApplicant()
+        {
+            var getCount = new ApplicantCountDetails();
+            try
+            {
+                getCount = _IApplicantManager.GetApplicantCount();
+            }
+            catch (Exception ex)
+            {
+                ViewBag.message = ex.Message;
+                ViewBag.className = "danger";
+            }
+            return Json(getCount, JsonRequestBehavior.AllowGet);
+        }
+        /// <summary>
+        /// Created By  :Ashwajit Bansod
+        /// Created For : To applicant hird after accepting offer letter
+        /// Created Date : 08-06-2020
+        /// </summary>
+        /// <param name="ApplicantId"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult HireApplicant(long ApplicantId)
+        {
+            var _repo = new ePeopleRepository();
+            var isSaved = false;
+            try
+            {
+                if (ApplicantId > 0)
+                {
+                    var sendMailToApplicant = _IApplicantManager.SendUserNameAndPassword(ApplicantId);
+                    var hiresaved = _repo.SendForAssessment(ApplicantStatus.Onboarding, ApplicantIsActiveStatus.Onboarding, ApplicantId);
+                    isSaved = true;
+                }
+                else
+                    isSaved = false;
+            }
+            catch(Exception ex)
+            {
+                ViewBag.message = ex.Message;
+                ViewBag.className = "danger";
+            }
+            return Json(isSaved, JsonRequestBehavior.AllowGet);
+        }
+        #endregion Hiring onboarding
         [HttpPost]
         public ActionResult SaveApplicant(CommonApplicantModel model)
         {
@@ -1601,7 +1945,7 @@ namespace WorkOrderEMS.Controllers.NewAdmin
         {
             eTracLoginModel ObjLoginModel = null;
             var _workorderems = new workorderEMSEntities();
-            var data = new List<spGetJobPosting_ForCompanyOpening_Result1>();
+            var data = new List<spGetJobPosting_ForCompanyOpening_Result>();
             if (Session["eTrac"] != null)
             {
                 ObjLoginModel = (eTracLoginModel)(Session["eTrac"]);
@@ -1876,7 +2220,7 @@ namespace WorkOrderEMS.Controllers.NewAdmin
             }
         }
         [HttpPost]
-        public ActionResult GetManagerListForApplicant()
+        public ActionResult GetManagerListForApplicant(string IsExempt)
         {
             eTracLoginModel ObjLoginModel = null;
             List<ManagerModel> result = new List<ManagerModel>();
@@ -1887,14 +2231,28 @@ namespace WorkOrderEMS.Controllers.NewAdmin
             try
             {
                 result = _ICommonMethod.GetManagerList();
-                var eventList = from e in result
-                                select new
-                                {
-                                    label = e.UserName,
-                                    value = e.UserEmail//.Split('@')[0]
-                                };
-                var rows = eventList.Where(x => x.value != ObjLoginModel.UserName.ToLower()).ToArray();
-                return Json(rows.ToArray(), JsonRequestBehavior.AllowGet);
+                if (IsExempt == "Y")
+                {
+                    var eventList = from e in result
+                                    select new
+                                    {
+                                        label = e.UserName,
+                                        value = e.UserEmail//.Split('@')[0]
+                                    };
+                    var rows = eventList.Where(x => x.value != ObjLoginModel.UserName.ToLower()).ToArray();
+                    return Json(rows.ToArray(), JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    var eventList = from e in result
+                                    select new
+                                    {
+                                        label = e.UserName,
+                                        value = e.UserEmail//.Split('@')[0]
+                                    };
+                    var rows = eventList.Where(x => x.value == ObjLoginModel.UserName.ToLower()).ToArray();
+                    return Json(rows.ToArray(), JsonRequestBehavior.AllowGet);
+                }
             }
             catch (Exception)
             {
@@ -1911,14 +2269,55 @@ namespace WorkOrderEMS.Controllers.NewAdmin
             }
             try
             {
-                result = _GlobalAdminManager.UpdateInterviewPanel(selectedManagers, ObjLoginModel.UserName, JobId, JobTitle);
-                return Json(result, JsonRequestBehavior.AllowGet);
+                if (selectedManagers != ObjLoginModel.UserName)
+                {
+                    result = _GlobalAdminManager.UpdateInterviewPanel(selectedManagers, ObjLoginModel.UserName, JobId, JobTitle);
+                }
+                else
+                {
+                    result = _GlobalAdminManager.UpdateInterviewPanel("", ObjLoginModel.UserName, JobId, JobTitle);
+                }
+                    return Json(result, JsonRequestBehavior.AllowGet);
+
             }
             catch (Exception)
             {
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
         }
+
+        /// <summary>
+        /// Created By : Ashwajit Bansod
+        /// Created Date : 16-06-2020
+        /// Created For : To update interview panel for my opening grid for applicant 
+        /// </summary>
+        /// <param name="selectedManagers"></param>
+        /// <param name="JobId"></param>
+        /// <param name="JobTitle"></param>
+        /// <param name="ApplicantId"></param>
+        /// <returns></returns>
+        
+        public ActionResult UpdateInterviewPanelForMyOpening(string selectedManagers, long ApplicantId)
+        {
+            eTracLoginModel ObjLoginModel = null;
+            bool result = false;
+            if (Session["eTrac"] != null)
+            {
+                ObjLoginModel = (eTracLoginModel)(Session["eTrac"]);
+            }
+            try
+            {
+                result = _GlobalAdminManager.UpdateInterviewPanelForMyOpening(selectedManagers, ObjLoginModel.UserName, null, null, ApplicantId);               
+                return Json(result, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (Exception)
+            {
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
         public JsonResult GetSlotTimings(string date) {
             eTracLoginModel ObjLoginModel = null;
             if (Session["eTrac"] != null)
@@ -1928,7 +2327,7 @@ namespace WorkOrderEMS.Controllers.NewAdmin
             List<CustomSlotTime> list = new List<CustomSlotTime>();
             try
             {
-                list= _ICommonMethod.GetSlotTimings(ObjLoginModel.UserId,date);
+                list= _ICommonMethod.GetSlotTimings(ObjLoginModel.UserName,date);
             }
             catch (Exception)
             {
@@ -1942,21 +2341,48 @@ namespace WorkOrderEMS.Controllers.NewAdmin
             _GlobalAdminManager.GetOutlookMeetingDetails("","");
         }
 
-
+        /// <summary>
+        /// Created By : Ashwajit Bansod
+        /// Created Date : 11-06-2020
+        /// Created For : TO make interviewer absent
+        /// </summary>
+        /// <param name="InterviewrID"></param>
+        /// <param name="ApplicantId"></param>
+        /// <param name="Comment"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult MarkAbsentToInterviewer(string InterviewerID,long ApplicantId, string Comment)
+        {
+            bool AbsentSaved = false;
+            try
+            {
+                var manager = new GlobalAdminManager();
+                if(InterviewerID != null)
+                {
+                     AbsentSaved = manager.MakeAbsent(InterviewerID, ApplicantId, Comment);              
+                }
+            }
+            catch(Exception ex)
+            {
+                ViewBag.Message = ex.Message;
+                ViewBag.ClassName = "danger";
+            }
+            return Json(AbsentSaved,JsonRequestBehavior.AllowGet);
+        }
         #endregion
-		//public ActionResult MySchedules() {
-  //          try
-  //          {
+        //public ActionResult MySchedules() {
+        //          try
+        //          {
 
-  //          }
-  //          catch (Exception)
-  //          {
+        //          }
+        //          catch (Exception)
+        //          {
 
-  //              throw;
-  //          }
-  //          return View();
-        
-  //      }
+        //              throw;
+        //          }
+        //          return View();
+
+        //      }
         [HttpGet]
         public ActionResult GetManagerAssessmentDetails()
         {
@@ -1996,7 +2422,6 @@ namespace WorkOrderEMS.Controllers.NewAdmin
 
         }
 
-
         [HttpPost]
         public JsonResult updateChangedExpectations(List<GWCQUestionModel> data)
         {
@@ -2015,6 +2440,7 @@ namespace WorkOrderEMS.Controllers.NewAdmin
             return Json(result, JsonRequestBehavior.AllowGet);
 
         }
+
         [HttpPost]
         public ActionResult SelfAssessmentView(string Id, string Assesment, string Name, string Image, string JobTitle, string FinYear, string FinQuarter, string Department, string LocationName)
         {
@@ -2048,6 +2474,350 @@ namespace WorkOrderEMS.Controllers.NewAdmin
             }
             ViewData["employeeInfo"] = new GWCQUestionModel() { EmployeeName = Name, AssessmentType = Assesment, Image = Image, JobTitle = JobTitle, Department = Department, LocationName = LocationName };
             return PartialView("SelfAssessmentView", ListQuestions);
+        }
+
+        /// <summary>
+        /// Created by : Ashwajit Bansod
+        /// Created For : To maintain a status of employee.
+        /// </summary>
+        /// <param name="EmployeeId"></param>
+        /// <param name="Status"></param>
+        /// <returns></returns>
+       [HttpPost]
+        public JsonResult PerformanceStatusChange(string EmployeeId, string Status)
+        {
+            try
+            {
+                var getEMPDetails = new GlobalAdminManager();
+                eTracLoginModel ObjLoginModel = null;
+                string message = "";
+                if (Session["eTrac"] != null)
+                {
+                    ObjLoginModel = (eTracLoginModel)(Session["eTrac"]);
+                }
+                if (EmployeeId != null && Status != null)
+                {
+                    if(Status == PerformanceEmployeeStatus.FinalSubmitByManager)
+                    {
+                        var dataEMP = getEMPDetails.GetEmployeeDetails(EmployeeId);
+                        string Message = DarMessage.HRDenyAppriasal(dataEMP.EMP_FirstName + " " + dataEMP.EMP_LastName);
+                        var data = _INotification.GetNotificationData(EmployeeId, EmployeeId, true, Message, ModuleSubModule.FinalSubmitEvaluation, ModuleSubModule.Performance, EmployeeId, "M", ObjLoginModel.UserName);
+                    }
+                    return Json(true, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return Json(false, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch(Exception ex)
+            {
+                return Json(ex, JsonRequestBehavior.AllowGet);
+            }
+            return Json(false, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// Created By : Ashwajit Bansod
+        /// Created For : TO update the performance status
+        /// </summary>
+        /// <param name="EmployeeId"></param>
+        /// <param name="Status"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult UpdatePerformanceStatus(string EmployeeId, string Status, long? RMS_Id, string Assessment)
+        {
+            try
+            {
+                eTracLoginModel ObjLoginModel = null;
+                if (Session["eTrac"] != null)
+                {
+                    ObjLoginModel = (eTracLoginModel)(Session["eTrac"]);
+                }
+                if (EmployeeId != null && Status != null)
+                {
+                    var save = _IePeopleManager.Status(EmployeeId, Status, ObjLoginModel.UserName, RMS_Id, Assessment);
+                    return Json(true, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                   return Json(false, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Message = ex.Message;
+                ViewBag.Class = "danger";
+            }
+           return Json(true, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// Created By : Ashwajit Bansod
+        /// Created Date : 11-08-2020
+        /// Created For : To save dispute appriasal file
+        /// </summary>
+        /// <param name="EmployeeId"></param>
+        /// <param name="Status"></param>
+        /// <param name="Comment"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult UploadFilesAppriasalDispute(string EmployeeId, string Status,string Comment)
+        {
+            eTracLoginModel ObjLoginModel = null;
+            var _manager = new GlobalAdminManager();
+            try
+            {
+                if (EmployeeId != null && Status == PerformanceEmployeeStatus.EMPDispute)
+                {
+                    HttpFileCollectionBase files = Request.Files;
+                    if (Session["eTrac"] != null)
+                    {
+                        ObjLoginModel = (eTracLoginModel)(Session["eTrac"]);
+                    }
+                    if (files.Count > 0)
+                    {
+                        try
+                        {
+                            //  Get all files from Request object  
+                            for (int i = 0; i < files.Count; i++)
+                            {
+                                HttpPostedFileBase file = files[i];
+                                string fname;
+                                // Checking for Internet Explorer  
+                                if (Request.Browser.Browser.ToUpper() == "IE" || Request.Browser.Browser.ToUpper() == "INTERNETEXPLORER")
+                                {
+                                    string[] testfiles = file.FileName.Split(new char[] { '\\' });
+                                    fname = testfiles[testfiles.Length - 1];
+                                }
+                                else
+                                {
+                                    fname = file.FileName;
+                                }
+                                var getUser = _manager.GetEmployeeDetails(EmployeeId);
+                                if (getUser != null)
+                                {
+                                    if (fname != null)
+                                    {
+
+                                        string FName = ObjLoginModel.UserId + "_" + DateTime.Now.Ticks.ToString() + "_" + fname;
+                                        CommonHelper.StaticUploadImage(file, Server.MapPath(ConfigurationManager.AppSettings["ApplicantSignature"]), FName);;
+                                        var getDetails = _IFillableFormManager.GetFileList(ObjLoginModel).Where(x => x.FileType == "Green" && x.FileTypeId == Convert.ToInt64(FileTypeId.PerformanceAppraisal)).FirstOrDefault();
+                                        var Obj = new UploadedFiles();
+                                        Obj.FileName = "Dispute Appriasal";
+                                        Obj.FileId = Convert.ToInt64(FileTypeId.PerformanceAppraisal);
+                                        Obj.FileEmployeeId = EmployeeId;
+                                        string LoginEmployeeId = EmployeeId;
+                                        Obj.AttachedFileName = fname;
+                                        var IsSaved = _IFillableFormManager.SaveFile(Obj, LoginEmployeeId);
+                                        var getHRList = _IDepartment.GetDepartmentEmployeeList(WorkOrderEMS.Helper.Department.HR);
+                                        foreach (var item in getHRList)
+                                        {
+                                            string Message = DarMessage.EMPAcceptDispute(getUser.EMP_FirstName + " " + getUser.EMP_LastName,"Dispute");
+                                            var data = _INotification.GetNotificationData(item.EmployeeId, item.EmployeeId, true, Message, ModuleSubModule.HRDisputeAppriasal, ModuleSubModule.Performance, item.EmployeeId, "H", ObjLoginModel.UserName);
+                                        }
+                                        var save = _IePeopleManager.Status(EmployeeId, Status, ObjLoginModel.UserName,null, null);
+                                    }
+                                }
+                            }
+                            // Returns message that successfully uploaded  
+                            return Json("File Uploaded Successfully!");
+                        }
+                        catch (Exception ex)
+                        {
+                            return Json("Error occurred. Error details: " + ex.Message);
+                        }
+                    }
+                    else
+                    {
+                        return Json("No files selected.");
+                    }
+                }
+                else
+                {
+                    var getUser = _manager.GetEmployeeDetails(EmployeeId);
+                    var getHRList = _IDepartment.GetDepartmentEmployeeList(WorkOrderEMS.Helper.Department.HR);
+                    foreach (var item in getHRList)
+                    {
+                        string Message = DarMessage.EMPAcceptDispute(getUser.EMP_FirstName + " " + getUser.EMP_LastName,"Accept");
+                        var data = _INotification.GetNotificationData(item.EmployeeId, item.EmployeeId, true, Message, ModuleSubModule.HRDisputeAppriasal, ModuleSubModule.Performance, item.EmployeeId, "H", ObjLoginModel.UserName);
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                return Json(ex.Message, JsonRequestBehavior.AllowGet);
+            }
+            return Json(true, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// Created By : Ashwajit Bansod
+        /// Created Date : 12-08-2020
+        /// Created For : To get employee file data for view file.
+        /// </summary>
+        /// <param name="EmployeeId"></param>
+        /// <returns></returns>
+        public ActionResult GetEmployeeDisputeComment(string EmployeeId)
+        {
+            var _manager = new FillableFormRepository();
+            try
+            {
+                if(EmployeeId != null)
+                {
+                    var getDetails = _manager.GetFileDataByEmployeeId(EmployeeId, FileName.EmpoyeeDisputeAppriasal);
+                    ViewBag.AttachedFileName = getDetails.FLU_FileAttached;
+                    ViewBag.FileId = getDetails.FLU_FileId;
+                    ViewBag.EmployeeId = EmployeeId;
+                    ViewBag.FileName = getDetails.FLU_FileName;
+                }
+            }
+            catch(Exception ex)
+            {
+                ViewBag.Message = ex.Message;
+                ViewBag.Class ="danger";
+            }
+            return View("~/Views/NewAdmin/_AcceptDisputeByHRComment.cshtml");
+        }
+
+        /// <summary>
+        /// Created By : Ashwajit Bansod
+        /// Created Date : 12-08-2020
+        /// Created For : To save Accept deny by HR
+        /// </summary>
+        /// <param name="EmployeeId"></param>
+        /// <param name="Status"></param>
+        /// <returns></returns>
+        public JsonResult AcceptDisputeByHR(string EmployeeId, string Status, string Remedy)
+        {
+            eTracLoginModel ObjLoginModel = null;
+            var _manager = new GlobalAdminManager();
+            try
+            {
+                if (Session["eTrac"] != null)
+                {
+                    ObjLoginModel = (eTracLoginModel)(Session["eTrac"]);
+                }
+                if (EmployeeId != null && Status != null)
+                {
+                    var save = _IePeopleManager.Status(EmployeeId, Status, ObjLoginModel.UserName,null, null);
+                    var data = _manager.GetEmployeeDetails(EmployeeId);
+                    if (data.EMP_EmployeeID != null)
+                    {
+                        string Message = string.Empty;
+                        var dataEMP = _manager.GetEmployeeDetails(EmployeeId);
+                        if (Status == PerformanceEmployeeStatus.DisputeDeny)
+                        {
+                             Message = DarMessage.HRAcceptDispute(dataEMP.EMP_FirstName + " " + dataEMP.EMP_LastName, Remedy);
+                        }
+                        else {
+                             Message = DarMessage.HRAcceptDispute(dataEMP.EMP_FirstName + " " + dataEMP.EMP_LastName, Remedy);
+                        }
+                            var notificationEMP = _INotification.GetNotificationData(dataEMP.EMP_EmployeeID, dataEMP.EMP_EmployeeID, true, Message, ModuleSubModule.HRDisputeAppriasal, ModuleSubModule.Performance, data.EMP_EmployeeID, "H", ObjLoginModel.UserName);
+                        
+                    }
+                    else
+                    {
+                        string Message = string.Empty;
+                        var dataMAN = _manager.GetEmployeeDetails(data.EMP_ManagerId);
+                        if (Status == PerformanceEmployeeStatus.DisputeDeny)
+                        {
+                             Message = DarMessage.HRAcceptDisputeDeny(dataMAN.EMP_FirstName + " " + dataMAN.EMP_LastName);
+                        }
+                        else
+                        {
+                             Message = DarMessage.HRAcceptDisputeDeny(dataMAN.EMP_FirstName + " " + dataMAN.EMP_LastName);
+                        }
+                            var notificationEMP = _INotification.GetNotificationData(dataMAN.EMP_EmployeeID, dataMAN.EMP_EmployeeID, true, Message, ModuleSubModule.HRDisputeAppriasal, ModuleSubModule.Performance, dataMAN.EMP_EmployeeID, "H", ObjLoginModel.UserName);
+                    }
+                }
+                return Json(true, JsonRequestBehavior.AllowGet);
+            }
+            catch(Exception ex)
+            {
+                return Json(false, JsonRequestBehavior.AllowGet);
+            }
+            //return Json(true, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// Created By : Ashwajit Bansod
+        /// Created Date : 09-08-2020
+        /// Created For : To generate PDF of evaluationa nd Assessment of employee
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="UserName"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public bool AssessmentEvaluationPDF(List<GWCQUestionModel> data, string UserName)
+        {
+            bool isPDFGenerate = false;
+            var AssessmentEvaluationData = new AssessmentEvaluationModel();
+            try
+            {
+                if(data.Count() > 0)
+                {
+                    var employeeId = data[0].SAR_EMP_EmployeeId;
+                    AssessmentEvaluationData.GWCQUestionModelEvaluation = data;
+                    AssessmentEvaluationData.GWCQUestionModelAssessment = _GlobalAdminManager.GetGWCQuestions(employeeId, data[0].AssessmentType, null);
+                    var pdfpath = employeeId + "_Assessment.pdf";
+                    var pdf = HtmlConvertToPdf("AssessmentEvaluationPDF", AssessmentEvaluationData, pdfpath, Convert.ToInt64(FileTypeId.PerformanceAppraisal), UserName, "Assessment File");
+                    isPDFGenerate = true;
+                }
+            }
+            catch(Exception ex)
+            {
+                ViewBag.Message = ex.Message;
+                ViewBag.Class = "danger";
+                isPDFGenerate = false;
+            }
+            return isPDFGenerate;
+        }
+        /// <summary>
+        /// Created By : Ashwajit Bansod
+        /// Created Date : 01-08-2020
+        /// </summary>
+        /// <param name="viewName"></param>
+        /// <param name="model"></param>
+        /// <param name="path"></param>
+        /// <param name="FileId"></param>
+        /// <param name="EmployeeId"></param>
+        /// <param name="FileName"></param>
+        /// <returns></returns>
+        public async Task<bool> HtmlConvertToPdf(string viewName, object model, string path, long FileId, string EmployeeId, string FileName)
+        {
+            bool status = false;
+            try
+            {
+                var pdf = new Rotativa.ViewAsPdf(viewName, model)
+                {
+                    FileName = path,
+                    CustomSwitches = "--page-offset 0 --footer-center [page] --footer-font-size 8"
+                };
+                byte[] pdfData = pdf.BuildFile(ControllerContext);
+                var root = Server.MapPath("~/Content/FilesRGY/");
+                var fullPath = Path.Combine(root, pdf.FileName);
+                fullPath = Path.GetFullPath(fullPath);
+                using (var fileStream = new FileStream(fullPath, FileMode.Create, FileAccess.Write))
+                {
+                    fileStream.Write(pdfData, 0, pdfData.Length);
+                }
+                if (path != null)
+                {
+                    var Obj = new UploadedFiles();
+                    Obj.FileName = FileName;
+                    Obj.FileId = FileId;
+                    Obj.FileEmployeeId = EmployeeId;
+                    string LoginEmployeeId = EmployeeId;
+                    Obj.AttachedFileName = path;
+                    var IsSaved = _IFillableFormManager.SaveFile(Obj, LoginEmployeeId);
+                }
+                return status = true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
     }
 }

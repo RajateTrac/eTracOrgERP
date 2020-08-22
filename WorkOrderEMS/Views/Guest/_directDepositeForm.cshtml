@@ -1,5 +1,12 @@
 ﻿@model WorkOrderEMS.Models.Employee.DirectDepositeFormModel
+    @{ 
+        string currentDate = DateTime.Now.Date.ToString();
+        long ApplicantId = Convert.ToInt64(Session["ApplicantId"]);
+ }
 <style>
+   /* * {
+        color: black;
+    }*/
 
     table {
         /*border:2px solid black!important;*/
@@ -53,6 +60,10 @@
         color: #000;
     }
 
+    .error {
+        color: red;
+    }
+
     .center {
         display: block;
         margin-left: auto;
@@ -70,21 +81,49 @@
         line-height: 1.3 !important;
         background: none !important;
     }
+
+    .fafaarrowstyle {
+        font-size: 40px;
+        color: steelblue;
+        margin-left: 1045px;
+        margin-bottom: 0px;
+    }
+
+    .DD-nonResponsive {
+        position: absolute;
+        bottom: 2.6%;
+        left: 9%
+    }
 </style>
+<link href="~/Content/toastr.min.css" rel="stylesheet" />
+<link href="~/Content/NewAdminContent/CSS/MyGuestDirectDeposit.css" rel="stylesheet" />
 <div class="p1">
     <div class="row">
-        <img src="~/Images/FormImages/image-form.jpg" alt="background image" />
-        <h3><u>Direct Deposit Authorization</u></h3>
+        <img id="DDimage-width" src="~/Images/FormImages/image-form.jpg" alt="background image" />
+        <h3 id="DD-h3Width"><u>Direct Deposit Authorization</u></h3>
     </div>
     <div>
-        <p>
+        <p id="DD-P-heading">
             This authorizes Elite Parking Services of America, Inc. (the "Company") to send credit entries (and appropriate debit and adjustment entries), electronically or by any other commercially accepted method, to my (our) account(s) indicated below and to other accounts I (we) identify in the
             future (the "Account"). This authorizes the financial institution holding the Account to post all such entries.
         </p>
         @using (Html.BeginForm("_DirectDepositeForm", "Guest", FormMethod.Post, new { id = "depositeForm" }))
         {
+
+
+            <input type="hidden" value="@Model.FormStatusw4" name="FormStatusw4" id="FormStatusw4">
+            <input type="hidden" value="@Model.FormStatusI9" name="FormStatusI9" id="FormStatusI9">
+            <input type="hidden" value="@Model.FormStatusdd" name="FormStatusdd" id="FormStatusdd">
+            <input type="hidden" value="@Model.FormStatusEvf" name="FormStatusEvf" id="FormStatusEvf">
+            <input type="hidden" value="@Model.FormStatussif" name="FormStatussif" id="FormStatussif">
+            <input type="hidden" value="@Model.FormStatusbcf" name="FormStatusbcf" id="FormStatusbcf">
+            <input type="hidden" value="@Model.FormStatusrop" name="FormStatusrop" id="FormStatusrop">
+            <input type="hidden" value="@Model.FormStatusprfecf" name="FormStatusprfecf" id="FormStatusprfecf">
+            <input type="hidden" value="@Model.FormStatusprfcaf" name="FormStatusprfcaf" id="FormStatusprfcaf">
+            <input type="hidden" value="@Model.FormStatusprf" name="FormStatusprf" id="FormStatusprf">
+            <input type="hidden" value="@Model.FormStatusff" name="FormStatusff" id="FormStatusff">
             @Html.HiddenFor(x => x.EmployeeSignatureName, new { @id = "getSignName" })
-            <table>
+            <table id="DD-tablewidth">
                 <tr>
                     <th>
                         Account No 1
@@ -95,7 +134,7 @@
                         Account Type (Checking or Savings)
                     </td>
                     <td>
-                        @Html.TextBoxFor(x => x.Account1.AccountType, new { @style = "width:290px;", @class = "text-line" })
+                        @Html.TextBoxFor(x => x.AccountType1, new { @style = "width:290px;", @class = "text-line" })
                     </td>
                 </tr>
                 <tr>
@@ -103,7 +142,7 @@
                         Employee Bank Name
                     </td>
                     <td>
-                        @Html.TextBoxFor(x => x.Account1.EmployeeBankName, new { @style = "width:290px;", @class = "text-line" })
+                        @Html.TextBoxFor(x => x.EmployeeBankName1, new { @style = "width:290px;", @class = "text-line" })
                     </td>
                 </tr>
                 <tr>
@@ -111,7 +150,11 @@
                         Account
                     </td>
                     <td>
-                        @Html.TextBoxFor(x => x.Account1.Account, new { @style = "width:290px;", @class = "text-line" })
+                        @Html.TextBoxFor(x => x.Account1, new { @style = "width:290px;", @class = "text-line" })
+                        @Html.ValidationMessageFor(x => x.Account1, "", new { @style = "color:red;" })
+                    </td>
+                    <td>
+                        <span id="errorAccount1" class="error">*</span>
                     </td>
                 </tr>
                 <tr>
@@ -119,7 +162,7 @@
                         Bank Routing (ABA)
                     </td>
                     <td>
-                        @Html.TextBoxFor(x => x.Account1.BankRouting, new { @style = "width:290px;", @class = "text-line" })
+                        @Html.TextBoxFor(x => x.BankRouting1, new { @style = "width:290px;", @class = "text-line" })
                     </td>
                 </tr>
                 <tr>
@@ -127,7 +170,7 @@
                         Percentage Or Dollar Amount To Be Deposited To This Account
                     </td>
                     <td>
-                        @Html.TextBoxFor(x => x.Account1.DepositeAmount, new { @style = "width:290px;", @class = "text-line" })
+                        @Html.TextBoxFor(x => x.DepositeAmount1, new { @style = "width:290px;", @class = "text-line" })
                     </td>
                 </tr>
                 <tr>
@@ -140,7 +183,8 @@
                         Account Type (Checking or Savings)
                     </td>
                     <td>
-                        @Html.TextBoxFor(x => x.Account2.AccountType, new { @style = "width:290px;", @class = "text-line" })
+                        @Html.TextBoxFor(x => x.AccountType2, new { @style = "width:290px;", @class = "text-line" })
+
                     </td>
                 </tr>
                 <tr>
@@ -148,7 +192,7 @@
                         Employee Bank Name
                     </td>
                     <td>
-                        @Html.TextBoxFor(x => x.Account2.EmployeeBankName, new { @style = "width:290px;", @class = "text-line" })
+                        @Html.TextBoxFor(x => x.EmployeeBankName2, new { @style = "width:290px;", @class = "text-line" })
                     </td>
                 </tr>
                 <tr>
@@ -156,7 +200,11 @@
                         Account
                     </td>
                     <td>
-                        @Html.TextBoxFor(x => x.Account2.Account, new { @style = "width:290px;", @class = "text-line" })
+                        @Html.TextBoxFor(x => x.Account2, new { @style = "width:290px;", @class = "text-line" })
+                        @Html.ValidationMessageFor(x => x.Account2, "", new { @style = "color:red;" })
+                    </td>
+                    <td>
+                        <span id="errorAccount1" class="error">*</span>
                     </td>
                 </tr>
                 <tr>
@@ -164,30 +212,58 @@
                         Bank Routing (ABA)
                     </td>
                     <td>
-                        @Html.TextBoxFor(x => x.Account2.BankRouting, new { @style = "width:290px;", @class = "text-line" })
+                        @Html.TextBoxFor(x => x.BankRouting2, new { @style = "width:290px;", @class = "text-line" })
                     </td>
                 </tr>
                 <tr>
             </table>
-            <p>
+            <p id="DD-pwidth">
                 This authorization will be in effect until the Company receives a written termination notice from me and has a reasonable opportunity to act on it.
             </p>
-            <table>
+            <table id="DD-lowertable">
                 <tr>
-                    <td>
+                    @Html.HiddenFor(model => model.EmployeeSignatureName, new { @id = "EmployeeDirectDepositSignature" })
+                    @if (Model.FormStatusdd == "true")
+                    {
+                        <td>
+                            <img id="OpenDirectDepositSign" style="width:163px;height:47px;" />
 
-                        <img id="openItForSignature" style="display:none;width:163px;height:47px;" />
-                        <span id="ShowHideSignatureSpan">
-                            @Html.TextBoxFor(x => x.Signature, new { @style = "width:290px;", @class = "text-line" })
-                        </span>
-                        <span>
-                            <span class="btn btn-success" style="border-radius:100px;width:20%;" id="AddSignature">
-                                Signature
+                            <br />Signature
+                        </td>
+                    }
+                    else
+                    {
+                        <td>
+                            <img id="OpenDirectDepositSign" style="display:none;width:163px;height:47px;" />
+                            <span id="ShowHideSignatureSpan" class="hideTextBoxAndButton">
+                                @Html.TextBoxFor(x => x.Signature, new { @style = "width:165px;", @class = "text-line" })
                             </span>
-                        </span>
-                        <br />Signature
-                    </td>
+                            <span>
+                                <span class="btn btn-success hideTextBoxAndButton" style="border-radius: 100px;width: 40%;background-image: linear-gradient(to left, #3cffdb, #425fe0);" id="AddSignatureDirectDeposite" onclick="OpenSignature('DirectDeposit','EmployeeDirectDepositSignature','OpenDirectDepositSign','hideTextBoxAndButton','myModalForSignatureDirectDeposit','colors_sketchDirectDeposite')">
+                                    Add Signature
+                                </span>
+                            </span>
+                           
+                            <br />Signature
+                        </td>
+                    }
+
                 </tr>
+                @*<tr>
+                        <td>
+
+                            <img id="openItForSignature" style="display:none;width:163px;height:47px;" />
+                            <span id="ShowHideSignatureSpan">
+                                @Html.TextBoxFor(x => x.Signature, new { @style = "width:290px;", @class = "text-line" })
+                            </span>
+                            <span>
+                                <span class="btn btn-success" style="border-radius:100px;width:20%;" id="AddSignature">
+                                    Signature
+                                </span>
+                            </span>
+                            <br />Signature
+                        </td>
+                    </tr>*@
                 <tr>
                     <td>
                         @Html.TextBoxFor(x => x.PrintedName, new { @style = "width:290px;", @class = "text-line" })
@@ -202,27 +278,121 @@
                 </tr>
                 <tr>
                     <td>
-                        @Html.TextBoxFor(x => x.Date, new { @style = "width:290px;", @class = "text-line" })<br />Date
+                        <input type="text" name="Date" style="width:290px" class="text-line" value="@currentDate"/>
+                        @*@Html.TextBoxFor(x => x.Date, new { @style = "width:290px;", @class = "text-line" })*@<br />Date
                     </td>
                 </tr>
             </table>
             <p style="font-weight:bold;">Important: Attach Voided Check (Not Deposit Slip) Below <U>Or Acquire An Official Direct Deposit Form From You Financial Institution.</U></p>
             <img class="center" src="~/Images/DIRECT-DEPOSIT.jpg" alt="background image" />
-            <table>
-                <tr>
-                    <td>
-                        @Html.CheckBoxFor(x => x.IsSave, new { @style = "height: 18px;width: 31px;position:absolute;bottom:3%;" })
-                    </td>
-                    <td colspan="2">
+            <br>
+            <br><br>
+            @*<table id="DD-checkbox-table">
+                    <tr>
+                        <td>
+                            @Html.CheckBoxFor(x => x.IsSave, new { @class = "DD-checkboxwidth", @style = "height: 18px;width: 31px;position:absolute;bottom:3%;" })
+                        </td>
+                        <td colspan="2">
 
-                        <span style="position:absolute;bottom:2.6%;left:9%">	i hereby declare that the above information is true to the best of my knowledge</span><p><span style="cursor:pointer;" onclick="SubmitForm(this, depositeForm)" title="Save"><a><i class="fa fa-long-arrow-right" style="font-size: 40px;color: steelblue;margin-left: 1045px;margin-bottom:0px"></i></a></span> </p>
-                    </td>
-                </tr>
-            </table>
+                            <span class="DD-nonResponsive DD-responsive">	i hereby declare that the above information is true to the best of my knowledge</span>
+                            <p>
+                            <span style="cursor:pointer;" onclick="SubmitForm(this, depositeForm)" title="Save">
+                                <a><i class="fa fa-long-arrow-right fafaarrowstyle" id="DD-arrow"></i></a>
+                            </span>
+                            </p>
+                        </td>
+                    </tr>
+                </table>*@
 
         }
     </div>
 </div>
+<div class="row" style="height: 50px;background-color: #292b48;bottom: 0;overflow: hidden;position: fixed;width: 100%;margin-left: 0px;">
+    <div class="col-md-4 text-right">
+
+    </div>
+    <div class="col-md-4 text-center">
+        <span>
+            <i class="fa fa-check-square" aria-hidden="true" onclick="GuestCheckList(this,depositeForm)" title="Go To CheckList" style="font-size: 20px;margin-top: 15px;color: #6cc387f2;padding-right:30px;cursor:pointer;"></i>
+        </span>
+
+        <span>
+            <a><i class="fa fa-question-circle" aria-hidden="true" title="Help" style="font-size: 20px;color: #f73c3c;margin-top: 6px;padding-right:30px;cursor:pointer;" onclick="SendFormIssueNotification('Direct Deposit', '@ApplicantId');"></i></a>
+        </span>
+
+        <span>
+            <a><i class="fa fa-floppy-o" aria-hidden="true" onclick="SaveBeforeNext(this,depositeForm)" title="Save" style="font-size: 20px;color: #6cc387f2;margin-top: 6px;padding-right:30px;cursor:pointer;"></i></a>
+        </span>
+
+    </div>
+    <div class="col-md-4 text-right">
+        <span style="cursor:pointer;" onclick="SubmitForm(this, depositeForm)" title="Save">
+            <a><i class="fa fa-long-arrow-right" title="Next" style="font-size: 45px;color: #6cc387f2;margin-top: 2px;"></i></a>
+        </span>
+    </div>
+</div>
+<div class="modal fade preview" id="myModalForSignatureDirectDeposit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" style="width:40%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Add Signature</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">X</span></button>
+            </div>
+            <div class="modal-body" style="margin-left:0px;">
+                <div id="divDetailPreview" class="">
+                    <div>
+                        <div class="" id="DivSignatureI9">
+                            <div class="form-group">
+                                <div class="col-lg-7 col-md-8 col-sm-8 col-xs-12">
+                                    <div class="tools">
+                                        <a href="#colors_sketch" data-tool="marker">Marker</a> <a href="#colors_sketch" data-tool="eraser">Eraser</a>
+                                    </div>
+                                    <br />
+                                    <canvas id="colors_sketchDirectDeposite" width="450" height="200"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="background: white;">
+                <input type="button" class="btn btn-primary" id="btnSaveSign" style="border-radius: 100px; width: 25%; background-image: linear-gradient(to left, #3cffdb, #425fe0);" data-dismiss="modal" value="Save as Image" />
+            </div>
+        </div>
+    </div>
+</div>
 <div id="openConatctModal"></div>
 @*@Html.ValidationSummary()*@
+
+<script src="~/Scripts/toastr.min.js"></script>
 <script src="~/Scripts/Guest/ApplicantFormSave.js"></script>
+<script src="~/Scripts/Guest/SketchSignature.js"></script>
+
+<script>
+    $(function () {
+
+         var formdd = $("#FormStatusdd").val();
+        if (formdd == "true") {
+            debugger
+            var ddSign = $("#EmployeeDirectDepositSignature").val();
+            //var neww4Sign = w4Sign.replace("-", "/");
+            $("#OpenDirectDepositSign").attr("src", ddSign);
+        }
+        else {
+             $('#colors_sketchDirectDeposite').sketch();
+        $(".tools a").eq(0).attr("style", "color:#000");
+        $(".tools a").click(function () {
+            $(".tools a").removeAttr("style");
+            $(this).attr("style", "color:#000");
+        });
+        $("#btnSaveSign").bind("click", function () {
+            var base64 = $('#colors_sketchDirectDeposite')[0].toDataURL();
+            $("#OpenDirectDepositSign").attr("src", base64);
+            $("#OpenDirectDepositSign").show();
+            $(".hideTextBoxAndButton").hide();
+            $("#EmployeeDirectDepositSignature").val(base64);
+        });
+        }
+       
+    });
+</script>

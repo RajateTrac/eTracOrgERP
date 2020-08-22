@@ -14,10 +14,29 @@ namespace WorkOrderEMS.Data.EntityModel
     public partial class spGetEmployeeStatusChangeList_Result
     {
         public long ESC_Id { get; set; }
-        public string ESC_EMP_EmployeeId { get; set; }
         public string ESC_ChangeType { get; set; }
+        public string ESC_EMP_EmployeeId { get; set; }
+        public string EmployeeName { get; set; }
+        public Nullable<long> ESC_EMP_JobTitleIdCurrent { get; set; }
+        public string CurrentJobTitle { get; set; }
+        public Nullable<long> ESC_EMP_JobTitleIdNext { get; set; }
+        public string NextJobTitle { get; set; }
+        public Nullable<long> ESC_EMP_LocationIdCurrent { get; set; }
+        public string CurrentLocation { get; set; }
+        public Nullable<long> ESC_EMP_LocationIdNext { get; set; }
+        public string NextLocation { get; set; }
+        public string ESC_VST_EmploymentStatusCurrent { get; set; }
+        public string ESC_VST_EmploymentStatusNext { get; set; }
+        public Nullable<System.DateTime> ESC_EffectiveFromDate { get; set; }
+        public Nullable<System.DateTime> ESC_EffectiveToDate { get; set; }
+        public string ESC_CreatedBy { get; set; }
+        public string CreatedBy { get; set; }
         public string ESC_ApprovedBy { get; set; }
+        public string ApproveBy { get; set; }
+        public Nullable<System.DateTime> ESC_ApprovedOn { get; set; }
         public string ESC_ApprovalStatus { get; set; }
+        public string ESC_ApprovalComment { get; set; }
         public Nullable<System.DateTime> ESC_Date { get; set; }
+        public string ESC_IsActive { get; set; }
     }
 }

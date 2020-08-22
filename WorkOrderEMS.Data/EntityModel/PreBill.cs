@@ -23,8 +23,6 @@ namespace WorkOrderEMS.Data.EntityModel
         public string PBL_InvoiceDocument { get; set; }
         public string PBL_IsActive { get; set; }
     
-        public virtual Company Company { get; set; }
         public virtual LocationMaster LocationMaster { get; set; }
-        public virtual PreBillNumber PreBillNumber { get; set; }
     }
 }

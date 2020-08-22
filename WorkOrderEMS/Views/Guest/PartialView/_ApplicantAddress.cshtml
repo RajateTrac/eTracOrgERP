@@ -2,60 +2,107 @@
 @{
     Layout = null;
 }
+<style>
+    .AP-marginL {
+        margin-left: 3px;
+        font-size: 14px;
+        font-family: sans-serif;
+        font-weight: 600;
+        color: #000000a1;
+    }
+    .dropdown-menu {
+        font-size: small;
+    }
+</style>
 @Html.HiddenFor(x => x.ApplicantAddress[0].APA_APT_ApplicantId)
 <div class="main_row">
-    @for (var i = 0; i < Model.ApplicantAddress.Count(); i++)
+    @*@for (var i = 0; i < Model.ApplicantAddress.Count(); i++)
+    {*@
+    @foreach (var item in Model.ApplicantAddress)
     {
+
+    
+        <div class="row">
+            <div class="colmn col-md-6">
+                <label class="AP-marginL">Street Address:</label>
+            </div>
+            <div class="colmn col-md-3">
+                <label class="AP-marginL">APT/UNIT#:</label>
+            </div>
+            <div class="colmn col-md-3">
+                <label class="AP-marginL">City:</label>
+            </div>
+        </div>
         <div class="row">
             <div class="colmn col-md-6">
                 <div class="form-group">
-                    @Html.TextBoxFor(x => x.ApplicantAddress[i].APA_StreetAddress, new { @class = "form-control", @placeholder = "Street Addrss" })
-                    @Html.ValidationMessageFor(x => x.ApplicantAddress[i].APA_StreetAddress)
+                    @Html.TextBoxFor(x => item.APA_StreetAddress, new { @class = "form-control", @placeholder = "Street Addrss" })
+                    @Html.ValidationMessageFor(x => item.APA_StreetAddress)
                 </div>
             </div>
             <div class="colmn col-md-3">
                 <div class="form-group">
-                    @Html.TextBoxFor(x => x.ApplicantAddress[i].APA_Apartment, new { @class = "form-control", @placeholder = "APT/UNIT#:" })
-                    @Html.ValidationMessageFor(x => x.ApplicantAddress[i].APA_Apartment)
+                    @Html.TextBoxFor(x => item.APA_Apartment, new { @class = "form-control", @placeholder = "APT/UNIT#:" })
+                    @Html.ValidationMessageFor(x => item.APA_Apartment)
                 </div>
             </div>
             <div class="colmn col-md-3">
                 <div class="form-group">
-                    @Html.TextBoxFor(x => x.ApplicantAddress[i].APA_City, new { @class = "form-control", @placeholder = "City" })
-                    @Html.ValidationMessageFor(x => x.ApplicantAddress[i].APA_City)
+                    @Html.TextBoxFor(x => item.APA_City, new { @class = "form-control", @placeholder = "City" })
+                    @Html.ValidationMessageFor(x => item.APA_City)
                 </div>
             </div>
         </div>
 
+
         <div class="row">
-            <div class="colmn col-md-4">
+            <div class="colmn col-md-3">
+                <label class="AP-marginL">State:</label>
+            </div>
+            <div class="colmn col-md-3">
+                <label class="AP-marginL">Zip:</label>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="colmn col-md-3">
                 <div class="form-group">
-                    @Html.TextBoxFor(x => x.ApplicantAddress[i].APA_State, new { @placeholder = "State", @class = "form-control" })
-                    @Html.ValidationMessageFor(x => x.ApplicantAddress[i].APA_State)
+                    @Html.TextBoxFor(x => item.APA_State, new { @placeholder = "State", @class = "form-control" })
+                    @Html.ValidationMessageFor(x => item.APA_State)
                 </div>
             </div>
-            <div class="colmn col-md-4">
-                <div class="form-group yearsaddress">
-                    <label class="form-label">ZIP</label>
-                    @Html.TextBoxFor(x => x.ApplicantAddress[i].APA_Zip, new { @placeholder = "ZIP", @class = "form-control" })
-                    @Html.ValidationMessageFor(x => x.ApplicantAddress[i].APA_Zip)
+            <div class="colmn col-md-3">
+                <div class="form-group">
+                    @*<label class="form-label">ZIP</label>*@
+                    @Html.TextBoxFor(x => item.APA_Zip, new { @placeholder = "ZIP", @class = "form-control" })
+                    @Html.ValidationMessageFor(x => item.APA_Zip)
                 </div>
             </div>
-            <div class="colmn col-md-4">
-                <div class="form-group yearsaddress">
-                    <label class="form-label">Years Address From</label>
-                    @Html.TextBoxFor(x => x.ApplicantAddress[i].APA_YearsAddressFrom, new { @placeholder = "Years Address From", @class = "form-control", @type = "date" })
-                    @Html.ValidationMessageFor(x => x.ApplicantAddress[i].APA_YearsAddressFrom)
-                </div>
-            </div>
+
         </div>
 
+
         <div class="row">
-            <div class="colmn col-md-4">
+            <div class="colmn col-md-3">
+                <label class="AP-marginL">Years Address From:</label>
+            </div>
+            <div class="colmn col-md-3">
+                <label class="AP-marginL">Years Address To:</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="colmn col-md-3">
                 <div class="form-group yearsaddress">
-                    <label class="form-label">Years Address To</label>
-                    @Html.TextBoxFor(x => x.ApplicantAddress[i].APA_YearsAddressTo, new { @class = "form-control", @placeholder = "Years Address To", @type = "date" })
-                    @Html.ValidationMessageFor(x => x.ApplicantAddress[i].APA_YearsAddressTo)
+
+                    @Html.TextBoxFor(x => item.APA_YearsAddressFrom, new { @placeholder = "Years Address From", @class = "form-control datepicker" })
+                    @Html.ValidationMessageFor(x => item.APA_YearsAddressFrom)
+                </div>
+            </div>
+            <div class="colmn col-md-3">
+                <div class="form-group yearsaddress">
+
+                    @Html.TextBoxFor(x => item.APA_YearsAddressTo, new { @class = "form-control datepicker", @placeholder = "Years Address To" })
+                    @Html.ValidationMessageFor(x => item.APA_YearsAddressTo)
                 </div>
             </div>
 
@@ -64,9 +111,17 @@
         <div class="row">
             <div class="colmn col-md-12 text-right">
                 <div class="form-group">
-                    <button class="btn">Add more address</button>
+                    <button class="btn" style="border-radius: 100px; width: 195px;height: 35px;font-size: 11px;background-image: linear-gradient(to left, #3cffdb, #425fe0);">Add more address</button>
                 </div>
             </div>
         </div>
     }
 </div>
+<script>
+      $(document).ready(function () {
+        debugger
+          $(".datepicker").datepicker();
+          $(".dropdown-menu").css("font-size", "small");
+    })
+
+</script>

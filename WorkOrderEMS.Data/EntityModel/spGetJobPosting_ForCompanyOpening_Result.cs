@@ -22,5 +22,6 @@ namespace WorkOrderEMS.Data.EntityModel
         public string JobPostingDate { get; set; }
         public Nullable<int> Duration { get; set; }
         public string Status { get; set; }
+        public string OtherInterviewer { get; set; }
     }
 }
